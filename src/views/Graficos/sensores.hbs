@@ -1,0 +1,158 @@
+<div class="card">
+    <div class="card-header">
+        <div class="input-group">
+            <form class="form-inline my-2 my-lg-0">
+                <input type="date" id="txt_buscar" class="form-control mr-sm-2">
+            </form>
+            <button type="button" onclick="BuscarValor()" class="btn btn-primary btn-icon-split btn-sm">
+                <span class="icon text-white-50">
+                    <i class="fas fa-search"></i>
+                </span>
+                <span class="text">Buscar</span>
+            </button>
+        </div>
+        <div id="grupo_txtBuscar1"></div>
+    </div>
+
+
+
+    <div class="row">
+        <div id="curve_chart3" style="width: 900px; height: 500px" class="col-md-12 col-lg-12 col-sm-12 col-xs-12"></div>
+    </div>
+
+
+
+</div>
+
+
+<script type="text/javascript">
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(drawChart2);
+
+    var options = {
+
+        title: 'Grafica humedad suelo sensor YL-69',
+        hAxis: { title: 'Horas ', titleTextStyle: { color: '#333' } },
+        vAxis: { title: 'Humedad Suelo' },
+        with: 200,
+        colors: ['#5C5E49', '#BCCA36'],
+        curveType: 'function',
+        legend: { position: 'bottom' }
+
+
+    };
+
+    var materialOptions = {
+        width: 900,
+        chart: {
+            title: 'Nearby galaxies',
+            subtitle: 'distance on the left, brightness on the right'
+        },
+        series: {
+            0: { axis: 'distance' }, // Bind series 0 to an axis named 'distance'.
+            1: { axis: 'brightness' } // Bind series 1 to an axis named 'brightness'.
+        },
+        axes: {
+            y: {
+                distance: { label: 'parsecs' }, // Left y-axis.
+                brightness: { side: 'right', label: 'apparent magnitude' } // Right y-axis.
+            }
+        }
+    };
+    var classicOptions = {
+        width: 900,
+        series: {
+            0: { targetAxisIndex: 0 },
+            1: { targetAxisIndex: 1 }
+        },
+        title: 'Nearby galaxies - distance on the left, brightness on the right',
+        vAxes: {
+            // Adds titles to each axis.
+            0: { title: 'parsecs' },
+            1: { title: 'apparent magnitude' }
+        }
+    };
+
+
+
+
+
+    function drawChart2() {
+        var fecha = fechaActual();
+        var Data = new google.visualization.DataTable();
+        Data.addColumn('number', 'hora');
+        Data.addColumn('number', 'Humedad A');
+        Data.addColumn('number', 'Humedad B');
+
+        Data.addRows(20);
+
+        var URL = "/HumedadSuelo/ListaHumedadFecha";
+        $.ajax({
+            url: URL,
+            type: "post",
+            dataType: "json",
+            data: { fecha },
+            success: function (response) {
+                var contador = 0;
+                limpiarHtml();
+                response.forEach(humedad => {
+                    var a = humedad.hum_sue_hora.split(":");
+                    Data.setValue(contador, 0, a[0]);
+                    Data.setValue(contador, 1, humedad.hum_sue_nodo_a);
+                    Data.setValue(contador, 2, humedad.hum_sue_nodo_b);
+
+                    contador++;
+                });
+
+                var chartspace = new google.visualization.LineChart(document.getElementById('curve_chart3'));
+                chartspace.draw(Data, options);
+
+          
+
+            }, error: function (e) {
+                console.log(e.readyState);
+            }
+        });
+    }
+
+
+    function BuscarValor() {
+        let fecha = $('#txt_buscar').val();
+        if (campoVacio(fecha, "grupo_txtBuscar1", "Seleccione una fecha valida")) {
+            var Data = new google.visualization.DataTable();
+            Data.addColumn('number', 'hora');
+            Data.addColumn('number', 'Humedad A');
+            Data.addColumn('number', 'Humedad B');
+            Data.addRows(20);
+            var URL = "/HumedadSuelo/ListaHumedadFecha";
+            $.ajax({
+                url: URL,
+                type: "post",
+                dataType: "json",
+                data: { fecha },
+                success: function (response) {
+                    var contador = 0;
+                    limpiarHtml();
+                    response.forEach(humedad => {
+                        var a = humedad.hum_sue_hora.split(":");
+                        Data.setValue(contador, 0, a[0]);
+                        Data.setValue(contador, 1, humedad.hum_sue_nodo_a);
+                        Data.setValue(contador, 2, humedad.hum_sue_nodo_b);
+                        contador++;
+                    });
+
+                    var chartspace = new google.visualization.LineChart(document.getElementById('curve_chart3'));
+                    chartspace.draw(Data, options);
+                }, error: function (e) {
+                    console.log(e.readyState);
+                }
+            });
+        }
+
+    }
+
+    function limpiarHtml() {
+        $("#grupo_txtBuscar1").val("");
+    }
+
+</script>

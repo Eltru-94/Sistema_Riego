@@ -1,0 +1,412 @@
+<button type="button" onclick="SelectCultivos()" name="CrearCultivoRiego" id="CrearCultivoRiego"
+    class="btn btn-primary btn-icon-split btn-sm" data-bs-toggle="modal" data-bs-target="#Riego">
+    <span class="icon text-white-50">
+        <i class="fas fa-spa"></i>
+    </span>
+    <span class="text">Registrar Riego</span>
+</button>
+<br>
+<hr>
+<div class="container1">
+
+    <div class="card">
+        <img src="/imagenes/riego.jpg" alt="">
+        <h4>Sistema de Riego por goteo</h4>
+        <div id="datos" class="container1">
+        </div>
+        <div id="valvula">
+        </div>
+        <br>
+        <div class="form-group row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8">
+                <button type="submit" class="btn btn-danger" id="btn_eliminar_riego" name="btn_eliminar_riego"
+                    disabled>Eliminar Riego</button>
+            </div>
+            <div class="col-sm-2"></div>
+        </div>
+        <hr>
+    </div>
+
+    <div class="card">
+        <img src="/imagenes/automatizacion.jpg" alt="">
+        <h4>Programar Riego</h4>
+        <h5>Automatizado</h5>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <button type="submit" class="btn btn-primary" id="btn_activar_aut" name="btn_activar_aut"
+                    disabled>Activar</button>
+            </div>
+            <div class="col-sm-6">
+                <button type="submit" class="btn btn-danger" id="btn_desactivar_aut" name="btn_desactivar_aut"
+                    disabled>Desactivar</button>
+            </div>
+        </div>
+
+        <h5>Manual</h5>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <button type="submit" class="btn btn-primary" id="btn_activar_man" name="btn_activar_man"
+                    disabled>Activar</button>
+            </div>
+            <div class="col-sm-6">
+                <button type="submit" class="btn btn-danger" id="btn_desactivar_man" name="btn_desactivar_man"
+                    disabled>Desactivar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="cli_id" name="cli_id" value="{{#cliente_id user 1}}{{/cliente_id}}">
+<input type="hidden" id="manual" name="manual" value="{{sensores.estado_manual}}">
+<input type="hidden" id="automatico" name="automatico" value="{{sensores.estado_automatico}}">
+<input type="hidden" id="valvula_id" name="valvula" value="{{sensores.valvula}}">
+<input type="hidden" id="aux" name="aux" value="0">
+<input type="hidden" id="riego_cultivo" name="riego_cultivo" value="{{ sensores.riego_cultivo}}">
+<input type="hidden" id="cultivo_id" name="cultivo_id" value="{{sensores.cultivo_id}}">
+
+<hr>
+<!-- Inicio Modal Modulo!-->
+<div class="modal fade" id="Riego" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header text-primary">
+                <h5 class="modal-title " id="exampleModalLabel">Registrar Riego</h5>
+            </div>
+
+            <form id="forRol">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div>
+                            <select name="cultivo" id="cultivo" class="form-control form-control-user">
+                            </select>
+                        </div>
+                        <div id="grupo_cultivo"></div>
+                    </div>
+
+                </div>
+                <div class="modal-footer" id="BotonesCrear">
+                    <button type="button" class="btn btn-secondary btn-icon-split btn-sm" id="btn_Cerrar"
+                        data-bs-dismiss="modal">
+                        <span class="icon text-white-50">
+                            <i class="fa fa-window-close"></i>
+                        </span>
+                        <span class="text">Cerrar</span>
+                    </button>
+                    <button type="submit" value="CrearRiego" class="btn btn-primary btn-icon-split btn-sm"
+                        id="btn_CrearRiego">
+                        <span class="icon text-white-50">
+                            <i class="fa fa-save"></i>
+                        </span>
+                        <span class="text">Guardar</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    const btnCrear = document.querySelector("#btn_Crear");
+    const btnCrearRiego = document.querySelector("#btn_CrearRiego");
+    const btn_activar_aut = document.querySelector("#btn_activar_aut");
+    const btn_activar_man = document.querySelector("#btn_activar_man");
+    const btn_desactivar_man = document.querySelector("#btn_desactivar_man");
+    const btn_eliminar_riego = document.querySelector("#btn_eliminar_riego");
+    const btn_desactivar_aut = document.querySelector("#btn_desactivar_aut");
+    function SelectCultivos() {
+        let rol = document.getElementById("cultivo");
+        let mensaje = " <option selected value='0'>Escoga el cultivo...</option>";
+        var URLRoles = "/GestionCultivo/Cultivos";
+        $.ajax({
+            url: URLRoles,
+            type: "get",
+            dataType: "json",
+            success: function (response) {
+                response.forEach(cultivo => {
+                    mensaje += "<option value='" + cultivo.cul_id + "'>" + cultivo.cul_nombre + "</option>";
+                });
+                rol.innerHTML = mensaje;
+            }
+        });
+
+    }
+
+    function HumedadMedia(fecha) {
+        let url = "/HumedadSuelo/nodo";
+        $.ajax({
+            url: url,
+            type: "post",
+            dataType: "json",
+            data: {
+                fecha
+            },
+            success: function (res) {
+                const promedio = Math.ceil((res.nodo_a + res.nodo_b) / 2);
+                $('#temperatura_media_a').val(Math.ceil(res.nodo_a) + "  % ");
+                $('#temperatura_media_b').val(Math.ceil(res.nodo_b) + "  % ");
+                $('#temperatura_promedio').val(Math.ceil(promedio) + "  % ");
+            }
+        });
+    }
+
+    btn_activar_aut.addEventListener("click", function (e) {
+        e.preventDefault();
+        Swal.fire({
+            title: "Activar Automatización riego?",
+            text: "Estas seguro!",
+            icon: "info",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Activar",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const cli_id = $("#cli_id").val();
+                const URL = "/ActivacionRiego/RiegoAutomaticoActivado/" + cli_id;
+                $.ajax({
+                    url: URL,
+                    type: "get",
+                    success: function (res) {
+                        document.querySelector("#valvula").innerHTML = "<h5>Riego Automatizado Activado</h5>";
+                        $("#btn_desactivar_aut").attr("disabled", false);
+                        $("#btn_activar_aut").attr("disabled", true);
+                        $("#btn_activar_man").attr("disabled", true);
+                        $("#btn_eliminar_riego").attr("disabled", true);
+                    }
+                })
+            }
+        });
+    });
+
+
+
+    btn_desactivar_man.addEventListener("click", function (e) {
+        e.preventDefault();
+        Swal.fire({
+            title: "Desactivar Riego Manual?",
+            text: "Estas seguro!",
+            icon: "error",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Desactivar",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const cli_id = $("#cli_id").val();
+                $.ajax({
+                    url: "/ActivacionRiego/DesactivarManual/" + cli_id,
+                    type: "get",
+                    success: function (res) {
+                        if (res.response == "success") {
+                            toastr["success"](res.mensaje);
+                            $("#btn_desactivar_man").attr("disabled", true);
+                            $("#btn_activar_aut").attr("disabled", false);
+                            $("#btn_activar_man").attr("disabled", false);
+                            $("#btn_eliminar_riego").attr("disabled", false);
+                            document.querySelector("#valvula").innerHTML = "<h5>Esperando activación electrovalvula.....</h5>";
+                        }
+                    },
+                });
+            }
+        });
+    });
+    btn_eliminar_riego.addEventListener("click", function (e) {
+        Swal.fire({
+            title: "Eliminar registro cultivo?",
+            text: "Estas seguro!",
+            icon: "error",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Eliminar!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const cli_id = $("#cli_id").val();
+                const URL = "/ActivacionRiego/Eliminar/" + cli_id;
+                $.ajax({
+                    url: URL,
+                    type: "get",
+                    success: function (res) {
+                        if (res.response == "success") {
+                            toastr["success"](res.mensaje);
+                            $("#btn_activar_aut").attr("disabled", true);
+                            $("#btn_desactivar_aut").attr("disabled", true);
+                            $("#btn_activar_man").attr("disabled", true);
+                            $("#btn_desactivar_man").attr("disabled", true);
+                            $("#CrearCultivoRiego").attr("disabled", false);
+                            $("#btn_eliminar_riego").attr("disabled", true);
+                            document.querySelector("#datos").innerHTML = "";
+                        }
+                    }
+
+                });
+            }
+        });
+
+    });
+
+    btn_activar_man.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        Swal.fire({
+            title: "Activar electrovalvula Manual?",
+            text: "Estas seguro!",
+            icon: "info",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Activar",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const cli_id = $("#cli_id").val();
+                $.ajax({
+                    url: "/ActivacionRiego/ActivarManual/" + cli_id,
+                    type: "get",
+                    success: function (res) {
+                        if (res.response == "success") {
+                            toastr["success"](res.mensaje);
+                            $("#btn_desactivar_man").attr("disabled", false);
+                            $("#btn_desactivar_aut").attr("disabled", true);
+                            $("#btn_activar_aut").attr("disabled", true);
+                            $("#btn_activar_man").attr("disabled", true);
+                            $("#btn_eliminar_riego").attr("disabled", true);
+                            document.querySelector("#valvula").innerHTML = "<h5>Regando manualmente..</h5>";
+                        }
+                    },
+                });
+            }
+        });
+    });
+
+    btnCrearRiego.addEventListener("click", function (e) {
+        e.preventDefault();
+        var URL = "/ActivacionRiego/RiegoCultivo";
+        $("#btn_activar_aut").attr("disabled", false);
+        $("#btn_activar_man").attr("disabled", false);
+        const cli_id = $("#cli_id").val();
+        const cul_id = $("#cultivo").val();
+        $.ajax({
+            url: URL,
+            type: "post",
+            dataType: "json",
+            data: {
+                cli_id, cul_id
+            }, success: function (res) {
+                $('#cultivoRiego').val(res.id);
+                ActivacionCultivo();
+                $("#Riego").modal("hide");
+            }
+        });
+    });
+
+    btn_desactivar_aut.addEventListener("click", function (e) {
+        e.preventDefault();
+
+
+        Swal.fire({
+            title: "Desactivar Riego Automatico?",
+            text: "Estas seguro!",
+            icon: "error",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Desactivar",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var URL = "/ActivacionRiego/DesactivarActumatico";
+                $.ajax({
+                    url: URL,
+                    type: "get",
+                    success: function (res) {
+                        $("#btn_desactivar_aut").attr("disabled", true);
+                        $("#btn_activar_aut").attr("disabled", false);
+                        $("#btn_activar_man").attr("disabled", false);
+                        $("#btn_eliminar_riego").attr("disabled", false);
+                    }
+                });
+            }
+        });
+    });
+
+    function ActivacionCultivo() {
+        const cli_id = $("#cli_id").val();
+        let id = $('#cultivoRiego').val()
+        VerificadorTemp(cli_id);
+        if ($('#riego_cultivo').val() == 1) {
+            document.querySelector("#valvula").innerHTML = "<h5>El riego se encuentra activado por otro usuario</h5>";
+            $("#CrearCultivoRiego").attr("disabled", true);
+
+        } else {
+            $("#CrearCultivoRiego").attr("disabled", false);
+        }
+
+        const URL = "/ActivacionRiego/ListaRiegoCultivo/" + cli_id;
+        $.ajax({
+            url: URL,
+            type: "get",
+            dataType: "json",
+            success: function (res) {
+                if ($('#aux').val() == cli_id) {
+
+
+                    document.querySelector("#datos").innerHTML = "<p> Creado por : " + res.cli_nombre + " " + res.cli_apellido + " </p>" + "<p>Cultivo : " + res.cul_nombre + " </p>";
+                    const manual = $('#manual').val();
+                    const automatico = $('#automatico').val();
+
+                    if (manual == 1 && automatico == 0) {
+                        $("#btn_desactivar_man").attr("disabled", false);
+                        $("#btn_desactivar_aut").attr("disabled", true);
+                        $("#btn_activar_aut").attr("disabled", true);
+                        $("#btn_activar_man").attr("disabled", true);
+                        $("#btn_eliminar_riego").attr("disabled", true);
+                        $("#btn_CrearRiego").attr("disabled", true);
+                        $("#CrearCultivoRiego").attr("disabled", true);
+                        document.querySelector("#valvula").innerHTML = "<h5>Regando manualmente..</h5>";
+                    }
+                    if (manual == 0 && automatico == 1) {
+                        $("#btn_desactivar_man").attr("disabled", true);
+                        $("#btn_desactivar_aut").attr("disabled", false);
+                        $("#btn_activar_aut").attr("disabled", true);
+                        $("#btn_activar_man").attr("disabled", true);
+                        $("#btn_eliminar_riego").attr("disabled", true);
+                        $("#btn_CrearRiego").attr("disabled", true);
+
+                        document.querySelector("#valvula").innerHTML = "<h5>Riego Automatico Activado..</h5>";
+                        if ($("#valvula_id").val() == 0) {
+                            document.querySelector("#valvula").innerHTML = "<h5>Esperando Regar..</h5>";
+                        } else {
+                            document.querySelector("#valvula").innerHTML = "<h5>Regando Automaticamente..</h5>";
+                        }
+                    }
+
+                    if (manual == 0 && automatico == 0) {
+                        $("#btn_desactivar_man").attr("disabled", true);
+                        $("#btn_desactivar_aut").attr("disabled", true);
+                        $("#btn_activar_aut").attr("disabled", false);
+                        $("#btn_activar_man").attr("disabled", false);
+                        $("#btn_eliminar_riego").attr("disabled", false);
+                        $("#CrearCultivoRiego").attr("disabled", true);
+                        document.querySelector("#valvula").innerHTML = "<h5>Cultivo listo Para regar..</h5>";
+                    }
+
+                } else {
+                    $("#btn_CrearRiego").attr("disabled", true);
+
+                }
+            }
+        });
+    }
+
+    function VerificadorTemp(cli_id) {
+        const URL = "/ActivacionRiego/BuscarActivador/" + cli_id;
+        $.ajax({
+            url: URL,
+            type: 'get',
+            success: function (res) {
+                $('#aux').val(res.cli_id);
+            }
+        });
+    }
+    window.onload = ActivacionCultivo;
+</script>

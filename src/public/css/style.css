@@ -1,0 +1,49 @@
+body{
+    margin: 0;
+    padding: 0;
+    background-color:#f3f;
+    font-family: 'Raleway',sans-serif;
+    color:#000;
+}
+.banner{
+    height: 100vh;
+    width: 100%;
+   background: url('/imagenes/internetcosas1.jpg');
+    background-position: center;
+    background-size: cover;
+    /*background-repeat: fixed;*/
+    background-repeat: no-repeat;
+}
+.banner .navbar{
+    margin-top: 2%;
+}
+.banner .navbar-nav{
+    margin-right: 5%;
+    margin-top: 3%;
+    
+}
+.banner .collapse .navbar-nav li a{
+    color: #fff;
+    font-size: 1.2em;
+}
+.banner .nav-link{
+    color: #fff;
+    font-size: 1.2em;    
+}
+.weather-card{
+    margin: 20px 20px;
+    background: var(--text-color);
+    color: var(--bg-color);
+    padding: 20px;
+    text-align: center;
+}
+.city{
+    font-size: 2.5rem;
+}
+
+th,td{
+    padding: 1px;
+    border: 1px solid black; 
+    border-collapse:collapse;
+}
+

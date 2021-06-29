@@ -1,0 +1,415 @@
+<button type="button" onclick="BotonCrear()" class="btn btn-primary btn-icon-split btn-sm" data-bs-toggle="modal"
+    data-bs-target="#ModuloTemperatura">
+    <span class="icon text-white-50">
+        <i class="fas fa-user-plus"></i>
+    </span>
+    <span class="text">Resgistrar Temperatura</span>
+</button>
+<hr>
+ <div class="form-group humedad_suelo" id="Humedad_Calculos">
+     <div class="row">
+   <div class="col-sm-4 mb-4 mb-sm-0">
+        <label >Temperatura Maxima :  </label>
+        <input type="text" id="temperatura_maxima" name="temperatura_media" size="5" disabled>
+      </div>
+        <div class="col-sm-4 mb-4 mb-sm-0">
+        <label >Temperatura Media : </label>
+          <input type="text" id="temperatura_media" name="temperatura_media" size="5" disabled>
+      </div>
+        <div class="col-sm-4 mb-4 mb-sm-0">
+        <label >Temperatura Minima:  </label>
+          <input type="text" id="temperatura_minima" name="temperatura_minima" size="5" disabled>
+      </div>
+     </div>
+   
+ </div>
+<!-- Inicio Modal Cultivo!-->
+<div class="modal fade" id="ModuloTemperatura" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header text-primary">
+                <h5 class="modal-title " id="exampleModalLabel"></h5>
+            </div>
+
+            <form id="forTemperatura">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div>
+                            <input type="text" class="form-control form-control-user" id="temperatura" name="temperatura"
+                                placeholder="0 ° C">
+                            <input type="hidden" class="form-control form-control-user" id="Identificador"
+                                name="Identificador">
+                        </div>
+                        <div id="grupo_temperatura">
+                        </div>
+                    </div>
+                       <div class="form-group row">
+                        <div class="col-sm-6 mb-3 mb-sm-0">
+                            <div>
+                                <input type="date" min="2021-03-25" max="2025-05-25" class="form-control form-control-user" id="fecha" name="fecha" >
+                            </div>
+                            <div id="grupo_fecha"></div>
+                        </div>
+                        <div class="col-sm-6 ">
+                            <div>
+                                <input type="time" class="form-control form-control-user" id="hora" name="hora"  min="09:00" max="18:00" step="600">
+                            </div>
+                            <div id="grupo_hora"></div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer" id="BotonesCrear">
+                    <button type="button" class="btn btn-secondary btn-icon-split btn-sm" id="btn_Cerrar"
+                        data-bs-dismiss="modal">
+                        <span class="icon text-white-50">
+                            <i class="fa fa-window-close"></i>
+                        </span>
+                        <span class="text">Cerrar</span>
+                    </button>
+                    <button type="submit" value="CrearTemperatura" class="btn btn-primary btn-icon-split btn-sm"
+                        id="btn_Crear">
+                        <span class="icon text-white-50">
+                            <i class="fa fa-save"></i>
+                        </span>
+                        <span class="text">Guardar</span>
+                    </button>
+                   
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--Fin Modal Modulo-->
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3 centro">
+        <h6 class="m-0 font-weight-bold text-primary">Temperatura</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <div class="input-group">
+                <form class="form-inline my-2 my-lg-0">
+                    <input type="date" id="txt_buscar" class="form-control mr-sm-2">
+                </form>
+                <button type="button" onclick="Calculos_HumedadA()" class="btn btn-primary btn-icon-split btn-sm">
+                <span class="icon text-white-50">
+                <i class="fas fa-search"></i>
+                </span>
+                <span class="text">Buscar</span>
+                </button>
+                
+
+            </div>
+                
+             <div id="grupo_txtBuscar"></div>
+            <br>
+            <table class="table table-bordered" id="dataTable1" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Temperatura</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Accion</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    let btn_verificador = "Actualizar";
+    const btnCrear = document.querySelector('#btn_Crear');
+    const btnCerrar = document.querySelector('#btn_Cerrar'); 
+    function ListaTemperatura() {
+        var URL = "/Temperatura/ListaTem";
+        $.ajax({
+            url: URL,
+            type: "get",
+            dataType: "json",
+            success: function (response) {
+                let tbody = $('tbody');
+                tbody.html('');
+                var a=1;
+                response.forEach(tem => {
+                    
+                    tbody.append(`
+                    <tr>
+                         <td id="fnombre">${a++}</td>
+                        <td id="fnombre">${tem.tem_temperatura} ° C</td>
+                        <td id="fapellido"> ${tem.tem_fecha}</td>
+                        <td id="fapellido"> ${tem.tem_hora}</td>
+                        <td>
+                            <a id="Actualizar" value="CrearUsuario" title="Actualizar" class="tn btn-primary btn-circle"  data-bs-toggle="modal" data-bs-target="#ModuloTemperatura"
+                               onclick="ActualizarModuloCultivo(${tem.tem_id})">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                            <a class="btn btn-danger btn-circle"
+                               onclick="eliminarNodoA(${tem.tem_id})">
+                                <i class="fas fa-trash" title="Eliminar"></i>
+                            </a>
+                        </td>
+                    </tr>
+                `)
+                })
+            }, error: function (e) {
+                console.log(e.readyState);
+            }
+        });
+    }
+
+    btnCrear.addEventListener('click', function (e) {
+        e.preventDefault();
+        let temperatura=$("#temperatura").val();
+        let fecha=$("#fecha").val();
+        let hora=$("#hora").val();
+
+         if(campoVacio(temperatura, "grupo_temperatura", "Ingrese la temperatura")){
+              if(validarN(temperatura, "grupo_temperatura", "Solo se permiten numeros de 2 digitos")){
+                  if(campoVacio(fecha, "grupo_fecha", "Seleccione una fecha valida")){
+                       if(campoVacio(hora, "grupo_hora", "Seleccione una hora valida")){
+
+
+                            if(btn_verificador=="CrearTemperatura"){
+                            var URL="/Temperatura/Crear";
+                            $.ajax({
+                                url:URL,
+                                type:"post",
+                                dataType:"json",
+                                data:{
+                                    temperatura,fecha,hora
+                                },
+                                success:function(res){
+                                    if(res.response=="success"){
+                                        toastr["success"](res.mensaje)
+                                        $('#ModuloTemperatura').modal('hide');
+                                        $('#forTemperatura')[0].reset();
+                                        ListaTemperatura();
+                                        limpiarHtml();
+                                        LimpiarCampos();
+                                        
+                                    }
+
+                                }
+
+                            });
+
+                        }else{
+                             let Identificador = $('#Identificador').val();
+                            var URL = "/Temperatura/Actualizar/" + Identificador;
+                             $.ajax({
+                                url:URL,
+                                type:"post",
+                                dataType:"json",
+                                data:{
+                                     temperatura,fecha,hora
+                                },
+                                success:function(res){
+                                    if(res.response=="success"){
+                                        toastr["success"](res.mensaje)
+                                        $('#ModuloTemperatura').modal('hide');
+                                        $('#forTemperatura')[0].reset();
+                                        ListaTemperatura();
+                                        limpiarHtml();
+                                        LimpiarCampos();
+                                    }
+
+                                }
+
+                            });
+
+                        }
+
+
+                       }
+
+
+                  }
+
+              }
+
+
+         }
+
+      
+    });
+
+    function ActualizarModuloCultivo(id) {
+        btn_verificador = "Actualizar";
+        var a = document.getElementById("exampleModalLabel");
+        a.innerHTML = "Actualizar Temperatura";
+        const URL = "/Temperatura/Actualizar/" + id;
+        $.ajax({
+            url: URL,
+            type: "get",
+            success: function (res) {
+                
+                var a=res.tem_fecha.split("T");
+                $("#temperatura").val(res.tem_temperatura);
+                $("#fecha").val(a[0]);
+                 $("#hora").val(res.tem_hora);
+                $("#Identificador").val(id);
+            }
+        });
+    }
+
+    function eliminarNodoA(id) {
+        const URL = "/Temperatura/Eliminar/" + id;
+        Swal.fire({
+            title: 'Estas seguro?',
+            text: "No podrás revertir esto!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, bórralo!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: URL,
+                    type: "get",
+                    success: function (res) {
+                        if (res.response == "success") {
+                            Swal.fire(
+                                'Eliminado!',
+                                'Temperatura eliminado.',
+                                'con exito'
+                            )
+                            ListaTemperatura();
+                        }
+                    }
+                });
+            }
+        })
+    }
+
+    function Calculos_HumedadA()
+    {
+        let txt_buscar= $('#txt_buscar').val();
+        if(campoVacio(txt_buscar, "grupo_txtBuscar", "Ingrese una fecha valida")){
+        HumedadMaxima(txt_buscar);
+        HumedadMinima(txt_buscar);
+        HumedadMedia(txt_buscar);
+        ListaFechaTemperatura(txt_buscar);
+        }
+       
+      
+    }
+
+    function HumedadMaxima(fecha){
+        let url="/Temperatura/HumedadMaxima";
+        $.ajax({
+             url:url,
+            type:"post",
+            dataType:"json",
+            data:{
+            fecha
+            },
+            success:function(res){
+                $('#temperatura_maxima').val(res.temperatura_maxima+ "  % ");
+            }
+        });
+    }
+
+    function HumedadMedia(fecha){
+        let url="/Temperatura/HumedadMedia";
+        $.ajax({
+             url:url,
+            type:"post",
+            dataType:"json",
+            data:{
+            fecha
+            },
+            success:function(res){
+               
+                  $('#temperatura_media').val(Math.ceil(res.temperatura_media)+"  % ");
+            }
+        });
+    }
+    
+    function HumedadMinima(fecha){
+        let url="/Temperatura/HumedadMinima";
+        $.ajax({
+             url:url,
+            type:"post",
+            dataType:"json",
+            data:{
+            fecha
+            },
+            success:function(res){
+                $('#temperatura_minima').val(res.temperatura_minima+ "  % ");
+            }
+        });
+    }
+    
+    function ListaFechaTemperatura(fecha){
+        let url="/Temperatura/ListaTemperatura";
+          $.ajax({
+             url:url,
+            type:"post",
+            dataType:"json",
+            data:{
+            fecha
+            },
+            success:function(res){
+                 let tbody = $('tbody');
+                tbody.html('');
+                var a=1;
+                res.forEach(temperatura => { 
+                    tbody.append(`
+                    <tr>
+                         <td id="fnombre">${a++}</td>
+                        <td id="fnombre">${temperatura.tem_temperatura} ° C</td>
+                        <td id="fapellido"> ${temperatura.tem_fecha}</td>
+                        <td id="fapellido"> ${temperatura.tem_hora}</td>
+                        <td>
+                            <a id="Actualizar" value="CrearUsuario" title="Actualizar" class="tn btn-primary btn-circle"  data-bs-toggle="modal" data-bs-target="#ModuloTemperatura"
+                               onclick="ActualizarModuloCultivo(${temperatura.tem_id})">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                            <a class="btn btn-danger btn-circle"
+                               onclick="eliminarNodoA(${temperatura.tem_id})">
+                                <i class="fas fa-trash" title="Eliminar"></i>
+                            </a>
+                        </td>
+                    </tr>
+                `)
+                })     
+            }
+        });
+    }
+
+    function BotonCrear() {
+        let nombre = $('#btn_Crear').val();
+        var a = document.getElementById("exampleModalLabel");
+        a.innerHTML = "Registrar Temperatura";
+        btn_verificador = nombre;
+        LimpiarCampos();
+    }
+
+    function limpiarHtml() {
+        document.getElementById("grupo_temperatura").innerHTML = "";
+        document.getElementById("grupo_hora").innerHTML = "";
+        document.getElementById("grupo_fecha").innerHTML = "";
+        document.getElementById("grupo_txtBuscar").innerHTML = "";
+    }
+
+    btnCerrar.addEventListener("click", function (e) {
+        limpiarHtml();
+        LimpiarCampos();
+    });
+    
+    function LimpiarCampos() {
+        $("#temperatura").val("");
+        $("#hora").val("");
+        $("#fecha").val("");  
+        $('#temperatura_minima').val("");
+        $('#temperatura_media').val("");
+        $('#temperatura_maxima').val("");
+        $('#txt_buscar').val("")
+    }
+
+    window.onload = ListaTemperatura;
+</script>

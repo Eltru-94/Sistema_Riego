@@ -1,0 +1,126 @@
+<div class="container-fluid">
+    <h1 class="text-center">Riego</h1>
+    <br>
+    <div class="row">
+
+        <div class="col-md-6 col-sm-6">
+            <button type="button" class="btn btn-primary btn-icon-split btn-sm" id="btn_conectar">
+                <span class="icon text-white-50">
+                    <i class="fas fa-user-plus"></i>
+                </span>
+                <span class="text">Conectar</span>
+            </button>
+        </div>
+        <div class="col-md-6 col-sm-6">
+            <button type="button" class="btn btn-secondary btn-icon-split btn-sm" id="btn_desconectar">
+                <span class="icon text-white-50">
+                    <i class="fas fa-user-plus"></i>
+                </span>
+                <span class="text">Desconectar</span>
+            </button>
+        </div>
+
+    </div>
+</div>
+<br>
+<br>
+<br>
+<div class="container">
+    <div class="row">
+
+        <div style="background-image: url('/imagenes/temperatura.jpg')" ;
+            class="card text-white text-center bg-primary mb-3" style="max-width: 18rem;">
+            <h3>Temperatura</h3>
+            <div class="card-body">
+                <div id="chart_div" style="width: 200px; height: 120px;"></div>
+                <h5 class="text-right">safdsafsaf</h5>
+                <h1 id="temp1" class="display-1 p-4 text-right"> 0 % </h1>
+            </div>
+
+
+        </div>
+        <div style="background-image: url('/imagenes/humedad_a.jpg')" ;
+            class="card text-white text-center bg-primary mb-3" style="max-width: 18rem;">
+            <h3>Humedad</h3>
+            <div class="card-body">
+                <h1 id="temp2" class="display-1 p-4 "> 0 % </h1>
+            </div>
+        </div>
+        <div style="background-image: url('/imagenes/humedad_s.jpg')" ;
+            class="card text-white text-center bg-primary mb-3" style="max-width: 18rem;">
+            <h3>Humedad Suuuelo</h3>
+            <div class="card-body">
+                <h1 id="temp3" class="display-1 p-4 "> 0 % </h1>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+</div>
+
+<script>
+    const btn_conectar = document.querySelector("#btn_conectar");
+    const btn_desconectar = document.querySelector("#btn_desconectar");
+    btn_conectar.addEventListener('click', (e) => {
+        e.preventDefault();
+        const URL = "/ActivacionRiego/conectar/";
+        alert("conectar");
+        $.ajax({
+            url: URL,
+            type: "get",
+            success: function (res) {
+                console(res.mensaje);
+            }
+
+
+        });
+    });
+    btn_desconectar.addEventListener('click', (e) => {
+        e.preventDefault();
+        let temperatura = document.getElementById("temp1");
+        let humedad = document.getElementById("temp2");
+        let humedad_s = document.getElementById("temp3");
+        const URL = "/ActivacionRiego/desconectar/";
+        alert("desconectar");
+        $.ajax({
+            url: URL,
+            type: "get",
+            success: function (res) {
+                console(res.mensaje);
+            }
+
+
+        });
+        temperatura.innerHTML = " 0 ° C";
+        humedad.innerHTML = " 0 %";
+        humedad_s.innerHTML = " 0 %";
+    });
+
+    google.charts.load('current', { 'packages': ['gauge'] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+
+        var data = google.visualization.arrayToDataTable([
+            ['Label', 'Value'],
+            ['Temperatura', 20]
+        ]);
+
+        var options = {
+            min: 0, max: 50,
+            width: 200, height: 100,
+            redFrom: 90, redTo: 100,
+            yellowFrom: 55, yellowTo: 80,
+            minorTicks: 5
+        };
+
+        var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+
+
+    }
+</script>

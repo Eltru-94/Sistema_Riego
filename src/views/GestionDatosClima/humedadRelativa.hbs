@@ -1,0 +1,399 @@
+<button type="button" onclick="BotonCrear()" class="btn btn-primary btn-icon-split btn-sm" data-bs-toggle="modal"
+    data-bs-target="#ModuloHR">
+    <span class="icon text-white-50">
+        <i class="fas fa-user-plus"></i>
+    </span>
+    <span class="text">Resgistrar Humedad Relativa</span>
+</button>
+<hr>
+<div class="form-group humedad_suelo" id="Humedad_Calculos">
+    <div class="row">
+        <div class="col-sm-4 mb-4 mb-sm-0">
+            <label>HR Maxima : </label>
+            <input type="text" id="hr_maxima" name="hr_media" size="5" disabled>
+        </div>
+        <div class="col-sm-4 mb-4 mb-sm-0">
+            <label>HR Media : </label>
+            <input type="text" id="hr_media" name="hr_media" size="5" disabled>
+        </div>
+        <div class="col-sm-4 mb-4 mb-sm-0">
+            <label>HR Minima: </label>
+            <input type="text" id="hr_minima" name="hr_minima" size="5" disabled>
+        </div>
+    </div>
+
+</div>
+<!-- Inicio Modal Cultivo!-->
+<div class="modal fade" id="ModuloHR" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header text-primary">
+                <h5 class="modal-title " id="exampleModalLabel"></h5>
+            </div>
+
+            <form id="forHR">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div>
+                            <input type="text" class="form-control form-control-user" id="hr" name="hr"
+                                placeholder="0 %">
+                            <input type="hidden" class="form-control form-control-user" id="Identificador"
+                                name="Identificador">
+                        </div>
+                        <div id="grupo_hr">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-6 mb-3 mb-sm-0">
+                            <div>
+                                <input type="date" min="2021-03-25" max="2025-05-25"
+                                    class="form-control form-control-user" id="fecha" name="fecha">
+                            </div>
+                            <div id="grupo_fecha"></div>
+                        </div>
+                        <div class="col-sm-6 ">
+                            <div>
+                                <input type="time" class="form-control form-control-user" id="hora" name="hora"
+                                    min="09:00" max="18:00" step="600">
+                            </div>
+                            <div id="grupo_hora"></div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer" id="BotonesCrear">
+                    <button type="button" class="btn btn-secondary btn-icon-split btn-sm" id="btn_Cerrar"
+                        data-bs-dismiss="modal">
+                        <span class="icon text-white-50">
+                            <i class="fa fa-window-close"></i>
+                        </span>
+                        <span class="text">Cerrar</span>
+                    </button>
+                    <button type="submit" value="CrearHR" class="btn btn-primary btn-icon-split btn-sm" id="btn_Crear">
+                        <span class="icon text-white-50">
+                            <i class="fa fa-save"></i>
+                        </span>
+                        <span class="text">Guardar</span>
+                    </button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--Fin Modal Modulo-->
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3 centro">
+        <h6 class="m-0 font-weight-bold text-primary">Humedad Relativa </h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <div class="input-group">
+                <form class="form-inline my-2 my-lg-0">
+                    <input type="date" id="txt_buscar" class="form-control mr-sm-2">
+                </form>
+                <button type="button" onclick="Calculos_HR()" class="btn btn-primary btn-icon-split btn-sm">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <span class="text">Buscar</span>
+                </button>
+
+
+            </div>
+
+            <div id="grupo_txtBuscar"></div>
+            <br>
+            <table class="table table-bordered" id="dataTable1" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Humedad Relativa</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Accion</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    let btn_verificador = "Actualizar";
+    const btnCrear = document.querySelector('#btn_Crear');
+    const btnCerrar = document.querySelector('#btn_Cerrar');
+
+
+    function ListaHR() {
+        var URL = "/HumedadRelativa/ListaHR";
+        $.ajax({
+            url: URL,
+            type: "get",
+            dataType: "json",
+            success: function (response) {
+                let tbody = $('tbody');
+                tbody.html('');
+                var a = 1;
+                response.forEach(hr => {
+
+                    tbody.append(`
+                    <tr>
+                         <td id="fnombre">${a++}</td>
+                        <td id="fnombre">${hr.hum_rel_valor} ° C</td>
+                        <td id="fapellido"> ${hr.hum_rel_fecha}</td>
+                        <td id="fapellido"> ${hr.hum_rel_hora}</td>
+                        <td>
+                            <a id="Actualizar" value="CrearUsuario" title="Actualizar" class="tn btn-primary btn-circle"  data-bs-toggle="modal" data-bs-target="#ModuloHR"
+                               onclick="ActualizarHR(${hr.hum_rel_id})">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                            <a class="btn btn-danger btn-circle"
+                               onclick="eliminarHR(${hr.hum_rel_id})">
+                                <i class="fas fa-trash" title="Eliminar"></i>
+                            </a>
+                        </td>
+                    </tr>
+                `)
+                })
+            }, error: function (e) {
+                console.log(e.readyState);
+            }
+        });
+    }
+
+
+
+    btnCrear.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        let valor_hr = $("#hr").val();
+        let fecha = $("#fecha").val();
+        let hora = $("#hora").val();
+
+        if (campoVacio(valor_hr, "grupo_hr", "Ingrese la Humedad Relativa")) {
+            if (validarN(valor_hr, "grupo_hr", "Solo se permiten numeros de 2 digitos")) {
+                if (campoVacio(fecha, "grupo_fecha", "Seleccione una fecha valida")) {
+                    if (campoVacio(hora, "grupo_hora", "Seleccione una hora valida")) {
+
+
+                        if (btn_verificador == "CrearHR") {
+                            var URL = "/HumedadRelativa/Crear";
+
+                            $.ajax({
+                                url: URL,
+                                type: "post",
+                                dataType: "json",
+                                data: {
+                                    valor_hr, fecha, hora
+                                },
+                                success: function (res) {
+                                    if (res.response == "success") {
+                                        toastr["success"](res.mensaje)
+                                        $('#ModuloHR').modal('hide');
+                                        $('#forHR')[0].reset();
+                                        ListaHR();
+                                        limpiarHtml();
+                                        LimpiarCampos();
+
+                                    }
+
+                                }
+
+                            });
+
+                        } else {
+                            let Identificador = $('#Identificador').val();
+                            var URL = "/HumedadRelativa/Actualizar/" + Identificador;
+                            $.ajax({
+                                url: URL,
+                                type: "post",
+                                dataType: "json",
+                                data: {
+                                    valor_hr, fecha, hora
+                                },
+                                success: function (res) {
+                                    if (res.response == "success") {
+                                        toastr["success"](res.mensaje)
+                                        $('#ModuloHR').modal('hide');
+                                        $('#forHR')[0].reset();
+                                        ListaHR();
+                                        limpiarHtml();
+                                        LimpiarCampos();
+                                    }
+
+                                }
+
+                            });
+
+                        }
+
+
+                    }
+
+
+                }
+
+            }
+
+
+        }
+
+
+    });
+
+    function ActualizarHR(id) {
+        btn_verificador = "Actualizar";
+        var a = document.getElementById("exampleModalLabel");
+        a.innerHTML = "Actualizar Humedad Relativa";
+        const URL = "/HumedadRelativa/Actualizar/" + id;
+        $.ajax({
+            url: URL,
+            type: "get",
+            success: function (res) {
+                var a = res.hum_rel_fecha.split("T");
+                $("#hr").val(res.hum_rel_valor);
+                $("#fecha").val(a[0]);
+                $("#hora").val(res.hum_rel_hora);
+                $("#Identificador").val(id);
+            }
+        });
+    }
+
+
+    function eliminarHR(id) {
+        const URL = "/HumedadRelativa/Eliminar/" + id;
+        Swal.fire({
+            title: 'Estas seguro?',
+            text: "No podrás revertir esto!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, bórralo!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: URL,
+                    type: "get",
+                    success: function (res) {
+                        if (res.response == "success") {
+                            Swal.fire(
+                                res.mensaje,
+                                res.accion,
+                                res.estado
+                            )
+                            ListaHR();
+                        }
+                    }
+                });
+            }
+        })
+    }
+    function Calculos_HR() {
+        let txt_buscar = $('#txt_buscar').val();
+        if (campoVacio(txt_buscar, "grupo_txtBuscar", "Ingrese una fecha valida")) {
+            ListaHRFecha(txt_buscar);
+            Promedio(txt_buscar);
+
+        }
+
+
+    }
+
+    function ListaHRFecha(fecha) {
+
+        let url = "/HumedadRelativa/ListaHR";
+        $.ajax({
+            url: url,
+            type: "post",
+            dataType: "json",
+            data: {
+                fecha
+            },
+            success: function (res) {
+                let tbody = $('tbody');
+                tbody.html('');
+                var a = 1;
+                res.forEach(hr => {
+
+                    tbody.append(`
+                    <tr>
+                         <td id="fnombre">${a++}</td>
+                        <td id="fnombre">${hr.hum_rel_valor} ° C</td>
+                        <td id="fapellido"> ${hr.hum_rel_fecha}</td>
+                        <td id="fapellido"> ${hr.hum_rel_hora}</td>
+                        <td>
+                            <a id="Actualizar" value="CrearUsuario" title="Actualizar" class="tn btn-primary btn-circle"  data-bs-toggle="modal" data-bs-target="#ModuloHR"
+                               onclick="ActualizarHR(${hr.hum_rel_id})">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                            <a class="btn btn-danger btn-circle"
+                               onclick="eliminarHR(${hr.hum_rel_id})">
+                                <i class="fas fa-trash" title="Eliminar"></i>
+                            </a>
+                        </td>
+                    </tr>
+                `)
+                })
+
+
+            }
+        });
+    }
+
+
+    btnCerrar.addEventListener("click", function (e) {
+        limpiarHtml();
+        LimpiarCampos();
+    });
+
+    function BotonCrear() {
+        let nombre = $('#btn_Crear').val();
+        var a = document.getElementById("exampleModalLabel");
+        a.innerHTML = "Registrar Humedad Relativa";
+        btn_verificador = nombre;
+        LimpiarCampos();
+    }
+    function limpiarHtml() {
+        document.getElementById("grupo_hr").innerHTML = "";
+        document.getElementById("grupo_hora").innerHTML = "";
+        document.getElementById("grupo_fecha").innerHTML = "";
+        document.getElementById("grupo_txtBuscar").innerHTML = "";
+    }
+    function LimpiarCampos() {
+        $("#hr").val("");
+        $("#hora").val("");
+        $("#fecha").val("");
+        $('#hr_minima').val("");
+        $('#hr_media').val("");
+        $('#hr_maxima').val("");
+        $('#txt_buscar').val("")
+    }
+
+    function Promedio(fecha) {
+
+        let URL = "/HumedadRelativa/CalculosDatos";
+        $.ajax({
+            url: URL,
+            type: "post",
+            dataType: "json",
+            data: {
+                fecha
+            },
+            success: function (res) {
+                $('#hr_maxima').val(res.max);
+                $('#hr_media').val(Math.ceil(res.promedio));
+                $('#hr_minima').val(res.min);
+
+
+
+            }
+        });
+    }
+    window.onload = ListaHR;
+</script>

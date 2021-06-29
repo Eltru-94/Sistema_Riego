@@ -1,0 +1,270 @@
+<button type="button" onclick="BotonCrear()" class="btn btn-primary btn-icon-split btn-sm" data-bs-toggle="modal"
+    data-bs-target="#Modulo">
+    <span class="icon text-white-50">
+        <i class="fas fa-user-plus"></i>
+    </span>
+    <span class="text">Resgistrar Modulo</span>
+</button>
+<hr>
+<!-- Inicio Modal Modulo!-->
+<div class="modal fade" id="Modulo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header text-primary">
+                <h5 class="modal-title " id="exampleModalLabel"></h5>
+            </div>
+
+            <form id="forModulo">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div>
+                            <input type="text" class="form-control form-control-user" id="modulo" name="modulo"
+                                placeholder="Modulo : ">
+                            <input type="hidden" class="form-control form-control-user" id="Identificador"
+                                name="Identificador">
+                        </div>
+                        <div id="grupo_modulo">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleFormControlTextarea1">Descripción rol </label>
+                        <textarea class="form-control" name="descripcion" id="descripcion" rows="3"></textarea>
+                    </div>
+
+                </div>
+                <div class="modal-footer" id="BotonesCrear">
+                    <button type="button" class="btn btn-secondary btn-icon-split btn-sm" id="btn_Cerrar"
+                        data-bs-dismiss="modal">
+                        <span class="icon text-white-50">
+                            <i class="fa fa-window-close"></i>
+                        </span>
+                        <span class="text">Cerrar</span>
+                    </button>
+                    <button type="submit" value="CrearModulo" class="btn btn-primary btn-icon-split btn-sm"
+                        id="btn_Crear">
+                        <span class="icon text-white-50">
+                            <i class="fa fa-save"></i>
+                        </span>
+                        <span class="text">Guardar</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--Fin Modal Modulo-->
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3 centro">
+        <h6 class="m-0 font-weight-bold text-primary">Modulo</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <div class="input-group">
+                <form class="form-inline my-2 my-lg-0">
+                    <input type="search" id="txt_Buscar" onkeyup="Buscar()" class="form-control mr-sm-2"
+                        placeholder="Buscar">
+                </form>
+
+            </div>
+
+
+            <br>
+            <table class="table table-bordered" id="dataTable1" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Modulo</th>
+                        <th>Descripcion</th>
+                        <th>Accion</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    let btn_verificador = "Actualizar";
+    const btnCrear = document.querySelector('#btn_Crear');
+    const btnCerrar = document.querySelector('#btn_Cerrar');
+    function ListaModulo() {
+        var URL = "/modulo/modulos";
+        $.ajax({
+            url: URL,
+            type: "get",
+            dataType: "json",
+            success: function (response) {
+                let tbody = $('tbody');
+                tbody.html('');
+                response.forEach(modulos => {
+                    tbody.append(`
+                    <tr>
+                        <td id="fnombre">${modulos.mod_modulo}</td>
+                        <td id="fapellido"> ${modulos.mod_descripcion}</td>
+                        <td>
+                            <a id="Actualizar" value="CrearUsuario" class="tn btn-primary btn-circle"  data-bs-toggle="modal" data-bs-target="#Modulo"
+                               onclick="ActualizarModulo(${modulos.mod_id})">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                            <a class="btn btn-danger btn-circle"
+                               onclick="eliminarUsuario(${modulos.mod_id})">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                `)
+                })
+            }, error: function (e) {
+                console.log(e.readyState);
+            }
+        });
+    }
+    function Buscar() {
+        let buscar = $('#txt_Buscar').val();
+        const URL = "/modulo/buscar";
+        $.ajax({
+            url: URL,
+            type: "post",
+            data: { buscar },
+            success: function (response) {
+                let tbody = $('tbody');
+                tbody.html('');
+                response.forEach(modulos => {
+                    tbody.append(`
+                   <tr>
+                        <td id="fnombre">${modulos.mod_modulo}</td>
+                        <td id="fapellido"> ${modulos.mod_descripcion}</td>
+                        <td>
+                            <a id="Actualizar" value="CrearUsuario" class="tn btn-primary btn-circle"  data-bs-toggle="modal" data-bs-target="#Usuario"
+                               onclick="ActualizarUsuario(${modulos.mod_id})">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                            <a class="btn btn-danger btn-circle"
+                               onclick="eliminarUsuario(${modulos.mod_id})">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                `)
+                })
+            }
+        });
+    }
+    btnCrear.addEventListener('click', function (e) {
+        e.preventDefault();
+        let modulo = $('#modulo').val();
+        let descripcion = $('#descripcion').val();
+        document.getElementById('grupo_modulo').innerHTML = "";
+        var ver = campoVacio(modulo, "grupo_modulo")
+        if (ver) {
+            if (btn_verificador == "CrearModulo") {
+                var ban1 = validarLetra(modulo, "grupo_modulo");
+                if (ban1) {
+                    var URL = "/modulo/crear";
+                    $.ajax({
+                        url: URL,
+                        type: "post",
+                        dataType: "json",
+                        data: {
+                            modulo,
+                            descripcion
+                        },
+                        success: function (res) {
+                            if (res.response == "success") {
+                                toastr["success"](res.mensaje)
+                                $('#Modulo').modal('hide');
+                                $('#forModulo')[0].reset();
+                                ListaModulo();
+                            }
+                        }
+                    })
+                }
+            } else {
+                let Identificador = $('#Identificador').val();
+                var URL = "/modulo/actualizar/" + Identificador;
+                $.ajax({
+                    url: URL,
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        modulo,
+                        descripcion,
+                    },
+                    success: function (res) {
+                        if (res.response == "success") {
+                            toastr["success"](res.mensaje)
+                            $('#Modulo').modal('hide');
+                            $('#forModulo')[0].reset();
+                            ListaModulo();
+                        }
+                    }
+                });
+            }
+        }
+    });
+    function BotonCrear() {
+        let nombre = $('#btn_Crear').val();
+        var a = document.getElementById("exampleModalLabel");
+        a.innerHTML = "Registrar Modulo";
+        btn_verificador = nombre;
+        LimpiarCampos();
+    }
+    function LimpiarCampos() {
+        $("#modulo").val("");
+        $("#descripcion").val("");
+        $("#Identificador").val("");
+    }
+    function ActualizarModulo(id) {
+        btn_verificador = "Actualizar";
+        var a = document.getElementById("exampleModalLabel");
+        a.innerHTML = "Actualizar Modulo";
+        const URL = "/modulo/actualizar/" + id;
+        $.ajax({
+            url: URL,
+            type: "get",
+            success: function (res) {
+                $("#modulo").val(res.mod_modulo);
+                $("#descripcion").val(res.mod_descripcion);
+                $("#Identificador").val(id);
+            }
+        });
+    }
+    function eliminarUsuario(id) {
+        const URL = "/modulo/eliminar/" + id;
+        Swal.fire({
+            title: 'Estas seguro?',
+            text: "No podrás revertir esto!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, bórralo!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: URL,
+                    type: "get",
+                    success: function (res) {
+                        if (res.response == "success") {
+                            Swal.fire(
+                                'Eliminado!',
+                                'Modulo  eliminado.',
+                                'exito'
+                            )
+                            ListaModulo();
+                        }
+                    }
+                });
+            }
+        })
+    }
+    btnCerrar.addEventListener('click', function (e) {
+        document.getElementById('grupo_modulo').innerHTML = "";
+    });
+    window.onload = ListaModulo;
+</script>

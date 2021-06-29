@@ -1,0 +1,432 @@
+<button type="button" onclick="BotonCrear()" class="btn btn-primary btn-icon-split btn-sm" data-bs-toggle="modal"
+    data-bs-target="#ModuloHumedad">
+    <span class="icon text-white-50">
+        <i class="fas fa-user-plus"></i>
+    </span>
+    <span class="text">Resgistrar Humedad Suelo</span>
+</button>
+<hr>
+<div class="form-group humedad_suelo" id="Humedad_Calculos">
+    <div class="row">
+        <div class="col-sm-4 mb-4 mb-sm-0">
+            <label>HS maxima nodo A: </label>
+            <input type="text" id="hs_maxima_a" name="hs_maxima_a" size="5" disabled>
+        </div>
+        <div class="col-sm-4 mb-4 mb-sm-0">
+            <label>HS Media nodo A: </label>
+            <input type="text" id="hs_media_a" name="hs_media_a" size="5" disabled>
+        </div>
+        <div class="col-sm-4 mb-4 mb-sm-0">
+            <label>HS minima nodo A: </label>
+            <input type="text" id="hs_minima_a" name="hs_minima_a" size="5" disabled>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-sm-4 mb-4 mb-sm-0">
+            <label>HS maxima nodo B: </label>
+            <input type="text" id="hs_maxima_b" name="hs_maxima_b" size="5" disabled>
+        </div>
+        <div class="col-sm-4 mb-4 mb-sm-0">
+            <label>HS Media nodo B: </label>
+            <input type="text" id="hs_media_b" name="hs_media_b" size="5" disabled>
+        </div>
+        <div class="col-sm-4 mb-4 mb-sm-0">
+            <label>HS minima nodo B: </label>
+            <input type="text" id="hs_minima_b" name="hs_minima_b" size="5" disabled>
+        </div>
+    </div>
+
+</div>
+
+<!-- Inicio Modal Cultivo!-->
+<div class="modal fade" id="ModuloHumedad" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header text-primary">
+                <h5 class="modal-title " id="exampleModalLabel"></h5>
+            </div>
+
+            <form id="forHumedad">
+                <div class="modal-body">
+
+                    <div class="form-group row">
+                        <div class="col-sm-6 mb-3 mb-sm-0">
+                            <div>
+                                <input type="text" class="form-control form-control-user" id="humedad_a"
+                                    name="humedad_a" placeholder="humedad suelo A : ">
+                                <input type="hidden" class="form-control form-control-user" id="Identificador"
+                                    name="Identificador">
+                            </div>
+                            <div id="grupo_humedad_a"></div>
+                        </div>
+                        <div class="col-sm-6 ">
+                            <div>
+                                <input type="text" class="form-control form-control-user" id="humedad_b"
+                                    name="humedad_b" placeholder="Humedad suelo B : ">
+                            </div>
+                            <div id="grupo_humedad_b"></div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-6 mb-3 mb-sm-0">
+                            <div>
+                                <input type="date" min="2021-03-25" max="2025-05-25"
+                                    class="form-control form-control-user" id="fecha" name="fecha">
+                            </div>
+                            <div id="grupo_fecha"></div>
+                        </div>
+                        <div class="col-sm-6 ">
+                            <div>
+                                <input type="time" class="form-control form-control-user" id="hora" name="hora"
+                                    min="09:00" max="18:00" step="600">
+                            </div>
+                            <div id="grupo_hora"></div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer" id="BotonesCrear">
+                    <button type="button" class="btn btn-secondary btn-icon-split btn-sm" id="btn_Cerrar"
+                        data-bs-dismiss="modal">
+                        <span class="icon text-white-50">
+                            <i class="fa fa-window-close"></i>
+                        </span>
+                        <span class="text">Cerrar</span>
+                    </button>
+                    <button type="submit" value="CrearHumedad" class="btn btn-primary btn-icon-split btn-sm"
+                        id="btn_Crear">
+                        <span class="icon text-white-50">
+                            <i class="fa fa-save"></i>
+                        </span>
+                        <span class="text">Guardar</span>
+                    </button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--Fin Modal Modulo-->
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3 centro">
+        <h6 class="m-0 font-weight-bold text-primary">Humedad Suelo </h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <div class="input-group">
+                <form class="form-inline my-2 my-lg-0">
+                    <input type="date" id="txt_buscar" class="form-control mr-sm-2">
+                </form>
+                <button type="button" onclick="Calculos_HumedadA()" class="btn btn-primary btn-icon-split btn-sm">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <span class="text">Buscar</span>
+                </button>
+
+
+            </div>
+
+            <div id="grupo_txtBuscar"></div>
+            <br>
+            <table class="table table-bordered" id="dataTable1" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Ndoo A</th>
+                        <th>Ndoo B</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- sCRIPT-->
+<script>
+
+    let btn_verificador = "Actualizar";
+    const btnCrear = document.querySelector('#btn_Crear');
+    const btnCerrar = document.querySelector('#btn_Cerrar');
+
+    function SelectHumedad() {
+        var URL = "/HumedadSuelo/SelectHumedad";
+        $.ajax({
+            url: URL,
+            type: "get",
+            dataType: "json",
+            success: function (response) {
+                let tbody = $('tbody');
+                tbody.html('');
+                var a = 1;
+                response.forEach(humedad => {
+                    var temfecha = humedad.hum_sue_fecha.split("T");
+                    tbody.append(`
+                    <tr>
+                         <td>${a++}</td>
+                        <td>${humedad.hum_sue_nodo_a} % </td>
+                        <td> ${humedad.hum_sue_nodo_b} %</td>
+                        <td> ${temfecha[0]}</td>
+                        <td> ${humedad.hum_sue_hora}</td>
+                        <td>
+                            <a id="Actualizar" value="CrearHumedad" title="Actualizar" class="tn btn-primary btn-circle"  data-bs-toggle="modal" data-bs-target="#ModuloHumedad"
+                               onclick="ActualizarDatos(${humedad.hum_sue_id})">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                            <a class="btn btn-danger btn-circle"
+                               onclick="eliminarhumedad(${humedad.hum_sue_id})">
+                                <i class="fas fa-trash" title="Eliminar"></i>
+                            </a>
+                        </td>
+                    </tr>
+                `)
+                })
+            }, error: function (e) {
+                console.log(e.readyState);
+            }
+        });
+    }
+
+    btnCrear.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        let humedad_a = $("#humedad_a").val();
+        let humedad_b = $("#humedad_b").val();
+        let fecha = $("#fecha").val();
+        let hora = $("#hora").val();
+        if (campoVacio(humedad_a, "grupo_humedad_a", "Ingrese la humedad del nodo a")) {
+            if (validarN(humedad_a, "grupo_humedad_a", "Solo se permiten numeros de 0 al 99")) {
+
+                if (campoVacio(humedad_b, "grupo_humedad_b", "Ingrese la humedad del nodo b")) {
+                    if (validarN(humedad_b, "grupo_humedad_b", "Solo se permiten numeros del 0 99")) {
+                        if (campoVacio(fecha, "grupo_fecha", "Seleccione una fecha valida")) {
+                            if (campoVacio(hora, "grupo_hora", "Seleccione una hora valida")) {
+
+                                if (btn_verificador == "CrearHumedad") {
+                                    var URL = "/HumedadSuelo/Crear";
+                                    $.ajax({
+                                        url: URL,
+                                        type: "post",
+                                        dataType: "json",
+                                        data: {
+                                            humedad_a, humedad_b, hora, fecha,
+                                        },
+                                        success: function (res) {
+                                            if (res.response == "success") {
+                                                toastr["success"](res.mensaje)
+                                                $('#ModuloHumedad').modal('hide');
+                                                $('#forHumedad')[0].reset();
+                                                SelectHumedad();
+                                                limpiarHtml();
+                                                LimpiarCampos();
+                                            }
+
+                                        }
+
+                                    });
+
+                                } else {
+
+                                    let Identificador = $('#Identificador').val();
+                                    var URL = "/HumedadSuelo/Actualizar/" + Identificador;
+                                    $.ajax({
+                                        url: URL,
+                                        type: "post",
+                                        dataType: "json",
+                                        data: {
+                                            humedad_a, humedad_b, fecha, hora,
+                                        },
+                                        success: function (res) {
+                                            if (res.response == "success") {
+                                                toastr["success"](res.mensaje)
+                                                $('#ModuloHumedad').modal('hide');
+                                                $('#forHumedad')[0].reset();
+                                                SelectHumedad();
+                                                limpiarHtml();
+                                                LimpiarCampos();
+                                            }
+
+                                        }
+
+                                    });
+
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+    });
+
+    function ActualizarDatos(id) {
+        btn_verificador = "Actualizar";
+        var a = document.getElementById("exampleModalLabel");
+        a.innerHTML = "Actualizar Humedad Suelo";
+        const URL = "/HumedadSuelo/Actualizar/" + id;
+        $.ajax({
+            url: URL,
+            type: "get",
+            success: function (res) {
+
+                var a = res.hum_sue_fecha.split("T");
+                $("#humedad_a").val(res.hum_sue_nodo_a);
+                $("#humedad_b").val(res.hum_sue_nodo_b);
+                $("#fecha").val(a[0]);
+                $("#hora").val(res.hum_sue_hora);
+                $("#Identificador").val(id);
+            }
+        });
+    }
+
+    function eliminarhumedad(id) {
+        const URL = "/HumedadSuelo/Eliminar/" + id;
+        Swal.fire({
+            title: 'Estas seguro?',
+            text: "No podrás revertir esto!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, bórralo!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: URL,
+                    type: "get",
+                    success: function (res) {
+                        if (res.response == "success") {
+                            Swal.fire(
+                                'Eliminado!',
+                                'Humedad del nodo A  eliminado.',
+                                'con exito'
+                            )
+                            ListaNodoA();
+                        }
+                    }
+                });
+            }
+        })
+    }
+
+    function Calculos_HumedadA() {
+        let txt_buscar = $('#txt_buscar').val();
+        if (campoVacio(txt_buscar, "grupo_txtBuscar", "Ingrese una fecha valida")) {
+            ListaHumedadFecha(txt_buscar);
+            Promedio(txt_buscar);
+        }
+
+
+    }
+
+
+    function ListaHumedadFecha(fecha) {
+
+        let url = "/HumedadSuelo/ListaHumedadFecha";
+        $.ajax({
+            url: url,
+            type: "post",
+            dataType: "json",
+            data: {
+                fecha
+            },
+            success: function (res) {
+                let tbody = $('tbody');
+                tbody.html('');
+                var a = 1;
+                res.forEach(humedad => {
+                    var temfecha = humedad.hum_sue_fecha.split("T");
+                    tbody.append(`
+                    <tr>
+                         <td>${a++}</td>
+                        <td>${humedad.hum_sue_nodo_a} % </td>
+                        <td> ${humedad.hum_sue_nodo_b} %</td>
+                        <td> ${temfecha[0]}</td>
+                        <td> ${humedad.hum_sue_hora}</td>
+                        <td>
+                            <a id="Actualizar" value="CrearHumedad" title="Actualizar" class="tn btn-primary btn-circle"  data-bs-toggle="modal" data-bs-target="#ModuloHumedad"
+                               onclick="ActualizarDatos(${humedad.hum_sue_id})">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                            <a class="btn btn-danger btn-circle"
+                               onclick="eliminarNodoA(${humedad.hum_sue_id})">
+                                <i class="fas fa-trash" title="Eliminar"></i>
+                            </a>
+                        </td>
+                    </tr>
+                `)
+                })
+
+            }
+        });
+    }
+
+    function BotonCrear() {
+        let nombre = $('#btn_Crear').val();
+        var a = document.getElementById("exampleModalLabel");
+        a.innerHTML = "Registrar Humedad Suelo";
+        btn_verificador = nombre;
+        LimpiarCampos();
+    }
+
+    function limpiarHtml() {
+        document.getElementById("grupo_humedad_a").innerHTML = "";
+        document.getElementById("grupo_humedad_b").innerHTML = "";
+        document.getElementById("grupo_hora").innerHTML = "";
+        document.getElementById("grupo_fecha").innerHTML = "";
+    }
+
+    btnCerrar.addEventListener("click", function (e) {
+        limpiarHtml();
+        LimpiarCampos();
+    });
+
+    function LimpiarCampos() {
+        $("#humedad_a").val("");
+        $("#humedad_b").val("");
+        $("#hora").val("");
+        $("#fecha").val("");
+        $('#humedad_minima').val("");
+        $('#humedad_media').val("");
+        $('#humedad_maxima').val("");
+        $('#txt_buscar').val("")
+    }
+
+    function Promedio(fecha) {
+
+        let URL = "/HumedadSuelo/CalculosDatos";
+        $.ajax({
+            url: URL,
+            type: "post",
+            dataType: "json",
+            data: {
+                fecha
+            },
+            success: function (res) {
+                $('#hs_maxima_a').val(res.max_nodo_a);
+                $('#hs_media_a').val(Math.ceil(res.pro_nodo_a));
+                $('#hs_minima_a').val(res.min_nodo_a);
+
+                $('#hs_maxima_b').val(res.max_nodo_b);
+                $('#hs_media_b').val(Math.ceil(res.pro_nodo_b));
+                $('#hs_minima_b').val(res.min_nodo_b);
+
+            }
+        });
+    }
+
+
+
+    window.onload = SelectHumedad;
+</script>

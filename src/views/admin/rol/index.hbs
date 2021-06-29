@@ -1,0 +1,386 @@
+<button type="button" onclick="BotonCrear()" class="btn btn-primary btn-icon-split btn-sm" data-bs-toggle="modal"
+    data-bs-target="#rol">
+    <span class="icon text-white-50">
+        <i class="fas fa-user-plus"></i>
+    </span>
+    <span class="text">Registrar Rol</span>
+</button>
+<hr>
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3 centro">
+        <h6 class="m-0 font-weight-bold text-primary"> Lista Roles</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <div class="input-group">
+                <form class="form-inline my-2 my-lg-0">
+                    <input type="search" id="txt_Buscar" onkeyup="Buscar()" class="form-control mr-sm-2"
+                        placeholder="Buscar">
+                </form>
+
+            </div>
+            <hr>
+            <table class="table table-bordered" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Rol</th>
+                        <th>Descripcion</th>
+                        <th>Accion</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- Inicio Modal Modulo!-->
+<div class="modal fade" id="rol" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header text-primary">
+                <h5 class="modal-title " id="exampleModalLabel"></h5>
+            </div>
+
+            <form id="forRol">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div>
+                            <input type="text" class="form-control form-control-user" id="nombre" name="nombre"
+                                placeholder="Rol : ">
+                            <input type="hidden" class="form-control form-control-user" id="Identificador"
+                                name="Identificador">
+                        </div>
+                        <div id="grupo_rol">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleFormControlTextarea1">Descripción rol </label>
+                        <textarea class="form-control" name="descripcion" id="descripcion" rows="3"></textarea>
+                    </div>
+
+                </div>
+                <div class="modal-footer" id="BotonesCrear">
+                    <button type="button" class="btn btn-secondary btn-icon-split btn-sm" id="btn_Cerrar"
+                        data-bs-dismiss="modal">
+                        <span class="icon text-white-50">
+                            <i class="fa fa-window-close"></i>
+                        </span>
+                        <span class="text">Cerrar</span>
+                    </button>
+                    <button type="submit" value="CrearModulo" class="btn btn-primary btn-icon-split btn-sm"
+                        id="btn_Crear">
+                        <span class="icon text-white-50">
+                            <i class="fa fa-save"></i>
+                        </span>
+                        <span class="text">Guardar</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<div class="modal fade" id="ModalAsignar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" id="lbl_mensaje">
+
+            </div>
+
+            <div class="modal-body" class="radio">
+                <form id="forRolAsignar">
+                    <input type="hidden" class="form-control form-control-user" id="id_rol" name="id_rol">
+                    <div id="radio">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-icon-split btn-sm" id="btn_CerrarAsignacion"
+                    data-bs-dismiss="modal">
+                    <span class="icon text-white-50">
+                        <i class="fa fa-window-close"></i>
+                    </span>
+                    <span class="text">Cerrar</span>
+                </button>
+                <button type="submit" value="CrearAsignacion" class="btn btn-primary btn-icon-split btn-sm"
+                    id="btn_CrearAsignacion">
+                    <span class="icon text-white-50">
+                        <i class="fa fa-save"></i>
+                    </span>
+                    <span class="text">Guardar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    let btn_verificador = "Actualizar";
+    const btnCrear = document.querySelector('#btn_Crear');
+    const btnCerrar = document.querySelector('#btn_Cerrar');
+    const btn_CrearAsignacion = document.querySelector('#btn_CrearAsignacion');
+    function ListaRol() {
+        var URL = "/rol/roles";
+        $.ajax({
+            url: URL,
+            type: "get",
+            dataType: "json",
+            success: function (response) {
+                let tbody = $('tbody');
+                tbody.html('');
+                response.forEach(roles => {
+                    tbody.append(`
+                    <tr>
+                        <td id="fnombre">${roles.rol_nombre}</td>
+                        <td id="fapellido"> ${roles.rol_descripcion}</td>
+                        <td>
+                            <a id="Actualizar" value="CrearUsuario" class="tn btn-primary btn-circle"  data-bs-toggle="modal" data-bs-target="#rol"
+                               onclick="ActualizarModulo(${roles.rol_id})">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                            <a class="btn btn-danger btn-circle"
+                               onclick="eliminarRol(${roles.rol_id})">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                            <a class="btn btn-success btn-circle" data-bs-toggle="modal" data-bs-target="#ModalAsignar"  onclick="asignacionRolesModuloLista(${roles.rol_id})">
+                                <i class="fa fa-edit"></i>
+                            </a>
+
+                        </td>
+                    </tr>
+                `)
+                })
+            }, error: function (e) {
+                console.log(e.readyState);
+            }
+        });
+    }
+
+    function Buscar() {
+        let buscar = $('#txt_Buscar').val();
+        const URL = "/rol/buscar";
+        $.ajax({
+            url: URL,
+            type: "post",
+            data: { buscar },
+            success: function (response) {
+                let tbody = $('tbody');
+                tbody.html('');
+                response.forEach(roles => {
+                    tbody.append(`
+                   <tr>
+                        <td id="fnombre">${roles.rol_nombre}</td>
+                        <td id="fapellido"> ${roles.rol_descripcion}</td>
+                        <td>
+                            <a id="Actualizar" value="CrearUsuario" class="tn btn-primary btn-circle"  data-bs-toggle="modal" data-bs-target="#rol"
+                               onclick="ActualizarModulo(${roles.rol_id})">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                            <a class="btn btn-danger btn-circle"
+                               onclick="eliminarRol(${roles.rol_id})">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                            <a class="btn btn-success btn-circle"  onclick="agi(${roles.rol_id})">
+                                <i class="fa fa-edit"></i>
+                            </a>
+
+                        </td>
+                    </tr>
+                `)
+                })
+            }
+        });
+    }
+
+    btnCrear.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        let rol = $('#nombre').val();
+        let descripcion = $('#descripcion').val();
+
+        document.getElementById('grupo_rol').innerHTML = "";
+        var ver = campoVacio(rol, "grupo_rol");
+        if (ver) {
+            var ban1 = validarLetra(rol, "grupo_rol");
+            if (ban1) {
+                if (btn_verificador == "CrearModulo") {
+                    var URL = "/rol/crear";
+                    $.ajax({
+                        url: URL,
+                        type: "post",
+                        dataType: "json",
+                        data: {
+                            rol,
+                            descripcion
+                        },
+                        success: function (res) {
+                            if (res.response == "success") {
+                                toastr["success"](res.mensaje)
+                                $('#rol').modal('hide');
+                                $('#forRol')[0].reset();
+                                ListaRol();
+                            }
+                        }
+                    })
+
+                } else {
+                    let Identificador = $('#Identificador').val();
+                    var URL = "/rol/actualizar/" + Identificador;
+
+                    $.ajax({
+                        url: URL,
+                        type: "post",
+                        dataType: "json",
+                        data: {
+                            rol,
+                            descripcion,
+                        },
+                        success: function (res) {
+                            if (res.response == "success") {
+                                toastr["success"](res.mensaje)
+                                $('#rol').modal('hide');
+                                $('#forRol')[0].reset();
+                                ListaRol();
+
+                            }
+
+
+                        }
+                    });
+
+                }
+            }
+        }
+
+    });
+
+    btn_CrearAsignacion.addEventListener('click', function (e) {
+        e.preventDefault();
+
+
+        const id_rol = $('#id_rol').val();
+        const URL = "/rol/asignarRolModulo/" + id_rol;
+        $.ajax({
+            url: URL,
+            type: "post",
+            data: $("#forRolAsignar").serialize(),
+            success: function (res) {
+                if (res.response == "success") {
+                    toastr["success"](res.mensaje)
+                } else {
+                    toastr["warning"](res.mensaje)
+                }
+
+                $('#ModalAsignar').modal('hide');
+                $('#forRolAsignar')[0].reset();
+                ListaRol();
+            }
+
+        });
+    });
+
+    function BotonCrear() {
+        let nombre = $('#btn_Crear').val();
+        var a = document.getElementById("exampleModalLabel");
+        a.innerHTML = "Registrar Rol";
+        btn_verificador = nombre;
+        LimpiarCampos();
+    }
+
+    function LimpiarCampos() {
+        $("#nombre").val("");
+        $("#descripcion").val("");
+        $("#Identificador").val("");
+    }
+
+    function ActualizarModulo(id) {
+        btn_verificador = "Actualizar";
+        var a = document.getElementById("exampleModalLabel");
+        a.innerHTML = "Actualizar Modulo";
+        const URL = "/rol/actualizar/" + id;
+        $.ajax({
+            url: URL,
+            type: "get",
+            success: function (res) {
+                $("#nombre").val(res.rol_nombre);
+                $("#descripcion").val(res.rol_descripcion);
+                $("#Identificador").val(id);
+            }
+        });
+
+    }
+
+    function asignacionRolesModuloLista(id) {
+        const URL = "/rol/asignarRolModulo/" + id;
+        var a = document.getElementById("radio");
+        var lbl_mensaje = document.getElementById("lbl_mensaje");
+        $("#id_rol").val(id);
+        var radio = "";
+        $.ajax({
+            url: URL,
+            type: "get",
+            success: function (res) {
+
+                for (var i = 0; i < res.length; i++) {
+                    if (res[i].mod_temp == 1) {
+                        radio += `<input type="checkbox" name="checkbox" checked ="${res[i].mod_id}" value="${res[i].mod_id}" id="${res[i].mod_id}"><label
+                                    for="${res[i].mod_modulo}">${res[i].mod_modulo}</label><br> `;
+                    } else {
+                        radio += `<input type="checkbox" name="checkbox" value="${res[i].mod_id}" id="${res[i].mod_id}"><label
+                                    for="${res[i].mod_modulo}">${res[i].mod_modulo}</label><br>`;
+                    }
+                }
+                a.innerHTML = radio;
+                lbl_mensaje.innerHTML = ` <h5 class="modal-title" id="exampleModalLabel">Asignar modulos al rol : ${res[0].rol}</h5>`;
+
+            }
+
+        });
+    }
+
+    function eliminarRol(id) {
+        const URL = "/rol/eliminar/" + id;
+        Swal.fire({
+            title: 'Estas seguro?',
+            text: "No podrás revertir esto!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, bórralo!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: URL,
+                    type: "get",
+                    success: function (res) {
+                        if (res.response == "success") {
+                            Swal.fire(
+                                'Eliminado!',
+                                'Modulo  eliminado.',
+                                'exito'
+                            )
+                            ListaRol();
+                        }
+                    }
+                });
+            }
+        })
+    }
+
+    btnCerrar.addEventListener('click', function (e) {
+        document.getElementById('grupo_rol').innerHTML = "";
+    });
+
+    window.onload = ListaRol;
+</script>

@@ -1,0 +1,453 @@
+<!--Inicio Boton Modal para ingresar usuario-->
+<button type="button" onclick="BotonCrear()" class="btn btn-primary btn-icon-split btn-sm" data-bs-toggle="modal"
+    data-bs-target="#Usuario">
+    <span class="icon text-white-50">
+        <i class="fas fa-user-plus"></i>
+    </span>
+    <span class="text">Resgistrar Usuario</span>
+</button>
+<hr>
+<!--Fin Boton Modal para ingresar usuario-->
+
+<!--Inicio Tabla lista Usuario -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3 centro">
+        <h6 class="m-0 font-weight-bold text-primary">Lista Usuarios</h6>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <div class="input-group">
+                <form class="form-inline my-2 my-lg-0">
+                    <input type="search" id="txt_Buscar" onkeyup="Buscar()" class="form-control mr-sm-2"
+                        placeholder="Buscar">
+                </form>
+
+            </div>
+
+
+            <br>
+            <table class="table table-bordered" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>N.- </th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Cedula</th>
+                        <th>Telefono</th>
+                        <th>Correo</th>
+                        <th>Rol </th>
+                        <th>usuario</th>
+                        <th>Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!--Fin Tabla Usuario-->
+<!--Inicio Modal Crear-->
+<div class="modal fade" id="Usuario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-primary">
+                <h5 class="modal-title " id="exampleModalLabel">/h5>
+            </div>
+
+            <form id="forUser">
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-sm-6 mb-3 mb-sm-0">
+                            <div>
+                                <input type="text" class="form-control form-control-user" id="nombre" name="nombre"
+                                    placeholder="Nombre : ">
+                            </div>
+                            <div id="grupo_nombre"></div>
+                        </div>
+                        <div class="col-sm-6 ">
+                            <div>
+                                <input type="text" class="form-control form-control-user" id="apellido" name="apellido"
+                                    placeholder="Apellido">
+                            </div>
+                            <div id="grupo_apellido"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-6 mb-3 mb-sm-0">
+                            <div>
+                                <input type="text" class="form-control form-control-user" id="cedula" name="cedula"
+                                    placeholder="Cedula :">
+                            </div>
+                            <div id="grupo_cedula"></div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div>
+                                <input type="text" class="form-control form-control-user" id="telefono" name="telefono"
+                                    placeholder="Telefono : ">
+                            </div>
+                            <div id="grupo_telefono"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div>
+                            <input type="email" class="form-control form-control-user" id="correo" name="correo"
+                                placeholder="Correo electronico" required>
+                            <input type="hidden" class="form-control form-control-user" id="Identificador"
+                                name="Identificador">
+                        </div>
+                        <div id="grupo_correo">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-6 mb-3 mb-sm-0">
+                            <div>
+                                <input type="text" class="form-control form-control-user" id="usuario" name="usuario"
+                                    placeholder="Usuario :">
+                            </div>
+                            <div id="grupo_usuario"></div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div>
+                                <input type="password" class="form-control form-control-user" id="contraseña"
+                                    name="contraseña" placeholder="Contraseña : ">
+                            </div>
+                            <div id="grupo_contraseña"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <select name="roles" id="roles" class="form-control form-control-user">
+                        </select>
+                        <div id="grupo_radio"></div>
+                    </div>
+                </div>
+                <div class="modal-footer" id="BotonesCrear">
+                    <button type="button" class="btn btn-secondary btn-icon-split btn-sm" id="btn_Cerrar"
+                        data-bs-dismiss="modal">
+                        <span class="icon text-white-50">
+                            <i class="fa fa-window-close"></i>
+                        </span>
+                        <span class="text">Cerrar</span>
+                    </button>
+                    <button type="submit" value="CrearUsuario" class="btn btn-primary btn-icon-split btn-sm"
+                        id="btn_Crear">
+                        <span class="icon text-white-50">
+                            <i class="fa fa-save"></i>
+                        </span>
+                        <span class="text">Guardar</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    let btn_verificador = "Actualizar";
+    const btnCrear = document.querySelector("#btn_Crear");
+    const btnCerrar = document.querySelector("#btn_Cerrar");
+
+    function verificarCampos(nombre, apellido, cedula, telefono, correo, usuario, rol) {
+        if (campoVacio(nombre, "grupo_nombre", "Ingrese el nombre")) {
+            if (validarLetra(nombre, "grupo_nombre", "Nombre incorrecto solo se permiten letras")) {
+                if (campoVacio(apellido, "grupo_apellido", "Ingrese el apellido")) {
+                    if (validarLetra(apellido, "grupo_apellido", "Apellido incorrecto solo se permiten letras")) {
+                        if (campoVacio(cedula, "grupo_cedula", "Ingrese la cedula")) {
+                            if (validarNumeros(cedula, "grupo_cedula", "Solo se permiten numeros de 10 caracteres")) {
+                                if (validarCedulaEcuador(cedula, "grupo_cedula")) {
+                                    if (campoVacio(telefono, "grupo_telefono", "Ingrese el telefono")) {
+                                        if (validarNumeros(telefono, "grupo_telefono", "El valor ingresado debe tener entre 7 y 10 digitos numericos")) {
+                                            if (validarCorreo(correo)) {
+                                                if (campoVacio(usuario, "grupo_usuario", "Ingrese el usuario")) {
+                                                    if (validarLetra(usuario, "grupo_usuario", "Usuario incorrecto solo se permiten letras")) {
+
+                                                        if (validarCbx(rol, "grupo_radio")) {
+                                                            return true;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    //Crud
+
+    function ListaUser() {
+        var URL = "/cliente/clientes";
+        var contador = 1;
+        $.ajax({
+            url: URL,
+            type: "get",
+            dataType: "json",
+            success: function (response) {
+                let tbody = $("tbody");
+                tbody.html("");
+                response.forEach((cliente) => {
+                    tbody.append(`
+                    <tr>
+                        <td class="success">${contador++}</td>
+                        <td >${cliente.cli_nombre}</td>
+                        <td > ${cliente.cli_apellido}</td>
+                        <td > ${cliente.cli_cedula}</td>
+                        <td > ${cliente.cli_telefono}</td>
+                        <td > ${cliente.cli_correo}</td>
+                        <td > ${cliente.rol_nombre}</td>
+                        <td > ${cliente.usu_nombre}</td>
+                        <td>
+                            <a id="Actualizar"  title="Actualizar" value="CrearUsuario" class="tn btn-primary btn-circle"  data-bs-toggle="modal" data-bs-target="#Usuario"
+                               onclick="ActualizarUsuario(${cliente.cli_id})">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                            <a class="btn btn-danger btn-circle"
+                               onclick="eliminarUsuario(${cliente.cli_id})"  title="Eliminar">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        
+                        </td>
+                    </tr>
+                `);
+                });
+            },
+            error: function (e) {
+                console.log(e.readyState);
+            },
+        });
+    }
+
+
+
+    btnCrear.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        let nombre = $("#nombre").val();
+        let apellido = $("#apellido").val();
+        let cedula = $("#cedula").val();
+        let telefono = $("#telefono").val();
+        let correo = $("#correo").val();
+        let usuario = $("#usuario").val();
+        let contraseña = $("#contraseña").val();
+        let rol = $("#roles").val();
+
+        if (verificarCampos(nombre, apellido, cedula, telefono, correo, usuario, rol)) {
+
+            if (btn_verificador == "CrearUsuario") {
+                if (campoVacio(contraseña, "grupo_contraseña", "Ingrese una contraseña")) {
+                    var URL = "/cliente/crear";
+                    $.ajax({
+                        url: URL,
+                        type: "post",
+                        dataType: "json",
+                        data: {
+                            nombre,
+                            apellido,
+                            cedula,
+                            telefono,
+                            correo,
+                            usuario,
+                            contraseña,
+                            rol
+                        },
+                        success: function (res) {
+                            if (res.response == "success") {
+                                toastr["success"](res.mensaje);
+                                $("#Usuario").modal("hide");
+                                $("#forUser")[0].reset();
+                                ListaUser();
+                            }
+                        },
+                    });
+
+                }
+
+            } else {
+
+                let Identificador = $("#Identificador").val();
+                var URL = "/cliente/actualizar/" + Identificador;
+
+                $.ajax({
+                    url: URL,
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        nombre,
+                        apellido,
+                        cedula,
+                        telefono,
+                        correo,
+                        usuario,
+                        contraseña,
+                        rol,
+                    },
+                    success: function (res) {
+                        if (res.response == "success") {
+                            toastr["success"](res.mensaje);
+                            $("#Usuario").modal("hide");
+                            $("#forUser")[0].reset();
+                            ListaUser();
+                        }
+                    },
+                });
+            }
+        }
+    });
+
+
+    function ActualizarUsuario(id) {
+        btn_verificador = "Actualizar";
+        Roleslista();
+        var a = document.getElementById("exampleModalLabel");
+        a.innerHTML = "Actualizar Usuario";
+        const URL = "/cliente/actualizar/" + id;
+        $.ajax({
+            url: URL,
+            type: "get",
+            success: function (res) {
+                $("#nombre").val(res.cli_nombre);
+                $("#apellido").val(res.cli_apellido);
+                $("#cedula").val(res.cli_cedula);
+                $("#telefono").val(res.cli_telefono);
+                $("#correo").val(res.cli_correo);
+                $("#usuario").val(res.usu_nombre);
+                $("#Identificador").val(id);
+            },
+        });
+    }
+
+    function Buscar() {
+        let buscar = $("#txt_Buscar").val();
+        var contador = 0;
+        const URL = "/cliente/buscar";
+        $.ajax({
+            url: URL,
+            type: "post",
+            data: { buscar },
+            success: function (response) {
+                let tbody = $("tbody");
+                tbody.html("");
+                response.forEach((cliente) => {
+                    tbody.append(`
+                    <tr>
+                        <td >${contador = contador + 1}</td>
+                        <td >${cliente.cli_nombre}</td>
+                        <td > ${cliente.cli_apellido}</td>
+                        <td > ${cliente.cli_cedula}</td>
+                        <td > ${cliente.cli_telefono}</td>
+                        <td > ${cliente.cli_correo}</td>
+                        <td> ${cliente.usu_nombre}</td>
+                        <td> ${cliente.rol_nombre}</td>
+                        <td>
+                            <a id="Actualizar" value="CrearUsuario" class="tn btn-primary btn-circle"  data-bs-toggle="modal" data-bs-target="#Usuario"
+                               onclick="ActualizarUsuario(${cliente.cli_id})">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                            <a class="btn btn-danger btn-circle"
+                               onclick="myFunction(${cliente.cli_id})">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                         
+                        </td>
+                    </tr>
+                `);
+                });
+            },
+        });
+    }
+
+    function eliminarUsuario(id) {
+        const URL = "/cliente/eliminar/" + id;
+        Swal.fire({
+            title: "Estas seguro?",
+            text: "No podrás revertir esto!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sí, bórralo!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: URL,
+                    type: "get",
+                    success: function (res) {
+                        if (res.response == "success") {
+                            Swal.fire("Eliminado!", "Usuario  eliminado.", "exito");
+                            ListaUser();
+                        }
+                    },
+                });
+            }
+        });
+    }
+
+
+
+    //Funciones para validar actualizar y limpiar campos
+
+    function LimpiarCampos() {
+        $("#nombre").val("");
+        $("#apellido").val("");
+        $("#cedula").val("");
+        $("#telefono").val("");
+        $("#correo").val("");
+        $("#Identificador").val("");
+    }
+
+    function Roleslista() {
+        let rol = document.getElementById("roles");
+        let mensaje = " <option selected value='0'>Escoga el rol...</option>";
+        var URLRoles = "/rol/roles";
+        $.ajax({
+            url: URLRoles,
+            type: "get",
+            dataType: "json",
+            success: function (response) {
+                response.forEach(roles => {
+                    mensaje += "<option value='" + roles.rol_id + "'>" + roles.rol_nombre + "</option>";
+                });
+                rol.innerHTML = mensaje;
+            }
+        });
+
+    }
+
+    function BotonCrear() {
+        let nombre = $("#btn_Crear").val();
+        var a = document.getElementById("exampleModalLabel");
+        a.innerHTML = "Registrar Usuario";
+        btn_verificador = nombre;
+        Roleslista();
+        LimpiarCampos();
+    }
+    function limpiarHtml() {
+        document.getElementById("grupo_nombre").innerHTML = "";
+        document.getElementById("grupo_apellido").innerHTML = "";
+        document.getElementById("grupo_cedula").innerHTML = "";
+        document.getElementById("grupo_telefono").innerHTML = "";
+        document.getElementById("grupo_correo").innerHTML = "";
+        document.getElementById("grupo_usuario").innerHTML = "";
+        document.getElementById("grupo_contraseña").innerHTML = "";
+        document.getElementById("grupo_rol").innerHTML = "";
+    }
+
+    btnCerrar.addEventListener("click", function (e) {
+        limpiarHtml();
+    });
+
+    window.onload = ListaUser;
+
+</script>
+<small></small>

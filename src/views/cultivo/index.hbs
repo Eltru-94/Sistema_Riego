@@ -1,0 +1,292 @@
+<button type="button" onclick="BotonCrear()" class="btn btn-primary btn-icon-split btn-sm" data-bs-toggle="modal"
+    data-bs-target="#ModuloCultivo">
+    <span class="icon text-white-50">
+        <i class="fas fa-user-plus"></i>
+    </span>
+    <span class="text">Resgistrar Cultivo</span>
+</button>
+<hr>
+
+<!-- Inicio Modal Cultivo!-->
+<div class="modal fade" id="ModuloCultivo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header text-primary">
+                <h5 class="modal-title " id="exampleModalLabel"></h5>
+            </div>
+
+            <form id="forCultivo">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div>
+                            <input type="text" class="form-control form-control-user" id="cultivo" name="cultivo"
+                                placeholder="Cultivo : ">
+                            <input type="hidden" class="form-control form-control-user" id="Identificador"
+                                name="Identificador">
+                        </div>
+                        <div id="grupo_cultivo">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleFormControlTextarea1">Descripción Cultivo </label>
+                        <textarea class="form-control" name="descripcion" id="descripcion" rows="3"></textarea>
+                    </div>
+
+                </div>
+                <div class="modal-footer" id="BotonesCrear">
+                    <button type="button" class="btn btn-secondary btn-icon-split btn-sm" id="btn_Cerrar"
+                        data-bs-dismiss="modal">
+                        <span class="icon text-white-50">
+                            <i class="fa fa-window-close"></i>
+                        </span>
+                        <span class="text">Cerrar</span>
+                    </button>
+                    <button type="submit" value="CrearCultivo" class="btn btn-primary btn-icon-split btn-sm"
+                        id="btn_Crear">
+                        <span class="icon text-white-50">
+                            <i class="fa fa-save"></i>
+                        </span>
+                        <span class="text">Guardar</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--Fin Modal Modulo-->
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3 centro">
+        <h6 class="m-0 font-weight-bold text-primary">Cultivo</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <div class="input-group">
+                <form class="form-inline my-2 my-lg-0">
+                    <input type="search" id="txt_Buscar" onkeyup="Buscar()" class="form-control mr-sm-2"
+                        placeholder="Buscar">
+                </form>
+
+            </div>
+
+
+            <br>
+            <table class="table table-bordered" id="dataTable1" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Cultivo</th>
+                        <th>Descripcion</th>
+                        <th>Accion</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    let btn_verificador = "Actualizar";
+    const btnCrear = document.querySelector('#btn_Crear');
+    const btnCerrar = document.querySelector('#btn_Cerrar');
+    function ListaCultivo() {
+        var URL = "/GestionCultivo/Cultivos";
+        $.ajax({
+            url: URL,
+            type: "get",
+            dataType: "json",
+            success: function (response) {
+                let tbody = $('tbody');
+                tbody.html('');
+                var a=1;
+                response.forEach(cultivo => {
+                    tbody.append(`
+                    <tr>
+                         <td id="fnombre">${a++}</td>
+                        <td id="fnombre">${cultivo.cul_nombre}</td>
+                        <td id="fapellido"> ${cultivo.cul_descripcion}</td>
+                        <td>
+                            <a id="Actualizar" value="CrearUsuario" class="tn btn-primary btn-circle"  data-bs-toggle="modal" data-bs-target="#ModuloCultivo"
+                               onclick="ActualizarModuloCultivo(${cultivo.cul_id})">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                            <a class="btn btn-danger btn-circle"
+                               onclick="eliminarCultivo(${cultivo.cul_id})">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                `)
+                })
+            }, error: function (e) {
+                console.log(e.readyState);
+            }
+        });
+    }
+
+    btnCrear.addEventListener('click', function (e) {
+        e.preventDefault();
+        let cultivo = $('#cultivo').val();
+        let descripcion = $('#descripcion').val();
+        if(campoVacio(cultivo, "grupo_cultivo", "Ingrese el cultivo")){
+            if(btn_verificador=="CrearCultivo"){
+               var URL="/GestionCultivo/Crear";
+               $.ajax({
+                   url:URL,
+                   type:"post",
+                   dataType:"json",
+                   data:{
+                       cultivo,
+                       descripcion
+                   },
+                   success:function(res){
+                       if(res.response=="success"){
+                          toastr["success"](res.mensaje)
+                            $('#ModuloCultivo').modal('hide');
+                            $('#forCultivo')[0].reset();
+                            ListaCultivo();
+                       }
+
+                   }
+
+               });
+            }else{
+
+               
+                let Identificador = $('#Identificador').val();
+                var URL = "/GestionCultivo/Actualizar/" + Identificador;
+            
+                $.ajax({
+                    url: URL,
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        cultivo,
+                        descripcion,
+                    },
+                    success: function (res) {
+                        if (res.response == "success") {
+                            toastr["success"](res.mensaje)
+                            $('#ModuloCultivo').modal('hide');
+                            $('#forCultivo')[0].reset();
+                            ListaCultivo();
+                            limpiarHtml();
+                        }
+                    }
+                });
+
+
+            }
+        } 
+      
+    });
+
+    function BotonCrear() {
+        let nombre = $('#btn_Crear').val();
+        var a = document.getElementById("exampleModalLabel");
+        a.innerHTML = "Registrar Cultivo";
+        btn_verificador = nombre;
+        LimpiarCampos();
+    }
+      function ActualizarModuloCultivo(id) {
+        btn_verificador = "Actualizar";
+        var a = document.getElementById("exampleModalLabel");
+        a.innerHTML = "Actualizar Cultivo";
+        const URL = "/GestionCultivo/Actualizar/" + id;
+        $.ajax({
+            url: URL,
+            type: "get",
+            success: function (res) {
+                $("#cultivo").val(res.cul_nombre);
+                $("#descripcion").val(res.cul_descripcion);
+                $("#Identificador").val(id);
+            }
+        });
+    }
+
+    function eliminarCultivo(id) {
+        const URL = "/GestionCultivo/Eliminar/" + id;
+        Swal.fire({
+            title: 'Estas seguro?',
+            text: "No podrás revertir esto!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, bórralo!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: URL,
+                    type: "get",
+                    success: function (res) {
+                        if (res.response == "success") {
+                            Swal.fire(
+                                'Eliminado!',
+                                'Cultivo  eliminado.',
+                                'exito'
+                            )
+                            ListaCultivo();
+                        }
+                    }
+                });
+            }
+        })
+    }
+    function Buscar() {
+        let buscar = $('#txt_Buscar').val();
+        const URL = "/GestionCultivo/Buscar";
+        $.ajax({
+            url: URL,
+            type: "post",
+            data: { buscar },
+            success: function (response) {
+                let tbody = $('tbody');
+                tbody.html('');
+                var a=1;
+                response.forEach(cultivo => {
+                    tbody.append(`
+                    <tr>
+                         <td id="fnombre">${a++}</td>
+                        <td id="fnombre">${cultivo.cul_nombre}</td>
+                        <td id="fapellido"> ${cultivo.cul_descripcion}</td>
+                        <td>
+                            <a id="Actualizar" value="CrearUsuario" class="btn btn-primary btn-circle"  data-bs-toggle="modal" data-bs-target="#ModuloCultivo"
+                               onclick="ActualizarModuloCultivo(${cultivo.cul_id})">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                            <a class="btn btn-danger btn-circle"
+                               onclick="eliminarCultivo(${cultivo.cul_id})">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                `)
+                })
+            }
+        });
+    }
+
+    function limpiarHtml() {
+        document.getElementById("grupo_cultivo").innerHTML = "";
+    }
+
+    btnCerrar.addEventListener("click", function (e) {
+        limpiarHtml();
+        LimpiarCampos();
+    });
+    
+    function LimpiarCampos() {
+        $("#cultivo").val("");
+        $('#descripcion').val("");
+       
+    }
+
+  window.onload = ListaCultivo;
+
+</script>

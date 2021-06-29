@@ -1,0 +1,80 @@
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Riego Cultivo</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="TablaRiego" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Cultivo</th>
+                            <th>Fecha</th>
+                            <th>Hora Inicio</th>
+                            <th>Hora Fin</th>
+                            <th>Tipo Riego</th>
+                            
+
+
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- /.container-fluid -->
+
+</div>
+
+<script>
+    $(document).ready(function () {
+    var id = {{#cliente_id user}}{{/ cliente_id}};
+    var URL = "/RiegoCultivo/Lista/" + id;
+    $('#TablaRiego').DataTable({
+        ajax: {
+            "url": URL,
+            "dataSrc": ""
+        },
+        "columns": [
+            { "data": "cul_nombre" },
+            { "data": "riego_fecha" },
+            { "data": "riego_hora_inicio" },
+            { "data": "riego_hora_fin" },
+            { "data": "riego_tipo" },
+            
+
+        ],
+        "language":idioma_es
+    });
+    
+    });
+
+       var idioma_es = {
+        "processing": "Procesando...",
+        "lengthMenu": "Mostrar _MENU_ registros",
+        "zeroRecords": "No se encontraron resultados",
+        "emptyTable": "Ningún dato disponible en esta tabla",
+        "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+        "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+        "search": "Buscar:",
+        "infoThousands": ",",
+        "loadingRecords": "Cargando...",
+        "paginate": {
+            "first": "Primero",
+            "last": "Último",
+            "next": "Siguiente",
+            "previous": "Anterior"}
+    };
+    
+
+</script>
