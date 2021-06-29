@@ -16,10 +16,7 @@ require("./lib/passport");
 //Globales
 global.config = require('./lib/Sensores');
 
-////////////////
 
-//const io = SocketIo.listen(server); //Configuracion web socket
-//Variables Configuracion
 
 app.set("port", process.env.PORT || 80); //Port Servidor
 app.set("host", "192.168.1.150");
@@ -71,10 +68,9 @@ app.use("/modulo", require("./routes/admin/modulo"));
 /*Modulo 2*/
 app.use("/CalculosRiego", require("./routes/riego/CalculosRiego"));
 app.use("/ActivacionRiego", require("./routes/riego"));
+
 /*Modulo 3*/
 app.use("/Temperatura", require("./routes/GestionDatosClima"));
-
-
 app.use("/HumedadSuelo", require("./routes/GestionDatosClima/humedadSuelo"));
 app.use("/HumedadRelativa", require("./routes/GestionDatosClima/humedad_relativa"));
 
