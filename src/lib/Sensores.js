@@ -12,5 +12,8 @@ module.exports ={
        valvula:0,
        riego_cultivo:0,
        cultivo_id:0,
+       promedio1:0,
+       riego_id:0,
+       mensaje_valvula:"",
     }
    };

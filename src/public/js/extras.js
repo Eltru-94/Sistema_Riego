@@ -118,6 +118,19 @@ function validarCbx(valor,grupo) {
   }
 }
 
+function validarCbx1(valor,grupo,mensaje) {
+  document.getElementById(grupo).innerHTML =" ";
+  if (valor!=0) {
+    document.getElementById(grupo).innerHTML =
+      '<small style="color:#008f39">listo</small>';
+    return true;
+  } else {
+    document.getElementById(grupo).innerHTML +=
+      '<br><small style="color:#FF0000">'+mensaje+'</small>';
+    return false;
+  }
+}
+
 
 function fechaActual(){
     var d = new Date();

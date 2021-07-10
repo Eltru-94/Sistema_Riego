@@ -4,8 +4,10 @@ const SerialConexion = require("../../lib/serialportConexion");
 var verificador = false;
 const { sensores } = require('../../lib/Sensores');
 const db = require("../../basedatos");
-var InsertAutomatico=true;
-var InsertRiego=0;
+var InsertAutomatico = true;
+var InsertRiego = 0;
+
+var valor_aux="";
 router.get('/', (req, res) => {
    res.render("riego/", { layout: "admin" });
 });
@@ -16,13 +18,14 @@ router.get('/conectar/', async (req, res) => {
    sensores.humedad_suelo_b = Math.ceil((humedad_suelo_nodoB * 100) / 1023);
    sensores.temperuta_a = temperatura_A;
    sensores.humedad_relativa = humedad_relativa_A;
+   sensores.promedio1 = Math.ceil((sensores.humedad_suelo_a + sensores.humedad_suelo_b) / 2);
    sensores.fecha_actual = fecha_actual;
    sensores.hora_actual = hora_actual;
    var hora = hora_actual.split(":");
    if (hora[1] == 59) {
       verificador = true;
    }
-   if (hora[0] <= 18 && hora[0] >= 8) {
+   if (hora[0] <= 18 && hora[0] >= 7) {
       if (hora[1] == 0 && verificador) {
 
          const newhumedad = {
@@ -60,58 +63,57 @@ router.get('/conectar/', async (req, res) => {
 
    if (sensores.estado_automatico == 1) {
       const aux_fecha = sensores.fecha_actual;
-      const promedio1 = Math.ceil((sensores.humedad_suelo_a + sensores.humedad_suelo_b) / 2);
-      const query2 = await db.query("SELECT AVG (tbl_humedad_suelo.hum_sue_nodo_a) AS 'nodo_a', AVG (tbl_humedad_suelo.hum_sue_nodo_b) AS 'nodo_b' FROM tbl_humedad_suelo WHERE tbl_humedad_suelo.hum_sue_estado=? AND tbl_humedad_suelo.hum_sue_fecha=?", [1, aux_fecha]);
-      const aux_nodo_a = query2[0].nodo_a;
-      const aux_nodo_b = query2[0].nodo_b;
-      const promedio = Math.ceil((aux_nodo_a + aux_nodo_b) / 2);
-      if (promedio > 75) {
-
-         if (promedio1 < 60 && InsertAutomatico==false) {
-            console.log("riego automatico desactivado");
-            sensores.valvula = 0;
-            InsertAutomatico=true;
-            const new_riego = {
-               riego_hora_fin: sensores.hora_actual,
-               riego_estado: 0,
-            };
-            console.log(new_riego);
-            res.json("*");
-         } else {
-            sensores.valvula = 1;
-
+     
+      if (sensores.promedio1 > 75) {
+         sensores.valvula = 1;
+         if (InsertAutomatico) {
             const new_riego = {
                riego_fecha: sensores.fecha_actual,
                riego_hora_inicio: sensores.hora_actual,
-               riego_humedad_suelo: promedio,
+               riego_humedad_suelo: sensores.promedio1,
                riego_temperatura: sensores.temperuta_a,
                riego_estado: 1,
                riego_cul_id: sensores.cultivo_id,
-               riego_tipo: 0,
+               riego_tipo: 2,
+               riego_humedad_relativa:sensores.humedad_relativa,
             }
-
-            if(InsertAutomatico){
-               console.log(new_riego);
-               InsertAutomatico=false;
-            }
-           
-
-            console.log("riego automatico");
-            res.json("#");
+            const query1 = await db.query("INSERT INTO tbl_riego set ?", [new_riego]);
+            sensores.riego_id=query1.insertId;
+            console.log(new_riego);
+            sensores.mensaje_valvula="Regando cultivo automatico...";
+            InsertAutomatico = false;
          }
+         console.log("riego automatico");
+         valor_aux="#";
+        
+      }else if (InsertAutomatico == false) {
+         console.log("riego automatico desactivado");
+         sensores.valvula = 0;
+         InsertAutomatico = true;
+         contador=1;
+         sensores.mensaje_valvula=" ";
+         const new_riego = {
+            riego_hora_fin: sensores.hora_actual,
+            riego_estado: 0,
+         };
+         const query = await db.query(
+            "UPDATE tbl_riego set ? WHERE tbl_riego.riego_id = ?",
+            [new_riego,sensores.riego_id]
+         );
+         console.log(new_riego);
+         valor_aux="*";
       }
 
-
-
-
-
-
-      console.log(promedio1 + "promedio tabla: " + promedio);
+      console.log("Promedio sensores : " + sensores.promedio1);
    } else if (sensores.estado_manual == 1) {
-      res.json("#");
+      sensores.mensaje_valvula="Regando cultivo manual...";
+      valor_aux="#";
    } else if (sensores.estado_manual == 0) {
-      res.json("*");
+      sensores.mensaje_valvula=" ";
+      valor_aux="*";
    }
+
+   res.json(valor_aux);
 
 
 
@@ -135,6 +137,7 @@ router.get('/ActivarManual/:id', async (req, res) => {
       riego_estado: 1,
       riego_cul_id: query1[0].riego_cul_id,
       riego_tipo: 1,
+      riego_humedad_relativa:sensores.humedad_relativa,
    }
    const query3 = await db.query("INSERT INTO tbl_riego set ?", [new_riego]);
 
@@ -224,8 +227,8 @@ router.get("/RiegoAutomaticoActivado/:id", async (req, res) => {
    sensores.estado_automatico = 1;
    const { id } = req.params;
    const query1 = await db.query("SELECT * FROM tbl_riego_cultivo WHERE tbl_riego_cultivo.cli_id=? AND tbl_riego_cultivo.riego_cul_estado=?", [id, 1]);
-   sensores.cultivo_id= query1[0].riego_cul_id
-  
+   sensores.cultivo_id = query1[0].riego_cul_id
+
    res.json("hola");
 });
 

@@ -1,80 +1,155 @@
-<!-- Begin Page Content -->
-<div class="container-fluid">
-
-
-
-    <!-- DataTales Example -->
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Riego Cultivo</h6>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered" id="TablaRiego" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>Cultivo</th>
-                            <th>Fecha</th>
-                            <th>Hora Inicio</th>
-                            <th>Hora Fin</th>
-                            <th>Tipo Riego</th>
-                            
-
-
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<!--Inicio Tabla lista Usuario -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3 centro">
+        <h6 class="m-0 font-weight-bold text-primary">Lista Riego Cultivo</h6>
     </div>
 
-</div>
-<!-- /.container-fluid -->
+    <div class="card-body">
+        <div class="table-responsive">
+            <div class="input-group">
+                <form class="form-inline my-2 my-lg-0">
 
+
+
+                    <div>
+                        <input type="date" id="txt_fecha" class="form-control mr-sm-2">
+                        <div id="grupo_txtfecha"></div>
+                    </div>
+
+                    <div>
+                        <select name="txt_tipo" id="txt_tipo" class="form-control mr-sm-2">
+                            <option value="0">Escoga el tipo de riego</option>
+                            <option value="1">MANUAL</option>
+                            <option value="2">AUTOMATICO</option>
+                        </select>
+                        <div id="grupo_tipo"></div>
+                    </div>
+
+                </form>
+                <div>
+                    <button type="button" onclick="Calculos_HumedadA()" class="btn btn-primary btn-icon-split btn-sm">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <span class="text"> Buscar</span>
+                    </button>
+                </div>
+
+            </div>
+
+
+            <br>
+            <table class="table table-bordered" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>N.- </th>
+                        <th>Cultivo</th>
+                        <th>HS</th>
+                        <th>T</th>
+                        <th>HR</th>
+                        <th>Fecha</th>
+                        <th>Hora inicio</th>
+                        <th>Hora Fin</th>
+                        <th>Tipo Riego</th>
+                        <th>Estado</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <script>
-    $(document).ready(function () {
-    var id = {{#cliente_id user}}{{/ cliente_id}};
-    var URL = "/RiegoCultivo/Lista/" + id;
-    $('#TablaRiego').DataTable({
-        ajax: {
-            "url": URL,
-            "dataSrc": ""
-        },
-        "columns": [
-            { "data": "cul_nombre" },
-            { "data": "riego_fecha" },
-            { "data": "riego_hora_inicio" },
-            { "data": "riego_hora_fin" },
-            { "data": "riego_tipo" },
-            
 
-        ],
-        "language":idioma_es
-    });
-    
-    });
+    function ListaRiego() {
 
-       var idioma_es = {
-        "processing": "Procesando...",
-        "lengthMenu": "Mostrar _MENU_ registros",
-        "zeroRecords": "No se encontraron resultados",
-        "emptyTable": "Ningún dato disponible en esta tabla",
-        "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-        "infoFiltered": "(filtrado de un total de _MAX_ registros)",
-        "search": "Buscar:",
-        "infoThousands": ",",
-        "loadingRecords": "Cargando...",
-        "paginate": {
-            "first": "Primero",
-            "last": "Último",
-            "next": "Siguiente",
-            "previous": "Anterior"}
-    };
-    
+        var id = {{#cliente_id user}} {{/cliente_id}};
+        var URL = "/RiegoCultivo/Lista/" + id;
+        var contador = 1;
+        $.ajax({
+            url: URL,
+            type: "get",
+            dataType: "json",
+            success: function (response) {
+                let tbody = $("tbody");
+                tbody.html("");
+                response.forEach((lista) => {
+                    var temfecha = lista.riego_fecha.split("T");
+                    tbody.append(`
+                    <tr>
+                        <td class="success">${contador++}</td>
+                        <td >${lista.cul_nombre}</td>
+                        <td > ${lista.riego_humedad_suelo}%</td>
+                        <td > ${lista.riego_temperatura}°C</td>
+                        <td > ${lista.riego_humedad_relativa}%</td>
+                        <td > ${temfecha[0]}</td>
+                        <td > ${lista.riego_hora_inicio}</td>
+                        <td > ${lista.riego_hora_fin}</td>
+                        <td > ${lista.riego_tipo}</td>
+                        <td > ${lista.riego_estado}</td>
+                     
+                    </tr>
+                `);
+                });
+            },
+            error: function (e) {
+                console.log(e.readyState);
+            },
+        });
+    }
 
+    function Calculos_HumedadA() {
+        let txt_fecha = $('#txt_fecha').val();
+        let txt_tipo = $('#txt_tipo').val();
+
+
+        if (campoVacio(txt_fecha, "grupo_txtfecha", "Ingrese una fecha valida")) {
+            if (validarCbx1(txt_tipo, "grupo_tipo", "Seleccione un tipo de riego")) {
+                ListaFechaTipo(txt_fecha, txt_tipo);
+            }
+        }
+    }
+
+
+    function ListaFechaTipo(fecha, Tipo) {
+        var contador = 1;
+        var URL = "/RiegoCultivo/Buscar/"
+        $.ajax({
+            url: URL,
+            type: "post",
+            dataType: "json",
+            data: {
+                fecha,
+                Tipo
+            },
+            success: function (response) {
+                let tbody = $("tbody");
+                tbody.html("");
+                response.forEach((lista) => {
+                    var temfecha = lista.riego_fecha.split("T");
+                    tbody.append(`<tr>
+                        <td class="success">${contador++}</td>
+                        <td >${lista.cul_nombre}</td>
+                        <td > ${lista.riego_humedad_suelo}%</td>
+                        <td > ${lista.riego_temperatura}°C</td>
+                        <td > ${lista.riego_humedad_relativa}%</td>
+                        <td > ${temfecha[0]}</td>
+                        <td > ${lista.riego_hora_inicio}</td>
+                        <td > ${lista.riego_hora_fin}</td>
+                        <td > ${lista.riego_tipo}</td>
+                        <td > ${lista.riego_estado}</td>
+                     
+                    </tr>
+                `);
+                });
+            },
+
+        });
+    }
+
+    window.onload = ListaRiego;
 </script>
