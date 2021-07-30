@@ -140,12 +140,12 @@
                 tbody.html('');
                 var a = 1;
                 response.forEach(hr => {
-
+                    var temfecha = hr.hum_rel_fecha.split("T");
                     tbody.append(`
                     <tr>
                          <td id="fnombre">${a++}</td>
                         <td id="fnombre">${hr.hum_rel_valor} ° C</td>
-                        <td id="fapellido"> ${hr.hum_rel_fecha}</td>
+                        <td id="fapellido"> ${temfecha[0]}</td>
                         <td id="fapellido"> ${hr.hum_rel_hora}</td>
                         <td>
                             <a id="Actualizar" value="CrearUsuario" title="Actualizar" class="tn btn-primary btn-circle"  data-bs-toggle="modal" data-bs-target="#ModuloHR"
@@ -320,12 +320,12 @@
                 tbody.html('');
                 var a = 1;
                 res.forEach(hr => {
-
+                    var temfecha = hr.hum_rel_fecha.split("T");
                     tbody.append(`
                     <tr>
                          <td id="fnombre">${a++}</td>
                         <td id="fnombre">${hr.hum_rel_valor} ° C</td>
-                        <td id="fapellido"> ${hr.hum_rel_fecha}</td>
+                        <td id="fapellido"> ${temfecha[0]}</td>
                         <td id="fapellido"> ${hr.hum_rel_hora}</td>
                         <td>
                             <a id="Actualizar" value="CrearUsuario" title="Actualizar" class="tn btn-primary btn-circle"  data-bs-toggle="modal" data-bs-target="#ModuloHR"
@@ -386,9 +386,9 @@
                 fecha
             },
             success: function (res) {
-                $('#hr_maxima').val(res.max);
-                $('#hr_media').val(Math.ceil(res.promedio));
-                $('#hr_minima').val(res.min);
+                $('#hr_maxima').val(res.max + " %");
+                $('#hr_media').val(Math.ceil(res.promedio) + " %");
+                $('#hr_minima').val(res.min + " %");
 
 
 

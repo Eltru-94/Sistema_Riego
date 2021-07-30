@@ -34,8 +34,8 @@ helpers.existe = function (datos, pos) {
     }
   }
   if (x && pos == 1) {
-    var html =
-      '<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse1"';
+    var html ='<li class="nav-item">';
+    html +=  '<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse1"';
     html += 'aria-expanded="true" aria-controls="collapse1">';
     html += '  <i class="fas fa-user-alt"></i>';
     html += " <span>" + modulo + "</span>";
@@ -43,15 +43,16 @@ helpers.existe = function (datos, pos) {
     html +=
       '<div id="collapse1" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">';
     html += ' <div class="bg-white py-2 collapse-inner rounded">';
-    html += '  <a class="collapse-item" href="/cliente">Clientes</a>';
+    html += '  <a class="collapse-item" href="/cliente">Usuarios</a>';
     html += '<a class="collapse-item" href="/rol">Roles</a>';
 
     html += "</div>";
     html += "</div>";
+    html += '</li>';
     html += ' <hr class="sidebar-divider">';
   } else if (x && pos == 2) {
-    var html =
-      '<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse2"';
+    var html ='<li class="nav-item">';
+    html +=  '<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse2"';
     html += 'aria-expanded="true" aria-controls="collapse2">';
     html += '<i class="fas fa-water"></i>';
     html += " <span>" + modulo + "</span>";
@@ -62,10 +63,11 @@ helpers.existe = function (datos, pos) {
     html += '  <a class="collapse-item" href="/CalculosRiego">Activacion Riego</a>';
     html += "</div>";
     html += "</div>";
+    html += '</li>';
     html += ' <hr class="sidebar-divider">';
   } else if (x && pos == 3) {
-    var html =
-      '<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse3"';
+    var html ='<li class="nav-item">';
+    html +=  '<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse3"';
     html += 'aria-expanded="true" aria-controls="collapse3">';
     html += '  <i class="fas fa-cloud-sun-rain"></i>';
     html += " <span>" + modulo + "</span>";
@@ -78,10 +80,11 @@ helpers.existe = function (datos, pos) {
     html += '  <a class="collapse-item" href="/Temperatura">Temperatura </a>';
     html += "</div>";
     html += "</div>";
+    html += '</li>';
     html += ' <hr class="sidebar-divider">';
   } else if (x && pos == 4) {
-    var html =
-      '<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse4"';
+    var html ='<li class="nav-item">';
+    html +='<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse4"';
     html += 'aria-expanded="true" aria-controls="collapse4">';
     html += '  <i class="fas fa-feather-alt"></i>';
     html += " <span>" + modulo + "</span>";
@@ -93,10 +96,11 @@ helpers.existe = function (datos, pos) {
     html += '  <a class="collapse-item" href="/RiegoCultivo">Riego Cultivo</a>';
     html += "</div>";
     html += "</div>";
+    html += '</li>';
     html += ' <hr class="sidebar-divider">';
   } else if (x && pos == 5) {
-    var html =
-      '<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse5"';
+    var html ='<li class="nav-item">';
+    html +='<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse5"';
     html += 'aria-expanded="true" aria-controls="collapse5">';
     html += '<i class="fas fa-chart-bar"></i>';
     html += " <span>" + modulo + "</span>";
@@ -105,11 +109,12 @@ helpers.existe = function (datos, pos) {
       '<div id="collapse5" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">';
     html += ' <div class="bg-white py-2 collapse-inner rounded">';
     html += '  <a class="collapse-item" href="/VisualizacionSensores">Humedad Suelo</a>';
-    html += '  <a class="collapse-item" href="/VisualizacionSensores/humedadHR">Humedad Relativa</a>';
-    html += '  <a class="collapse-item" href="/VisualizacionSensores/Temperatura">Temperatura</a>';
+    html += '  <a class="collapse-item" href="/GraficoHR">Humedad Relativa</a>';
+    html += '  <a class="collapse-item" href="/GraficoTemperatura">Temperatura</a>';
 
     html += "</div>";
     html += "</div>";
+    html += '</li>';
     html += ' <hr class="sidebar-divider">';
   } else {
     html = "";

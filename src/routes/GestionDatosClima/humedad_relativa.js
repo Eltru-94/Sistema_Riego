@@ -2,10 +2,10 @@ const express = require("express");
 const router = express.Router();
 const db = require("../../basedatos");
 const { isLoggedIn } = require("../../lib/auth");
-const helpers = require("../../lib/helpers");
-
+const { sensores } = require('../../lib/Sensores');
 
 router.get("/", isLoggedIn, async (req, res) => {
+    mensaje();
     res.render("GestionDatosClima/humedadRelativa", { layout: "admin" });
 })
 
@@ -103,4 +103,16 @@ router.post("/CalculosDatos", isLoggedIn, async (req, res) => {
     console.log(HR_claculos[0]);
     res.json(HR_claculos[0]);
 });
+function mensaje() {
+   
+    sensores.titulo = "Sensor Humedad relativa";
+
+    if (sensores.humedad_relativa != 0) {
+        sensores.mensaje_valvula = "Sensor HR : " + sensores.humedad_relativa + " %";
+    } else {
+        sensores.mensaje_valvula = "Sensor HR : SC";
+    }
+
+}
+
 module.exports = router;

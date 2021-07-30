@@ -2,10 +2,13 @@ const express = require("express");
 const router = express.Router();
 const db = require("../../basedatos");
 const { isLoggedIn } = require("../../lib/auth");
+const { sensores } = require('../../lib/Sensores');
 
 router.get("/", isLoggedIn, async (req, res) => {
+  sensores.mensaje_valvula = "Inicio riego cultivo sistema de riego";
+  sensores.titulo = "Programar Riego",
 
-  res.render("cultivo/RiegoCultivo", { layout: "admin" });
+    res.render("cultivo/RiegoCultivo", { layout: "admin" });
 
 });
 

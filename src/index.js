@@ -19,7 +19,7 @@ global.config = require('./lib/Sensores');
 
 
 app.set("port", process.env.PORT || 80); //Port Servidor
-app.set("host", "192.168.1.150");
+app.set("host", "192.168.1.145");
 app.set("views", path.join(__dirname, "views"));
 app.engine(
   ".hbs",
@@ -79,7 +79,8 @@ app.use("/GestionCultivo", require("./routes/Cultivo"));
 app.use("/RiegoCultivo", require("./routes/Cultivo/RiegoCultivo"));
 /*Modulo Visualizacion Graficos */
 app.use("/VisualizacionSensores", require("./routes/Graficos/Sensores"));
-
+app.use("/GraficoTemperatura", require("./routes/Graficos/temperatura"));
+app.use("/GraficoHR", require("./routes/Graficos/humedadr"));
 //Carpeta publica
 app.use(express.static(path.join(__dirname, "public")));
 

@@ -350,7 +350,12 @@
                 if ($('#aux').val() == cli_id) {
 
 
-                    document.querySelector("#datos").innerHTML = "<p> Creado por : " + res.cli_nombre + " " + res.cli_apellido + " </p>" + "<p>Cultivo : " + res.cul_nombre + " </p>";
+                    document.querySelector("#datos").innerHTML = "<p> Creado por : " + res.cli_nombre + " " + res.cli_apellido + " </p>" + "<p>Cultivo : " + res.cul_nombre + " </p>"
+                    + "<p>HSA: " + {{sensores.humedad_suelo_a}} 
+                    + "%  - HSB : " + {{sensores.humedad_suelo_b}} 
+                    + "%  - HSP : " + {{sensores.promedio1}} + "</p>"
+                    + "%<p>TEMP: " + {{sensores.temperuta_a}} 
+                    + "° C- HR : " + {{sensores.humedad_relativa}} + "%</p>";
                     const manual = $('#manual').val();
                     const automatico = $('#automatico').val();
 

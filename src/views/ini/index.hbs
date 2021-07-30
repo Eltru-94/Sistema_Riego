@@ -2,21 +2,50 @@
 
     <div class="card">
         <img src="/imagenes/inicio_riego.jpg" alt="">
-        <h4>Sistemas de Riego</h4>
+        <br>
+        <h4>Humedad Suelo Cultivo</h4>
         <br>
         <div class="row">
 
-            <div class="col-sm-6 col-md-6 col-lg-6 text-center text-dark">
+            <div class="col-sm-4 col-md-4 col-lg-4 text-center text-dark">
                 <h5>Nodo A</h5>
+
+                {{#if sensores.humedad_suelo_a}}
                 <div>
                     <h1 id="temper" class="display-5 p-3">{{sensores.humedad_suelo_a}}%</h1>
                 </div>
+                {{else}}
+                <div>
+                    <h1 id="temper" class="display-5 p-3">S/N</h1>
+                </div>
+                {{/if}}
+
             </div>
-            <div class="col-sm-6 col-md-6 col-lg-6 text-center text-dark">
+            <div class="col-sm-4 col-md-4 col-lg-4 text-center text-dark">
                 <h5>Nodo B</h5>
+                {{#if sensores.humedad_suelo_b}}
                 <div>
                     <h1 id="temper" class="display-5 p-3">{{sensores.humedad_suelo_b}}%</h1>
                 </div>
+                {{else}}
+                <div>
+                    <h1 id="temper" class="display-5 p-3">S/N</h1>
+                </div>
+                {{/if}}
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4 text-center text-dark">
+                <h5>Promedio</h5>
+
+                {{#if sensores.promedio1}}
+                <div>
+                    <h1 id="promedio" class="display-5 p-3">{{sensores.promedio1}}%</h1>
+                </div>
+                {{else}}
+                <div>
+                    <h1 id="temper" class="display-5 p-3">S/N</h1>
+                </div>
+                {{/if}}
+
             </div>
         </div>
 
@@ -31,22 +60,44 @@
     </div>
 
     <div class="card">
+
         <img src="/imagenes/internetcosas.jpg" alt="">
+        <br>
         <h4>Datos Clima</h4>
         <br>
         <div class="row">
 
             <div class="col-sm-6 col-md-6 col-lg-6 text-center text-primary">
+
                 <h5>Temperatura</h5>
+                {{#if sensores.temperuta_a}}
                 <div>
-                    <h1 id="temper" class="display-5 p-3">{{sensores.temperuta_a}}°C</h1>
+                    <h1 id="promedio" class="display-5 p-3">{{sensores.temperuta_a}}%</h1>
+
                 </div>
+                {{else}}
+                <div>
+                    <h1 id="temper" class="display-5 p-3">S/N</h1>
+                </div>
+                {{/if}}
+
+
+
             </div>
-            <div class="col-sm-6 col-md-6 col-lg-6 text-center text-primary">
-                <h5>Humedad relativa</h5>
+            <div class="col-sm-4 col-md-4 col-lg-4 text-center text-primary">
+                <h5>Hum Relativa</h5>
+
+                {{#if sensores.humedad_relativa}}
                 <div>
-                    <h1 id="temper" class="display-5 p-3">{{sensores.humedad_relativa}}%</h1>
+
+                    <h1 id="promedio" class="display-5 p-3">{{sensores.humedad_relativa}}%</h1>
                 </div>
+                {{else}}
+                <div>
+                    <h1 id="temper" class="display-5 p-3">S/N</h1>
+                </div>
+                {{/if}}
+
             </div>
         </div>
 

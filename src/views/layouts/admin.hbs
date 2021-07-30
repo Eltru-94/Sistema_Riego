@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Administrativo</title>
+    <title>{{sensores.titulo}}</title>
 
     <!-- Fuentes personalizadas para esta plantilla-->
     <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -51,13 +51,28 @@
             <div class="sidebar-heading">
                 Modulos
             </div>
-            <li id="modulos" class="nav-item">
+            <li class="nav-item">
                 {{#existe user 1}}{{/existe}}
                 {{#existe user 2}}{{/existe}}
                 {{#existe user 3}}{{/existe}}
                 {{#existe user 4}}{{/existe}}
                 {{#existe user 5}}{{/existe}}
                 {{#existe user 6}}{{/existe}}
+                <div class="sidebar-heading">
+                    ELECTROVALVULA
+                </div>
+            <li class="nav-item">
+
+                <a class="nav-link" href="#" aria-expanded="true" aria-controls="collapse1">
+                    <img src="imagenes/valvula.png" style="width: 35px; height: 35px" alt="">
+                    <span>      {{sensores.temp_valvula}}</span>
+                </a>
+
+
+
+            </li>
+
+            <hr class="sidebar-divider">
             </li>
 
             <div class="text-center d-none d-md-inline">
@@ -126,8 +141,8 @@
                             </a>
                         </li>
                         <li class="list-inline-item">
-                            <a class="btn-floating btn-tw mx-1" >
-                                <i class="fab fa-twitter" > </i>
+                            <a class="btn-floating btn-tw mx-1">
+                                <i class="fab fa-twitter"> </i>
                             </a>
                         </li>
                         <li class="list-inline-item">
@@ -135,7 +150,7 @@
                                 <i class="fab fa-linkedin-in"> </i>
                             </a>
                         </li>
-                      
+
                     </ul>
                     <!-- Social buttons -->
 
@@ -144,9 +159,9 @@
 
                 <!-- Copyright -->
                 <div class="footer-copyright text-center py-3">© 2021 Copyright:
-                    <a href="https://mdbootstrap.com/"> alexskate19@gmail.com</a>
+                    <a href="https://www.facebook.com/Eltru94"> alexskate19@gmail.com</a>
                 </div>
-              
+
             </footer>
             <!-- End of Footer -->
         </div>

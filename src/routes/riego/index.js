@@ -5,15 +5,18 @@ var verificador = false;
 const { sensores } = require('../../lib/Sensores');
 const db = require("../../basedatos");
 var InsertAutomatico = true;
-var InsertRiego = 0;
 
-var valor_aux="";
+
+var valor_aux = "";
 router.get('/', (req, res) => {
-   res.render("riego/", { layout: "admin" });
+   sensores.mensaje_valvula = "Programar Riego";
+   sensores.titulo = "Programar Riego",
+      res.render("riego/", { layout: "admin" });
 });
 
 router.get('/conectar/', async (req, res) => {
-   const { temperatura_A, humedad_relativa_A, humedad_suelo_nodoA, humedad_suelo_nodoB, fecha_actual, hora_actual } = req.query;
+   const { temperatura_A, humedad_relativa_A, humedad_suelo_nodoA, humedad_suelo_nodoB, fecha_actual} = req.query;
+   var hora_actual =horaTiempos();
    sensores.humedad_suelo_a = Math.ceil((humedad_suelo_nodoA * 100) / 1023);
    sensores.humedad_suelo_b = Math.ceil((humedad_suelo_nodoB * 100) / 1023);
    sensores.temperuta_a = temperatura_A;
@@ -63,7 +66,7 @@ router.get('/conectar/', async (req, res) => {
 
    if (sensores.estado_automatico == 1) {
       const aux_fecha = sensores.fecha_actual;
-     
+
       if (sensores.promedio1 > 75) {
          sensores.valvula = 1;
          if (InsertAutomatico) {
@@ -75,51 +78,57 @@ router.get('/conectar/', async (req, res) => {
                riego_estado: 1,
                riego_cul_id: sensores.cultivo_id,
                riego_tipo: 2,
-               riego_humedad_relativa:sensores.humedad_relativa,
+               riego_humedad_relativa: sensores.humedad_relativa,
             }
             const query1 = await db.query("INSERT INTO tbl_riego set ?", [new_riego]);
-            sensores.riego_id=query1.insertId;
+            sensores.riego_id = query1.insertId;
             console.log(new_riego);
-            sensores.mensaje_valvula="Regando cultivo automatico...";
+            sensores.mensaje_valvula = "Regando cultivo automatico...";
             InsertAutomatico = false;
          }
+         sensores.temp_valvula = "Riego Automático ON";
          console.log("riego automatico");
-         valor_aux="#";
-        
-      }else if (InsertAutomatico == false) {
+         valor_aux = "#";
+
+      } else if (InsertAutomatico == false) {
          console.log("riego automatico desactivado");
+         sensores.temp_valvula = "Riego Automático OFF";
          sensores.valvula = 0;
          InsertAutomatico = true;
-         contador=1;
-         sensores.mensaje_valvula=" ";
+         contador = 1;
+         sensores.mensaje_valvula = " ";
          const new_riego = {
             riego_hora_fin: sensores.hora_actual,
             riego_estado: 0,
          };
          const query = await db.query(
             "UPDATE tbl_riego set ? WHERE tbl_riego.riego_id = ?",
-            [new_riego,sensores.riego_id]
+            [new_riego, sensores.riego_id]
          );
          console.log(new_riego);
-         valor_aux="*";
+         valor_aux = "*";
       }
 
       console.log("Promedio sensores : " + sensores.promedio1);
    } else if (sensores.estado_manual == 1) {
-      sensores.mensaje_valvula="Regando cultivo manual...";
-      valor_aux="#";
-   } else if (sensores.estado_manual == 0) {
-      sensores.mensaje_valvula=" ";
-      valor_aux="*";
-   }
 
+      sensores.temp_valvula = "Riego Manual ON";
+      valor_aux = "#";
+   } else if (sensores.estado_manual == 0) {
+      sensores.temp_valvula = "Riego Manual OFF"
+      valor_aux = "*";
+   }
+   if (sensores.estado_manual == 0 && sensores.estado_automatico == 0) {
+      sensores.temp_valvula = "0FF"
+   }
+   console.log(horaTiempos());
    res.json(valor_aux);
 
 
 
 });
 router.get('/ActivarManual/:id', async (req, res) => {
-
+   sensores.temp_valvula = "Riego Manual ONN"
    sensores.estado_manual = 1;
    const aux_fecha = sensores.fecha_actual;
    const { id } = req.params;
@@ -137,7 +146,7 @@ router.get('/ActivarManual/:id', async (req, res) => {
       riego_estado: 1,
       riego_cul_id: query1[0].riego_cul_id,
       riego_tipo: 1,
-      riego_humedad_relativa:sensores.humedad_relativa,
+      riego_humedad_relativa: sensores.humedad_relativa,
    }
    const query3 = await db.query("INSERT INTO tbl_riego set ?", [new_riego]);
 
@@ -150,7 +159,7 @@ router.get('/ActivarManual/:id', async (req, res) => {
 });
 
 router.get('/DesactivarManual/:id', async (req, res) => {
-
+   sensores.temp_valvula = "Riego Manual OFF"
    sensores.estado_manual = 0;
    const { id } = req.params;
    const query1 = await db.query("SELECT * FROM tbl_riego_cultivo WHERE tbl_riego_cultivo.cli_id=? AND tbl_riego_cultivo.riego_cul_estado=?", [id, 1]);
@@ -224,6 +233,7 @@ router.get("/Eliminar/:id", async (req, res) => {
 });
 
 router.get("/RiegoAutomaticoActivado/:id", async (req, res) => {
+   sensores.temp_valvula = "Riego Automático";
    sensores.estado_automatico = 1;
    const { id } = req.params;
    const query1 = await db.query("SELECT * FROM tbl_riego_cultivo WHERE tbl_riego_cultivo.cli_id=? AND tbl_riego_cultivo.riego_cul_estado=?", [id, 1]);
@@ -237,7 +247,7 @@ router.get("/RiegoAutomaticoActivado/:id", async (req, res) => {
 router.get('/DesactivarActumatico', async (req, res) => {
 
    sensores.estado_automatico = 0;
-
+   sensores.temp_valvula = "Riego Automático OFF";
 
    const respuesta = {
       response: "success",
@@ -252,6 +262,15 @@ router.get("/BuscarActivador/:id", async (req, res) => {
    res.json(query1[0]);
 
 });
+
+function horaTiempos() {
+   var fecha = new Date();
+   var hora1 = fecha.getHours();
+   var minutos = fecha.getMinutes();
+   var segundos = fecha.getSeconds();
+   var rec = hora1 + ":" + minutos + ":" + segundos;
+   return rec;
+}
 
 
 

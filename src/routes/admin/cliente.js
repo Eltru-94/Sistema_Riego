@@ -3,10 +3,13 @@ const router = express.Router();
 const db = require("../../basedatos");
 const { isLoggedIn } = require("../../lib/auth");
 const helpers = require("../../lib/helpers");
+const { sensores } = require('../../lib/Sensores');
 
 //Index cliente
 router.get("/", isLoggedIn, async (req, res) => {
-  res.render("admin/cliente/index", { layout: "admin" });
+  sensores.mensaje_valvula = "Inicio usuarios sistema de riego";
+  sensores.titulo = "Usuarios",
+    res.render("admin/cliente/index", { layout: "admin" });
 });
 
 //Index Actualizar Cliente
@@ -72,7 +75,7 @@ router.post("/crear", isLoggedIn, async (req, res) => {
       res.json(respuesta);
     }
   }
-  
+
 });
 
 //lista clientes
@@ -116,8 +119,8 @@ router.post("/actualizar/:id", isLoggedIn, async (req, res) => {
     cli_correo: correo,
     cli_estado: 1,
   };
-  const newrol={
-    rol_id:rol,
+  const newrol = {
+    rol_id: rol,
   }
   const query = await db.query(
     "UPDATE tbl_cliente set ? WHERE tbl_cliente.cli_id = ?",
@@ -134,7 +137,7 @@ router.post("/actualizar/:id", isLoggedIn, async (req, res) => {
   );
 
 
-  
+
   if (query.affectedRows == 1 && query1.affectedRows == 1 && query2.affectedRows == 1) {
     const respuesta = { response: "success", mensaje: "Usuario Actualizado" };
     res.json(respuesta);
@@ -149,7 +152,7 @@ router.post("/buscar", isLoggedIn, async (req, res) => {
     [tem]
   );
   res.json(clientes);
-  
+
 });
 //Eliminar clientes
 router.get("/eliminar/:id", isLoggedIn, async (req, res) => {
@@ -164,5 +167,7 @@ router.get("/eliminar/:id", isLoggedIn, async (req, res) => {
     res.json(respuesta);
   }
 });
+
+
 
 module.exports = router;

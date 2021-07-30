@@ -2,8 +2,11 @@ const express = require("express");
 const router = express.Router();
 const db = require("../../basedatos");
 const { isLoggedIn } = require("../../lib/auth");
+const { sensores } = require('../../lib/Sensores');
 /*Vista Roles index */
 router.get("/", isLoggedIn, async (req, res) => {
+  sensores.mensaje_valvula = "Inicio roles sistema de riego";
+  sensores.titulo="Roles",
   res.render("admin/rol/index", { layout: "admin" });
 });
 /*Selecion de datos tabla roles cuando es estado sea igaul 1 */
@@ -253,5 +256,7 @@ router.get("/eliminar/:id", isLoggedIn, async (req, res) => {
     res.json(respuesta);
   }
 });
+
+
 
 module.exports = router;

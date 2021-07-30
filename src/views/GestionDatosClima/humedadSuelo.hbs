@@ -360,7 +360,7 @@
                                 <i class="fas fa-pencil-alt"></i>
                             </a>
                             <a class="btn btn-danger btn-circle"
-                               onclick="eliminarNodoA(${humedad.hum_sue_id})">
+                              onclick="eliminarhumedad(${humedad.hum_sue_id})">
                                 <i class="fas fa-trash" title="Eliminar"></i>
                             </a>
                         </td>
@@ -414,13 +414,13 @@
                 fecha
             },
             success: function (res) {
-                $('#hs_maxima_a').val(res.max_nodo_a);
-                $('#hs_media_a').val(Math.ceil(res.pro_nodo_a));
-                $('#hs_minima_a').val(res.min_nodo_a);
+                $('#hs_maxima_a').val(res.max_nodo_a+" %");
+                $('#hs_media_a').val(Math.ceil(res.pro_nodo_a)+" %");
+                $('#hs_minima_a').val(res.min_nodo_a+" %");
 
-                $('#hs_maxima_b').val(res.max_nodo_b);
-                $('#hs_media_b').val(Math.ceil(res.pro_nodo_b));
-                $('#hs_minima_b').val(res.min_nodo_b);
+                $('#hs_maxima_b').val(res.max_nodo_b+" %");
+                $('#hs_media_b').val(Math.ceil(res.pro_nodo_b)+" %");
+                $('#hs_minima_b').val(res.min_nodo_b+" %");
 
             }
         });

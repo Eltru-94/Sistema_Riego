@@ -3,9 +3,11 @@ const router = express.Router();
 const db = require("../../basedatos");
 const { isLoggedIn } = require("../../lib/auth");
 const helpers = require("../../lib/helpers");
+const { sensores } = require("../../lib/Sensores");
 
 
 router.get("/", isLoggedIn, async (req, res) => {
+  mensaje();
   res.render("GestionDatosClima/humedadSuelo", { layout: "admin" });
 })
 
@@ -111,10 +113,28 @@ router.post("/nodo", isLoggedIn, async (req, res) => {
 router.post("/CalculosDatos", isLoggedIn, async (req, res) => {
   const { fecha } = req.body;
   const H_claculos = await db.query(
-    "SELECT AVG(tbl_humedad_suelo.hum_sue_nodo_a) AS 'pro_nodo_a', MAX(tbl_humedad_suelo.hum_sue_nodo_a) AS 'max_nodo_a', MIN(tbl_humedad_suelo.hum_sue_nodo_a) AS 'min_nodo_a', AVG(tbl_humedad_suelo.hum_sue_nodo_b) AS 'pro_nodo_b', MAX(tbl_humedad_suelo.hum_sue_nodo_b) AS 'max_nodo_b', MIN(tbl_humedad_suelo.hum_sue_nodo_b) AS 'min_nodo_b' FROM tbl_humedad_suelo WHERE tbl_humedad_suelo.hum_sue_fecha=?",[fecha, 1]
+    "SELECT AVG(tbl_humedad_suelo.hum_sue_nodo_a) AS 'pro_nodo_a', MAX(tbl_humedad_suelo.hum_sue_nodo_a) AS 'max_nodo_a', MIN(tbl_humedad_suelo.hum_sue_nodo_a) AS 'min_nodo_a', AVG(tbl_humedad_suelo.hum_sue_nodo_b) AS 'pro_nodo_b', MAX(tbl_humedad_suelo.hum_sue_nodo_b) AS 'max_nodo_b', MIN(tbl_humedad_suelo.hum_sue_nodo_b) AS 'min_nodo_b' FROM tbl_humedad_suelo WHERE tbl_humedad_suelo.hum_sue_fecha=?", [fecha, 1]
   );
   res.json(H_claculos[0]);
 });
+;
+function mensaje() {
+  sensores.titulo = "Sensor Humedad Suelo";
+  var aux_a = "";
+  var aux_b = "";
+  if (sensores.humedad_suelo_a == 0) {
+    aux_a = "Nodo A : SC";
+  } else {
+    aux_a = "Nodo A : " + sensores.humedad_suelo_a + "%";
+  }
+  if (sensores.humedad_suelo_b == 0) {
+    aux_b = "Nodo B : SC";
+  } else {
+    aux_b = "Nodo B : " + sensores.humedad_suelo_b + "%";
+  }
 
+
+  sensores.mensaje_valvula = "HS : "+aux_a + "         " + aux_b;
+}
 
 module.exports = router;

@@ -94,6 +94,7 @@
     margin: 20px;
     text-align: center;
     transition: all 0.25s;
+    color: black;
 }
 .container1 .card:hover{
     transform: translateY(-15px);
