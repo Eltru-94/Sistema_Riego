@@ -1,0 +1,235 @@
+<div class="row">
+    <h5 class="center">ECUACIÓN DE PENMAN-MONTEITH</h5>
+</div>
+<hr>
+<div class="row">
+    <div class="col-sm-4 mb-3 mb-sm-0">
+        <button type="button" onclick="SelectCultivos()" name="CrearCultivoRiego" id="CrearCultivoRiego"
+            class="btn btn-primary btn-icon-split btn-sm" data-bs-toggle="modal" data-bs-target="#Formula">
+            <span class="icon text-white-50">
+                <i class="fas">ETo</i>
+            </span>
+            <span class="text">Variables de Calculo</span>
+        </button>
+    </div>
+    <br>
+    <div class="col-sm-4 mb-9 mb-sm-0">
+        <img src="imagenes/formula.png" alt="">
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="Formula" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header text-primary">
+                <h5 class="modal-title " id="exampleModalLabel">Variables Ecuación</h5>
+            </div>
+
+            <form id="forVariables">
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-sm-4">
+                            <div>
+                                <label>Velocidad Viento</label>
+                                <input type="text" class="form-control form-control-user" id="velocidad_viento"
+                                    name="velocidad_viento" placeholder="vels : m/s">
+                            </div>
+                            <div id="grupo_velocidad_viento"></div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div>
+                                <label>Altura Estación C</label>
+                                <input type="text" class="form-control form-control-user" id="altura" name="altura"
+                                    placeholder="altura : m">
+                            </div>
+                            <div id="grupo_altura"></div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div>
+                                <label>Latitud</label>
+                                <input type="text" class="form-control form-control-user" id="latitud" name="latitud"
+                                    placeholder="latitud : ">
+                            </div>
+                            <div id="grupo_latitud"></div>
+                        </div>
+
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-4 mb-3 mb-sm-0">
+                            <div>
+                                <label>Humedad relativa</label>
+                                <input type="text" class="form-control form-control-user" id="Humedad_relativa"
+                                    name="Humedad_relativa" placeholder="HRP : ">
+                            </div>
+                            <div id="grupo_humedad_relativa"></div>
+                        </div>
+                        <div class="col-sm-4 ">
+                            <div>
+                                <label>msnm</label>
+                                <input type="text" class="form-control form-control-user" id="msnm" name="msnm"
+                                    placeholder="msnm : ">
+                            </div>
+                            <div id="grupo_msnm"></div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div>
+                                <label>% Despeje nubes</label>
+                                <input type="text" class="form-control form-control-user" id="porcentaje"
+                                    name="porcentaje" placeholder="pdn : %">
+                            </div>
+                            <div id="grupo_porcentaje"></div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-4 mb-3 mb-sm-0">
+                            <div>
+                                <label>Tmax</label>
+                                <input type="text" class="form-control form-control-user" id="Tmax" name="Tmax"
+                                    placeholder="Tmax : ºC">
+                            </div>
+                            <div id="grupo_Tmax"></div>
+                        </div>
+                        <div class="col-sm-4 ">
+                            <div>
+                                <label>Tpromedio</label>
+                                <input type="text" class="form-control form-control-user" id="Tpromedio"
+                                    name="Tpromedio" placeholder="Tpro : ºC">
+                            </div>
+                            <div id="grupo_Tpromedio"></div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div>
+                                <label>Tmin</label>
+                                <input type="text" class="form-control form-control-user" id="Tmin" name="Tmin"
+                                    placeholder="Tmin : ºC">
+                            </div>
+                            <div id="grupo_Tmin"></div>
+                        </div>
+
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-4 mb-3 mb-sm-0">
+                            <div>
+                                <label>FlujoCalor</label>
+                                <input type="text" class="form-control form-control-user" id="FlujoCalor"
+                                    name="FlujoCalor" placeholder="G : MJ m^-2 dia^-1">
+                            </div>
+                            <div id="grupo_FlujoCalor"></div>
+                        </div>
+                        <div class="col-sm-4 mb-3 mb-sm-0">
+                            <div>
+                                <label>Meses</label>
+                                <select class="form-control form-control-user" id="meses" name="meses">
+                                    <option value="1">Enero</option>
+                                    <option value="2">Febrero</option>
+                                    <option value="3">Marzo</option>
+                                    <option value="4">Abril</option>
+                                    <option value="5">Mayo</option>
+                                    <option value="6">Junio</option>
+                                    <option value="7">Julio</option>
+                                    <option value="8">Agosto</option>
+                                    <option value="9">Septiembre</option>
+                                    <option value="10">Octubre</option>
+                                    <option value="11">Noviembre</option>
+                                    <option value="12">Diciembre</option>
+                                </select>
+                            </div>
+                            <div id="grupo_mes"></div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="modal-footer" id="BotonesCrear">
+                    <button type="button" class="btn btn-secondary btn-icon-split btn-sm" id="btn_Cerrar"
+                        data-bs-dismiss="modal">
+                        <span class="icon text-white-50">
+                            <i class="fa fa-window-close"></i>
+                        </span>
+                        <span class="text">Cerrar</span>
+                    </button>
+                    <button type="submit" value="VariablesCalculo" class="btn btn-primary btn-icon-split btn-sm"
+                        id="btn_VariablesCalculo">
+                        <span class="icon text-white-50">
+                            <i class="fa fa-save"></i>
+                        </span>
+                        <span class="text">Actualizar</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<h5>Calculos ecuación</h5>
+<hr>
+
+<!--Inicio Tabla lista Usuario -->
+<div class="card shadow mb-4">
+
+    <div class="table-responsive">
+        <table class="table table-bordered" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Y</th>
+                    <th>Rn</th>
+                    <th>Ra</th>
+                    <th>G</th>
+                    <th>T</th>
+                    <th>U2</th>
+                    <th>es</th>
+                    <th>ea</th>
+                    <th>(es-ea)</th>
+                    <th>(es-ea)</th>
+                    <th>ETo</th>
+                </tr>
+            </thead>
+            <tbody id="TablaDatosVariables">
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script>
+    const btn_VariablesCalculo = document.querySelector('#btn_VariablesCalculo');
+    btn_VariablesCalculo.addEventListener('click', function (e) {
+
+        let vels = $('#velocidad_viento').val();
+        let altura = $('#altura').val();
+        let latitud = $('#latitud').val();
+        let mes = $('#meses').val();
+        let msnm = $('#msnm').val();
+        let Tpromedio = $('#Tpromedio').val();
+        let Tmax = $('#Tmax').val();
+        let Tmin = $('#Tmin').val();
+        let HRpromedio = $('#Humedad_relativa').val();
+        let porcentaje = $('#porcentaje').val();
+        let FlujoCalor = $('#FlujoCalor').val();
+
+
+
+        let v2 = velocidadViento(vels, altura);
+        let Ra = RadiacionExtraterrestre(latitud, mes);
+        let N = InsolacionMaximaDiaria(latitud, mes)
+        let pcv = pendienteCurvaPresionVapor(Tpromedio)
+        let y = constantepsicometric(msnm);
+        let es = presionVaporSaturacion(Tmax, Tmin);
+        let ea = presionRealVapor(HRpromedio, es);
+        let n = duracionInsolacion(N, porcentaje);
+        let Rn = radiacionNeta(Tmax, Tmin, ea, Ra, msnm, N, n);
+
+        let Eto = EcuacionPenmanMonteith(v2, y, pcv, es, ea, Rn, Tpromedio,FlujoCalor);
+        alert("Valor Eto = " + Eto);
+
+
+
+
+    });
+
+</script>

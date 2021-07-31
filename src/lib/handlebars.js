@@ -93,6 +93,7 @@ helpers.existe = function (datos, pos) {
       '<div id="collapse4" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">';
     html += ' <div class="bg-white py-2 collapse-inner rounded">';
     html += '  <a class="collapse-item" href="/GestionCultivo">Cultivo</a>';
+    html += '  <a class="collapse-item" href="/Formula">Formula</a>';
     html += '  <a class="collapse-item" href="/RiegoCultivo">Riego Cultivo</a>';
     html += "</div>";
     html += "</div>";
