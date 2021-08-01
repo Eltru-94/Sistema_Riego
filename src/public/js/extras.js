@@ -148,6 +148,24 @@ function HoraActual() {
   return hora;
 }
 
+
+
+function validarNumerosIntDoubles(valor, grupo, mensaje) {
+  document.getElementById(grupo).innerHTML = " ";
+
+  var regexp = /^[0-9]+([.][0-9]+)?$/g;
+  var result = regexp.test(valor);
+  if (result) {
+    document.getElementById(grupo).innerHTML =
+      '<small style="color:#008f39">listo</small>';
+    return true;
+  } else {
+    document.getElementById(grupo).innerHTML +=
+      '<br><small style="color:#FF0000">' + mensaje + '</small>';
+    return false;
+  }
+}
+
 var arreglo = [{ "id": 0 }]
 
 //Calculo ECUACIÓN DE PENMAN-MONTEITH
@@ -171,23 +189,28 @@ function velocidadViento(velocidad, altura) {
 }
 
 function RadiacionExtraterrestre(latitudx, mes) {
+  let x = latitudx;
+  latitudx = latitudx + ".";
   let a = latitudx.split(".");
   let x2 = parseInt(a[0]);
   let x1 = parseInt(a[0]) + 2;
   let y2 = arrRadiacionExtraterrestre[x2][mes - 1];
   let y1 = arrRadiacionExtraterrestre[x1][mes - 1];
-  let Ra = y1 - (x1 - latitudx) * ((y2 - y1) / (x2 - x1));
+  let Ra = y1 - (x1 - x) * ((y2 - y1) / (x2 - x1));
+
   return Ra.toFixed(4);
 
 }
 
 function InsolacionMaximaDiaria(latitudx, mes) {
+  let x = latitudx;
+  latitudx = latitudx + ".";
   let a = latitudx.split(".");
   let x2 = parseInt(a[0]);
   let x1 = parseInt(a[0]) + 2;
   let y2 = arrInsolacion[x2][mes - 1];
   let y1 = arrInsolacion[x1][mes - 1];
-  let N = y1 - (x1 - latitudx) * ((y2 - y1) / (x2 - x1));
+  let N = y1 - (x1 - x) * ((y2 - y1) / (x2 - x1));
   return N.toFixed(4);
 
 }

@@ -14,7 +14,7 @@
     </div>
     <br>
     <div class="col-sm-4 mb-9 mb-sm-0">
-        <img src="imagenes/formula.png" alt="">
+        <img src="imagenes/formula.png" alt="" width="430" height="310">
     </div>
 </div>
 
@@ -33,7 +33,7 @@
                     <div class="form-group row">
                         <div class="col-sm-4">
                             <div>
-                                <label>Velocidad Viento</label>
+                                <label>Vels m/s</label>
                                 <input type="text" class="form-control form-control-user" id="velocidad_viento"
                                     name="velocidad_viento" placeholder="vels : m/s">
                             </div>
@@ -41,7 +41,7 @@
                         </div>
                         <div class="col-sm-4">
                             <div>
-                                <label>Altura Estación C</label>
+                                <label>Altura Estación m</label>
                                 <input type="text" class="form-control form-control-user" id="altura" name="altura"
                                     placeholder="altura : m">
                             </div>
@@ -60,7 +60,7 @@
                     <div class="form-group row">
                         <div class="col-sm-4 mb-3 mb-sm-0">
                             <div>
-                                <label>Humedad relativa</label>
+                                <label>Humedad rel %</label>
                                 <input type="text" class="form-control form-control-user" id="Humedad_relativa"
                                     name="Humedad_relativa" placeholder="HRP : ">
                             </div>
@@ -76,7 +76,7 @@
                         </div>
                         <div class="col-sm-4">
                             <div>
-                                <label>% Despeje nubes</label>
+                                <label>% nubosidad</label>
                                 <input type="text" class="form-control form-control-user" id="porcentaje"
                                     name="porcentaje" placeholder="pdn : %">
                             </div>
@@ -88,7 +88,7 @@
                     <div class="form-group row">
                         <div class="col-sm-4 mb-3 mb-sm-0">
                             <div>
-                                <label>Tmax</label>
+                                <label>Tmax °C</label>
                                 <input type="text" class="form-control form-control-user" id="Tmax" name="Tmax"
                                     placeholder="Tmax : ºC">
                             </div>
@@ -96,7 +96,7 @@
                         </div>
                         <div class="col-sm-4 ">
                             <div>
-                                <label>Tpromedio</label>
+                                <label>Tpromedio °C</label>
                                 <input type="text" class="form-control form-control-user" id="Tpromedio"
                                     name="Tpromedio" placeholder="Tpro : ºC">
                             </div>
@@ -104,7 +104,7 @@
                         </div>
                         <div class="col-sm-4">
                             <div>
-                                <label>Tmin</label>
+                                <label>Tmin °C</label>
                                 <input type="text" class="form-control form-control-user" id="Tmin" name="Tmin"
                                     placeholder="Tmin : ºC">
                             </div>
@@ -115,7 +115,7 @@
                     <div class="form-group row">
                         <div class="col-sm-4 mb-3 mb-sm-0">
                             <div>
-                                <label>FlujoCalor</label>
+                                <label>Flujo de Calor</label>
                                 <input type="text" class="form-control form-control-user" id="FlujoCalor"
                                     name="FlujoCalor" placeholder="G : MJ m^-2 dia^-1">
                             </div>
@@ -125,18 +125,7 @@
                             <div>
                                 <label>Meses</label>
                                 <select class="form-control form-control-user" id="meses" name="meses">
-                                    <option value="1">Enero</option>
-                                    <option value="2">Febrero</option>
-                                    <option value="3">Marzo</option>
-                                    <option value="4">Abril</option>
-                                    <option value="5">Mayo</option>
-                                    <option value="6">Junio</option>
-                                    <option value="7">Julio</option>
-                                    <option value="8">Agosto</option>
-                                    <option value="9">Septiembre</option>
-                                    <option value="10">Octubre</option>
-                                    <option value="11">Noviembre</option>
-                                    <option value="12">Diciembre</option>
+
                                 </select>
                             </div>
                             <div id="grupo_mes"></div>
@@ -175,7 +164,6 @@
         <table class="table table-bordered" cellspacing="0">
             <thead>
                 <tr>
-                    <th>Y</th>
                     <th>Rn</th>
                     <th>Ra</th>
                     <th>G</th>
@@ -184,7 +172,8 @@
                     <th>es</th>
                     <th>ea</th>
                     <th>(es-ea)</th>
-                    <th>(es-ea)</th>
+                    <th>&#x25B2;</th>
+                    <th>y</th>
                     <th>ETo</th>
                 </tr>
             </thead>
@@ -198,8 +187,14 @@
 
 <script>
     const btn_VariablesCalculo = document.querySelector('#btn_VariablesCalculo');
-    btn_VariablesCalculo.addEventListener('click', function (e) {
+    const btn_Cerrar = document.querySelector('#btn_Cerrar');
 
+    btn_Cerrar.addEventListener('click', function (e) {
+        DatosEcuacion();
+        limpiarAlertas();
+    });
+    btn_VariablesCalculo.addEventListener('click', function (e) {
+        e.preventDefault();
         let vels = $('#velocidad_viento').val();
         let altura = $('#altura').val();
         let latitud = $('#latitud').val();
@@ -211,25 +206,182 @@
         let HRpromedio = $('#Humedad_relativa').val();
         let porcentaje = $('#porcentaje').val();
         let FlujoCalor = $('#FlujoCalor').val();
+        if (campoVacio(vels, "grupo_velocidad_viento", "Ingrese velocidad viento")) {
+            if (validarNumerosIntDoubles(vels, "grupo_velocidad_viento", "Valor Incorrecto")) {
+
+                if (campoVacio(altura, "grupo_altura", "Ingrese la altura")) {
+                    if (validarNumerosIntDoubles(altura, "grupo_altura", "Valor Incorrecto")) {
+
+                        if (campoVacio(latitud, "grupo_latitud", "Ingrese la latitud")) {
+                            if (validarNumerosIntDoubles(latitud, "grupo_latitud", "Valor Incorrecto")) {
+
+                                if (campoVacio(msnm, "grupo_msnm", "Ingrese la msnm")) {
+                                    if (validarNumerosIntDoubles(msnm, "grupo_msnm", "Valor Incorrecto")) {
+
+                                        if (campoVacio(Tpromedio, "grupo_Tpromedio", "Ingrese la Temp promedio")) {
+                                            if (validarNumerosIntDoubles(Tpromedio, "grupo_Tpromedio", "Valor Incorrecto")) {
+
+                                                if (campoVacio(Tmax, "grupo_Tmax", "Ingrese la Tem maxima")) {
+                                                    if (validarNumerosIntDoubles(Tmax, "grupo_Tmax", "Valor Incorrecto")) {
+
+                                                        if (campoVacio(Tmin, "grupo_Tmin", "Ingrese la Temp minima")) {
+                                                            if (validarNumerosIntDoubles(Tmin, "grupo_Tmin", "Valor Incorrecto")) {
+
+                                                                if (campoVacio(HRpromedio, "grupo_humedad_relativa", "Ingrese el promedio HR")) {
+                                                                    if (validarNumerosIntDoubles(HRpromedio, "grupo_humedad_relativa", "Valor Incorrecto")) {
+
+                                                                        if (campoVacio(porcentaje, "grupo_porcentaje", "Ingrese el porcentaje")) {
+                                                                            if (validarNumerosIntDoubles(porcentaje, "grupo_porcentaje", "Valor Incorrecto")) {
+
+                                                                                if (campoVacio(porcentaje, "grupo_porcentaje", "Ingrese el porcentaje")) {
+                                                                                    if (validarNumerosIntDoubles(porcentaje, "grupo_porcentaje", "Valor Incorrecto")) {
 
 
+                                                                                        if (campoVacio(FlujoCalor, "grupo_FlujoCalor", "Ingrese el porcentaje")) {
+                                                                                            if (validarNumerosIntDoubles(FlujoCalor, "grupo_FlujoCalor", "Valor Incorrecto")) {
 
-        let v2 = velocidadViento(vels, altura);
-        let Ra = RadiacionExtraterrestre(latitud, mes);
-        let N = InsolacionMaximaDiaria(latitud, mes)
-        let pcv = pendienteCurvaPresionVapor(Tpromedio)
-        let y = constantepsicometric(msnm);
-        let es = presionVaporSaturacion(Tmax, Tmin);
-        let ea = presionRealVapor(HRpromedio, es);
-        let n = duracionInsolacion(N, porcentaje);
-        let Rn = radiacionNeta(Tmax, Tmin, ea, Ra, msnm, N, n);
+                                                                                                var URL = "/Formula/Actualizar/1";
 
-        let Eto = EcuacionPenmanMonteith(v2, y, pcv, es, ea, Rn, Tpromedio,FlujoCalor);
-        alert("Valor Eto = " + Eto);
+                                                                                                $.ajax({
+                                                                                                    url: URL,
+                                                                                                    type: "post",
+                                                                                                    dataType: "json",
+                                                                                                    data: {
+                                                                                                        vels,
+                                                                                                        altura,
+                                                                                                        latitud,
+                                                                                                        mes,
+                                                                                                        msnm,
+                                                                                                        Tpromedio,
+                                                                                                        Tmax,
+                                                                                                        Tmin,
+                                                                                                        HRpromedio,
+                                                                                                        porcentaje,
+                                                                                                        FlujoCalor
+                                                                                                    },
+                                                                                                    success: function (res) {
+                                                                                                        if (res.response == "success") {
+                                                                                                            toastr["success"](res.mensaje);
+                                                                                                            $("#Formula").modal("hide");
 
+                                                                                                            DatosEcuacion();
+                                                                                                            limpiarAlertas();
+                                                                                                        }
+                                                                                                    },
+                                                                                                });
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
 
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
 
     });
 
+    function DatosEcuacion() {
+        var URL = "/Formula/Ecuacion";
+        $.ajax({
+            url: URL,
+            type: "get",
+            dataType: "json",
+            success: function (response) {
+                let tbody = $('tbody');
+                tbody.html('');
+                response.forEach(ecuacion => {
+                    let v2 = velocidadViento(ecuacion.ecu_vels, ecuacion.ecu_altura);
+                    let y = constantepsicometric(ecuacion.ecu_msnm);
+                    let Ra = RadiacionExtraterrestre(ecuacion.ecu_latitud, ecuacion.ecu_mes);
+                    let N = InsolacionMaximaDiaria(ecuacion.ecu_latitud, ecuacion.ecu_mes);
+                    let es = presionVaporSaturacion(ecuacion.ecu_Tmax, ecuacion.ecu_Tmin);
+                    let ea = presionRealVapor(ecuacion.ecu_humedad_relativa_promedio, es);
+                    let es_ea = (parseFloat(es) - parseFloat(ea)).toFixed(4);
+                    let pcv = pendienteCurvaPresionVapor(ecuacion.ecu_Tpromedio);
+                    let n = duracionInsolacion(N, ecuacion.ecu_despeje_nubes);
+                    let Rn = radiacionNeta(ecuacion.ecu_Tmax, ecuacion.ecu_Tmin, ea, Ra, ecuacion.ecu_msnm, N, n);
+                    let Eto = EcuacionPenmanMonteith(v2, y, pcv, es, ea, Rn, ecuacion.ecu_Tpromedio, ecuacion.ecu_flujoCalor);
+                    $('#velocidad_viento').val((ecuacion.ecu_vels));
+                    $('#altura').val(ecuacion.ecu_altura);
+                    $('#latitud').val(ecuacion.ecu_latitud);
+
+                    $('#msnm').val(ecuacion.ecu_msnm);
+                    $('#Tpromedio').val(ecuacion.ecu_Tpromedio);
+                    $('#Tmax').val(ecuacion.ecu_Tmax);
+                    $('#Tmin').val(ecuacion.ecu_Tmin);
+                    $('#Humedad_relativa').val(ecuacion.ecu_humedad_relativa_promedio);
+                    $('#porcentaje').val(ecuacion.ecu_despeje_nubes);
+                    $('#FlujoCalor').val(ecuacion.ecu_flujoCalor);
+                    MesesLista(ecuacion.ecu_mes);
+                    tbody.append(`
+                    <tr>
+                        <td >${Rn}</td>
+                        <td >${Ra}</td>
+                        <td>${ecuacion.ecu_flujoCalor}</td>
+                        <td>${ecuacion.ecu_Tpromedio} °C</td>
+                        <td>${v2}</td>
+                        <td>${es}</td>
+                        <td>${ea}</td>
+                        <td>${es_ea}</td>
+                        <td>${pcv}</td>
+                        <td>${y}</td>
+                        <td>${Eto}</td>
+                    
+                    </tr>
+                `)
+                })
+            }, error: function (e) {
+                console.log(e.readyState);
+            }
+        });
+    }
+
+    function limpiarAlertas() {
+        document.getElementById("grupo_velocidad_viento").innerHTML = "";
+        document.getElementById("grupo_porcentaje").innerHTML = "";
+        document.getElementById("grupo_Tmax").innerHTML = "";
+        document.getElementById("grupo_Tmin").innerHTML = "";
+        document.getElementById("grupo_Tpromedio").innerHTML = "";
+        document.getElementById("grupo_humedad_relativa").innerHTML = "";
+        document.getElementById("grupo_latitud").innerHTML = "";
+        document.getElementById("grupo_altura").innerHTML = "";
+        document.getElementById("grupo_msnm").innerHTML = "";
+        document.getElementById("grupo_porcentaje").innerHTML = "";
+        document.getElementById("grupo_FlujoCalor").innerHTML = "";
+    }
+
+    function MesesLista(id_mes) {
+        let MesesAnio = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+        let meses = document.getElementById("meses");
+        let mensaje = "";
+        for (let i = 0; i < 12; i++) {
+            let aux = (i + 1);
+            if (id_mes == aux) {
+                mensaje += "<option value='" + aux + "' selected>" + MesesAnio[i] + "</option>";
+            }
+            mensaje += "<option value='" + aux + "'>" + MesesAnio[i] + "</option>";
+        }
+        meses.innerHTML = mensaje;
+    }
+
+    window.onload = DatosEcuacion;
 </script>

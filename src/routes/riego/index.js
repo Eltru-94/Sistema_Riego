@@ -15,8 +15,9 @@ router.get('/', (req, res) => {
 });
 
 router.get('/conectar/', async (req, res) => {
-   const { temperatura_A, humedad_relativa_A, humedad_suelo_nodoA, humedad_suelo_nodoB, fecha_actual} = req.query;
-   var hora_actual =horaTiempos();
+   const { temperatura_A, humedad_relativa_A, humedad_suelo_nodoA, humedad_suelo_nodoB } = req.query;
+   var hora_actual = horaTiempos();
+   var fecha_actual = fechaTiempos();
    sensores.humedad_suelo_a = Math.ceil((humedad_suelo_nodoA * 100) / 1023);
    sensores.humedad_suelo_b = Math.ceil((humedad_suelo_nodoB * 100) / 1023);
    sensores.temperuta_a = temperatura_A;
@@ -121,7 +122,7 @@ router.get('/conectar/', async (req, res) => {
    if (sensores.estado_manual == 0 && sensores.estado_automatico == 0) {
       sensores.temp_valvula = "0FF"
    }
-   console.log(horaTiempos());
+   console.log(fechaTiempos()+" h: "+horaTiempos());
    res.json(valor_aux);
 
 
@@ -269,6 +270,15 @@ function horaTiempos() {
    var minutos = fecha.getMinutes();
    var segundos = fecha.getSeconds();
    var rec = hora1 + ":" + minutos + ":" + segundos;
+   return rec;
+}
+
+function fechaTiempos() {
+   var fecha = new Date();
+   var anio = fecha.getFullYear();
+   var mes = fecha.getMonth() + 1;
+   var dia = fecha.getDate();
+   var rec = anio + "-" + mes + "-" + dia;
    return rec;
 }
 

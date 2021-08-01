@@ -19,7 +19,7 @@ global.config = require('./lib/Sensores');
 
 
 app.set("port", process.env.PORT || 80); //Port Servidor
-app.set("host", "192.168.1.145");
+//app.set("host", "192.168.1.145");
 app.set("views", path.join(__dirname, "views"));
 app.engine(
   ".hbs",
@@ -87,9 +87,9 @@ app.use(express.static(path.join(__dirname, "public")));
 
 //Inicialización Servidor
 app.listen(app.get("port"), app.get("host"), () => {
-  //console.log("Servidor Puerto", app.get("port"));
+  console.log("Servidor Puerto", app.get("port"));
 
-  console.log(`Servidor corriendo en http://${app.get("host")}:${app.get("port")}`);
+  //console.log(`Servidor corriendo en http://${app.get("host")}:${app.get("port")}`);
 });
 
 
