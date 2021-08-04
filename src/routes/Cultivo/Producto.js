@@ -6,7 +6,7 @@ const { sensores } = require('../../lib/Sensores');
 
 router.get("/", isLoggedIn, async (req, res) => {
     sensores.mensaje_valvula = "Inicio cultivo sistema de riego";
-    sensores.titulo = "Cultivos",
+    sensores.titulo = "Cultivos";
         res.render("Cultivo/index", { layout: "admin" });
 
 });
