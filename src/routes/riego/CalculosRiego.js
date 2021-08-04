@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require("../../basedatos");
 const { sensores } = require('../../lib/Sensores');
 router.get('/', (req, res) => {
-   sensores.mensaje_valvula = "Inicio sistema de riego";
+   sensores.mensaje_valvula = "Calculos de riego";
    sensores.titulo = "Programar Riego";
    res.render("riego/CalculosRiego", { layout: "admin" });
 });
@@ -19,8 +19,6 @@ router.post('/ActualizarRiegoCultivo/:id', async(req, res) => {
       "UPDATE tbl_riego_cultivo set ? WHERE tbl_riego_cultivo.riego_cul_id= ?",
       [new_riego_cultivo, id]
    );
-
-   console.log(update_riego_cultivo);
    
    if (update_riego_cultivo.affectedRows == 1) {
       const respuesta = {

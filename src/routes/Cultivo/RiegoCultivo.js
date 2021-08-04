@@ -5,7 +5,7 @@ const { isLoggedIn } = require("../../lib/auth");
 const { sensores } = require('../../lib/Sensores');
 
 router.get("/", isLoggedIn, async (req, res) => {
-  sensores.mensaje_valvula = "Inicio riego cultivo sistema de riego";
+  sensores.mensaje_valvula = "Actualidad del riego cultivo";
   sensores.titulo = "Programar Riego",
 
     res.render("cultivo/RiegoCultivo", { layout: "admin" });

@@ -6,7 +6,6 @@ const { sensores } = require('../../lib/Sensores');
 const db = require("../../basedatos");
 var InsertAutomatico = true;
 
-
 var valor_aux = "";
 router.get('/', (req, res) => {
    sensores.mensaje_valvula = "Programar Riego";
@@ -16,15 +15,47 @@ router.get('/', (req, res) => {
 
 router.get('/conectar/', async (req, res) => {
    const { temperatura_A, hora_actual, fecha_actual, humedad_relativa_A, humedad_suelo_nodoA, humedad_suelo_nodoB } = req.query;
-
+   var hora = hora_actual.split(":");
    if (sensores.humedad_rel_estado == 1) {
       sensores.humedad_relativa = humedad_relativa_A;
+      if (hora[0] == 19) {
+         const HRpromedio = await db.query(
+            "SELECT AVG(tbl_humedad_relativa.hum_rel_valor) AS 'promedio' FROM   tbl_humedad_relativa WHERE tbl_humedad_relativa.hum_rel_fecha=?", [fecha, 1]
+         );
+         const newHr = {
+            ecu_humedad_relativa_promedio: HRpromedio[0].promedio
+         };
+
+         console.log(HRpromedio[0].promedio);
+
+         const query = await db.query(
+            "UPDATE tbl_ecuacion e set ? WHERE e.ecu_id = ?",
+            [newHr, 1]
+         );
+
+      }
    } else {
       sensores.humedad_relativa = 0;
    }
 
    if (sensores.temperatura_estado == 1) {
       sensores.temperuta_a = temperatura_A;
+      if (hora[0] == 19) {
+         const Tpromaxmin = await db.query(
+            "SELECT AVG( tbl_temperatura.tem_temperatura) AS 'Tpromedio', MAX( tbl_temperatura.tem_temperatura) AS 'Tmax', MIN(tbl_temperatura.tem_temperatura) AS 'Tmin' FROM  tbl_temperatura WHERE  tbl_temperatura.tem_fecha=?", [fecha, 1]
+         );
+         const newTpmn = {
+            ecu_Tmax: Tpromaxmin[0].Tmax,
+            ecu_Tmin: Tpromaxmin[0].Tmin,
+            ecu_Tpromedio: Tpromaxmin[0].Tpromedio
+
+         };
+         const query = await db.query(
+            "UPDATE tbl_ecuacion e set ? WHERE e.ecu_id = ?",
+            [newTpmn, 1]
+         );
+
+      }
    } else {
       sensores.temperuta_a = 0;
    }
@@ -42,20 +73,21 @@ router.get('/conectar/', async (req, res) => {
    sensores.promedio1 = Math.ceil((sensores.humedad_suelo_a + sensores.humedad_suelo_b) / 2);
    sensores.fecha_actual = fecha_actual;
    sensores.hora_actual = hora_actual;
-   var hora = hora_actual.split(":");
+
    if (hora[1] == 59) {
       verificador = true;
    }
    if (hora[0] <= 18 && hora[0] >= 7) {
       if (hora[1] == 0 && verificador) {
-
-         const newhumedad = {
-            hum_sue_nodo_a: sensores.humedad_suelo_a,
-            hum_sue_nodo_b: sensores.humedad_suelo_b,
-            hum_sue_hora: hora_actual,
-            hum_sue_fecha: fecha_actual,
-            hum_sue_estado: 1,
-         };
+         if (sensores.humedad_suelo == 1) {
+            const newhumedad = {
+               hum_sue_nodo_a: sensores.humedad_suelo_a,
+               hum_sue_nodo_b: sensores.humedad_suelo_b,
+               hum_sue_hora: hora_actual,
+               hum_sue_fecha: fecha_actual,
+               hum_sue_estado: 1,
+            };
+         }
          if (sensores.temperatura_estado == 1) {
             const newtemperatura = {
                tem_temperatura: temperatura_A,
@@ -64,8 +96,6 @@ router.get('/conectar/', async (req, res) => {
                tem_estado: 1,
             };
          }
-
-
          if (sensores.humedad_rel_estado == 1) {
 
             const newtHR = {
@@ -76,7 +106,6 @@ router.get('/conectar/', async (req, res) => {
             };
          }
 
-
          const query1 = await db.query("INSERT INTO tbl_humedad_suelo set ?", [newhumedad]);
          const query2 = await db.query("INSERT INTO tbl_temperatura set ?", [newtemperatura]);
          const query3 = await db.query("INSERT INTO tbl_humedad_relativa set ?", [newtHR]);
@@ -85,8 +114,6 @@ router.get('/conectar/', async (req, res) => {
       }
 
    }
-
-
 
    if (sensores.estado_automatico == 1) {
       const aux_fecha = sensores.fecha_actual;
@@ -145,7 +172,12 @@ router.get('/conectar/', async (req, res) => {
    if (sensores.estado_manual == 0 && sensores.estado_automatico == 0) {
       sensores.temp_valvula = "0FF"
    }
-   console.log(fechaTiempos() + " h: " + horaTiempos() + ": " + sensores.tiempo_aplicacion);
+
+
+
+
+
+
    res.json(valor_aux);
 
 
@@ -316,6 +348,8 @@ function fechaTiempos() {
    var rec = anio + "-" + mes + "-" + dia;
    return rec;
 }
+
+
 
 
 

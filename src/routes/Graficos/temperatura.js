@@ -6,15 +6,9 @@ const { sensores } = require('../../lib/Sensores');
 
 router.get("/", isLoggedIn, async (req, res) => {
 
-    sensores.mensaje_valvula = "Seguimiento del cultivo";
-
-
-    sensores.titulo = "Seguimiento Cultivo";
+    sensores.mensaje_valvula = "Seguimiento de riego en el cultivo";
+    sensores.titulo = "Seguimiento R Cultivo";
     res.render("Graficos/temperatura", { layout: "admin" });
-
 });
-
-
-
 
 module.exports = router;

@@ -5,9 +5,9 @@ const { isLoggedIn } = require("../../lib/auth");
 const { sensores } = require('../../lib/Sensores');
 
 router.get("/", isLoggedIn, async (req, res) => {
-  sensores.mensaje_valvula = "Inicio cultivo sistema de riego";
+  sensores.mensaje_valvula = "Riegos Realizados";
   sensores.titulo = "Cultivos";
-  res.render("Cultivo/index", { layout: "admin" });
+  res.render("cultivo/index", { layout: "admin" });
 
 });
 

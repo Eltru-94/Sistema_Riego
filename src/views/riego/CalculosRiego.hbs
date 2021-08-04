@@ -19,17 +19,17 @@
                         <th>Cultivo</th>
                         <th>ETo</th>
                         <th>ETc</th>
+                        <th>Fase</th>
                         <th>Kc</th>
-                        <th>RR</th>
-                        <th>EE</th>
-                        <th>EL</th>
-                        <th>FR</th>
-                        <th>VA</th>
+                        <th>R.R</th>
+                        <th>E.E.P</th>
+                        <th>E.L.P</th>
+                        <th>V. Agu</th>
                         <th>EG</th>
                         <th>Q</th>
-                        <th>TAD</th>
-                        <th>TAF</th>
-                        <th>Accion</th>
+                        <th>Apli D. Ag</th>
+
+                        <th>Actualizar</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -48,10 +48,10 @@
         <h4>Sistema de Riego por goteo</h4>
 
         <div class="PruebaImagen">
-           <img id="imagenvalvula1" alt="">
-          
+            <img id="imagenvalvula1" alt="">
+
         </div>
-         <div id="datos" class="PruebaImagen">
+        <div id="datos" class="PruebaImagen">
         </div>
         <div id="valvula">
         </div>
@@ -96,18 +96,18 @@
     </div>
 </div>
 <input type="hidden" id="cli_id" name="cli_id" value="{{#cliente_id user 1}}{{/cliente_id}}">
-<input type="hidden"  id="manual" name="manual" value="{{sensores.estado_manual}}">
+<input type="hidden" id="manual" name="manual" value="{{sensores.estado_manual}}">
 <input type="hidden" id="automatico" name="automatico" value="{{sensores.estado_automatico}}">
-<input type="hidden"  id="valvula_id" name="valvula" value="{{sensores.valvula}}">
-<input type="hidden"  id="aux" name="aux">
-<input type="hidden"  id="riego_cultivo" name="riego_cultivo" value="{{ sensores.riego_cultivo}}">
-<input type="hidden"  id="cultivo_id" name="cultivo_id" value="{{sensores.cultivo_id}}">
-<input type="hidden"  id="Eto" name="Eto" value="">
-<input type="hidden"  id="riego_cul_id" name="rig_cul_id" value="{{sensores.riego_cultivo_id}}">
-<input type="hidden"  id="cultivoRiego" name="rig_cul_id" value="{{sensores.riego_cultivo_id}}">
-<input type="hidden"  id="tiempoRiego" name="tiempoRiego">
-<input type="hidden"  id="etapades" name="etapades">
-               
+<input type="hidden" id="valvula_id" name="valvula" value="{{sensores.valvula}}">
+<input type="hidden" id="aux" name="aux">
+<input type="hidden" id="riego_cultivo" name="riego_cultivo" value="{{ sensores.riego_cultivo}}">
+<input type="hidden" id="cultivo_id" name="cultivo_id" value="{{sensores.cultivo_id}}">
+<input type="hidden" id="Eto" name="Eto" value="">
+<input type="hidden" id="riego_cul_id" name="rig_cul_id" value="{{sensores.riego_cultivo_id}}">
+<input type="hidden" id="cultivoRiego" name="rig_cul_id" value="{{sensores.riego_cultivo_id}}">
+<input type="hidden" id="tiempoRiego" name="tiempoRiego">
+<input type="hidden" id="etapades" name="etapades">
+
 
 <hr>
 <!-- Inicio Modal Modulo!-->
@@ -140,15 +140,15 @@
                     <div class="form-group row">
                         <div class="col-sm-6">
                             <div>
-                                <input type="text" class="form-control form-control-user" id="distgoteros" name="distgoteros"
-                                    placeholder="Dist goteros en m">
+                                <input type="text" class="form-control form-control-user" id="distgoteros"
+                                    name="distgoteros" placeholder="Dist goteros en m">
                             </div>
                             <div id="grupo_distgoteros"></div>
                         </div>
-                         <div class="col-sm-6">
+                        <div class="col-sm-6">
                             <div>
-                                <input type="text" class="form-control form-control-user" id="q_goteros" name="q_goteros"
-                                    placeholder="Q Goteros">
+                                <input type="text" class="form-control form-control-user" id="q_goteros"
+                                    name="q_goteros" placeholder="Q Goteros">
                             </div>
                             <div id="grupo_qgoteros"></div>
                         </div>
@@ -195,23 +195,23 @@
                             </select>
                             <div id="grupo_etapacultivo"></div>
                         </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-icon-split btn-sm" id="btn_CerrarEtapa"
-                        data-bs-dismiss="modal">
-                        <span class="icon text-white-50">
-                            <i class="fa fa-window-close"></i>
-                        </span>
-                        <span class="text">Cerrar</span>
-                    </button>
-                    <button type="submit" value="Actualizar" class="btn btn-primary btn-icon-split btn-sm"
-                        id="btn_ActualizarEtapa">
-                        <span class="icon text-white-50">
-                            <i class="fa fa-save"></i>
-                        </span>
-                        <span class="text">Guardar</span>
-                    </button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-icon-split btn-sm" id="btn_CerrarEtapa"
+                            data-bs-dismiss="modal">
+                            <span class="icon text-white-50">
+                                <i class="fa fa-window-close"></i>
+                            </span>
+                            <span class="text">Cerrar</span>
+                        </button>
+                        <button type="submit" value="Actualizar" class="btn btn-primary btn-icon-split btn-sm"
+                            id="btn_ActualizarEtapa">
+                            <span class="icon text-white-50">
+                                <i class="fa fa-save"></i>
+                            </span>
+                            <span class="text">Guardar</span>
+                        </button>
+                    </div>
             </form>
         </div>
     </div>
@@ -226,9 +226,9 @@
     const btn_desactivar_man = document.querySelector("#btn_desactivar_man");
     const btn_eliminar_riego = document.querySelector("#btn_eliminar_riego");
     const btn_desactivar_aut = document.querySelector("#btn_desactivar_aut");
-    const btn_ActualizarEtapa=document.querySelector("#btn_ActualizarEtapa");
-    const imagenllaves=document.querySelector("#imagenvalvula1");
-  
+    const btn_ActualizarEtapa = document.querySelector("#btn_ActualizarEtapa");
+    const imagenllaves = document.querySelector("#imagenvalvula1");
+
     function SelectCultivos() {
         let rol = document.getElementById("cultivo");
         let mensaje = " <option selected value='0'>Escoga el cultivo...</option>";
@@ -242,39 +242,39 @@
                     mensaje += "<option value='" + cultivo.cul_id + "'>" + cultivo.cul_nombre + "</option>";
                 });
                 rol.innerHTML = mensaje;
-                imagenllaves.src="imagenes/valvula.png";
+                imagenllaves.src = "imagenes/valvula.png";
             }
         });
 
     }
 
-    btn_ActualizarEtapa.addEventListener("click", function(e) {
+    btn_ActualizarEtapa.addEventListener("click", function (e) {
         e.preventDefault();
-        let EtapaDesarrolllo=$("#etapacultivoAct").val();
-        let id=$("#riego_cul_id").val();
-        let URL="/CalculosRiego/ActualizarRiegoCultivo/"+ id;
+        let EtapaDesarrolllo = $("#etapacultivoAct").val();
+        let id = $("#riego_cul_id").val();
+        let URL = "/CalculosRiego/ActualizarRiegoCultivo/" + id;
         $.ajax({
-            url:URL,
-            type:"post",
-            dataType:"json",
-            data:{
+            url: URL,
+            type: "post",
+            dataType: "json",
+            data: {
                 EtapaDesarrolllo
             },
-            success:function(res){
+            success: function (res) {
                 if (res.response == "success") {
                     toastr["success"](res.mensaje);
                     ActivacionCultivo();
-                    
+
                     $("#etapades").val(EtapaDesarrolllo);
-                    $("#EtapaDesarrolllo").modal("hide"); 
-                    imagenllaves.src="imagenes/valvula.png"
+                    $("#EtapaDesarrolllo").modal("hide");
+                    imagenllaves.src = "imagenes/valvula.png"
                 }
-                
+
             }
         })
     });
 
-  
+
 
     btn_activar_aut.addEventListener("click", function (e) {
         e.preventDefault();
@@ -294,12 +294,11 @@
                     url: URL,
                     type: "get",
                     success: function (res) {
-                        document.querySelector("#valvula").innerHTML = "<h5>Riego Automatizado Activado</h5>";
                         $("#btn_desactivar_aut").attr("disabled", false);
                         $("#btn_activar_aut").attr("disabled", true);
                         $("#btn_activar_man").attr("disabled", true);
                         $("#btn_eliminar_riego").attr("disabled", true);
-                        imagenllaves.src="imagenes/valvula_02.png"
+                        imagenllaves.src = "imagenes/valvula.png"
                     }
                 })
             }
@@ -331,7 +330,7 @@
                             $("#btn_activar_aut").attr("disabled", false);
                             $("#btn_activar_man").attr("disabled", false);
                             $("#btn_eliminar_riego").attr("disabled", false);
-                           imagenllaves.src="imagenes/valvula.png"
+                            imagenllaves.src = "imagenes/valvula.png"
                         }
                     },
                 });
@@ -339,7 +338,7 @@
         });
     });
     btn_eliminar_riego.addEventListener("click", function (e) {
-       
+
         Swal.fire({
             title: "Eliminar registro cultivo?",
             text: "Estas seguro!",
@@ -368,7 +367,7 @@
                             $("#CrearCultivoRiego").attr("disabled", false);
                             $("#btn_eliminar_riego").attr("disabled", true);
                             ActivacionCultivo();
-                            imagenllaves.src="imagenes/valvula_02.png"
+                            imagenllaves.src = "imagenes/valvula_02.png"
                             document.querySelector("#datos").innerHTML = "";
                         }
                     }
@@ -381,9 +380,9 @@
 
     btn_activar_man.addEventListener("click", function (e) {
         e.preventDefault();
-        
-        let Eto=$("#Eto").val();    
-        let etapacultivo= $("#etapades").val();    
+
+        let Eto = $("#Eto").val();
+        let etapacultivo = $("#etapades").val();
         Swal.fire({
             title: "Activar electrovalvula Manual?",
             text: "Estas seguro!",
@@ -398,8 +397,8 @@
                 $.ajax({
                     url: "/ActivacionRiego/ActivarManual/" + cli_id,
                     type: "post",
-                    dataType:"json",
-                    data:{Eto,etapacultivo},
+                    dataType: "json",
+                    data: { Eto, etapacultivo },
                     success: function (res) {
                         if (res.response == "success") {
                             toastr["success"](res.mensaje);
@@ -408,8 +407,8 @@
                             $("#btn_activar_aut").attr("disabled", true);
                             $("#btn_activar_man").attr("disabled", true);
                             $("#btn_eliminar_riego").attr("disabled", true);
-                            imagenllaves.src="imagenes/valvula_02.png";
-                            document.querySelector("#datos").innerHTML = "<br><h5>Regando.</h5>"+$('#tiempoRiego').val()+" minutos";
+                            imagenllaves.src = "imagenes/valvula_02.png";
+
                         }
                     },
                 });
@@ -425,38 +424,38 @@
         $("#btn_activar_man").attr("disabled", false);
         const cli_id = $("#cli_id").val();
         const cul_id = $("#cultivo").val();
-        const etapacultivo=$("#etapacultivo").val();
-        const caudal=$("#q_goteros").val();
-        const dgoteros=$("#distgoteros").val();
+        const etapacultivo = $("#etapacultivo").val();
+        const caudal = $("#q_goteros").val();
+        const dgoteros = $("#distgoteros").val();
 
-        if(validarCbx1(cul_id,"grupo_cultivo","Seleccione cultivo")){
-            if(validarCbx1(etapacultivo,"grupo_etapacultivo","Seleccione base desarrollo ")){
+        if (validarCbx1(cul_id, "grupo_cultivo", "Seleccione cultivo")) {
+            if (validarCbx1(etapacultivo, "grupo_etapacultivo", "Seleccione base desarrollo ")) {
 
-                if(campoVacio(dgoteros,"grupo_distgoteros","Ingres el valor distancia del gotero")){
-                    if(validarNumerosIntDoubles(dgoteros,"grupo_distgoteros" ,"valor incorrecto")){
+                if (campoVacio(dgoteros, "grupo_distgoteros", "Ingres el valor distancia del gotero")) {
+                    if (validarNumerosIntDoubles(dgoteros, "grupo_distgoteros", "valor incorrecto")) {
 
-                        if(campoVacio(caudal,"grupo_qgoteros","Ingres el cauldal del gotero")){
-                            if(validarNumerosIntDoubles(caudal,"grupo_qgoteros" ,"valor incorrecto")){
- $.ajax({
-            url: URL,
-            type: "post",
-            dataType: "json",
-            data: {
-                cli_id, cul_id,etapacultivo,caudal,dgoteros
-            }, success: function (res) {
-                $("#Riego").modal("hide");
-                $('#cultivoRiego').val(res.id);
-                $('#riego_cul_id').val(res.id);
-                $('#cultivo_id').val(res.id);
-                $('#aux').val(1);
-                 $("#etapades").val(etapacultivo);
-                imagenllaves.src="imagenes/valvula.png"
-                ActivacionCultivo();
-               
-                
-            }
-        });
-                        }
+                        if (campoVacio(caudal, "grupo_qgoteros", "Ingres el cauldal del gotero")) {
+                            if (validarNumerosIntDoubles(caudal, "grupo_qgoteros", "valor incorrecto")) {
+                                $.ajax({
+                                    url: URL,
+                                    type: "post",
+                                    dataType: "json",
+                                    data: {
+                                        cli_id, cul_id, etapacultivo, caudal, dgoteros
+                                    }, success: function (res) {
+                                        $("#Riego").modal("hide");
+                                        $('#cultivoRiego').val(res.id);
+                                        $('#riego_cul_id').val(res.id);
+                                        $('#cultivo_id').val(res.id);
+                                        $('#aux').val(1);
+                                        $("#etapades").val(etapacultivo);
+                                        imagenllaves.src = "imagenes/valvula.png"
+                                        ActivacionCultivo();
+
+
+                                    }
+                                });
+                            }
 
                         }
                     }
@@ -465,7 +464,7 @@
 
             }
         }
-/*  */  
+        /*  */
     });
 
     btn_desactivar_aut.addEventListener("click", function (e) {
@@ -489,7 +488,7 @@
                         $("#btn_activar_aut").attr("disabled", false);
                         $("#btn_activar_man").attr("disabled", false);
                         $("#btn_eliminar_riego").attr("disabled", false);
-                        imagenllaves.src="imagenes/valvula.png"
+                        imagenllaves.src = "imagenes/valvula.png"
                     }
                 });
             }
@@ -497,35 +496,35 @@
     });
 
     function ActivacionCultivo() {
-        imagenllaves.src="imagenes/valvula.png";
+        imagenllaves.src = "imagenes/valvula.png";
         const cli_id = $("#cli_id").val();
         let id = $('#cultivoRiego').val()
-        
-       let tiempo_aplicacion=$('#tiempoRiego').val();
-       
-        
+
+        let tiempo_aplicacion = $('#tiempoRiego').val();
+
+
         DatosEcuacion();
         CalculosDtos();
         VerificadorTemp(cli_id);
         if ($('#riego_cultivo').val() == 1) {
-          
+
             $("#CrearCultivoRiego").attr("disabled", true);
 
         } else {
             $("#CrearCultivoRiego").attr("disabled", false);
         }
-        
- 
+
+
         const URL = "/ActivacionRiego/ListaRiegoCultivo/" + cli_id;
         $.ajax({
             url: URL,
             type: "post",
             dataType: "json",
-            data: {tiempo_aplicacion},
+            data: { tiempo_aplicacion },
             success: function (res) {
                 if ($('#aux').val() == cli_id) {
-    
-                    imagenllaves.src="/imagenes/valvula.png"
+
+                    imagenllaves.src = "/imagenes/valvula.png"
                     const manual = $('#manual').val();
                     const automatico = $('#automatico').val();
 
@@ -537,8 +536,8 @@
                         $("#btn_eliminar_riego").attr("disabled", true);
                         $("#btn_CrearRiego").attr("disabled", true);
                         $("#CrearCultivoRiego").attr("disabled", true);
-                        imagenllaves.src="imagenes/valvula_02.png"
-                        document.querySelector("#valvula").innerHTML = "<h5>Riego Activado</h5>";
+                        imagenllaves.src = "imagenes/valvula_02.png"
+
                     }
                     if (manual == 0 && automatico == 1) {
                         $("#btn_desactivar_man").attr("disabled", true);
@@ -548,14 +547,14 @@
                         $("#btn_eliminar_riego").attr("disabled", true);
                         $("#btn_CrearRiego").attr("disabled", true);
 
-                        document.querySelector("#valvula").innerHTML = "<h5>Riego Automatico Activado..</h5>";
+
                         if ($("#valvula_id").val() == 0) {
-                            imagenllaves.src="imagenes/valvula.png"
-                            document.querySelector("#valvula").innerHTML = "<h5>Esperando Regar..</h5>";
+                            imagenllaves.src = "imagenes/valvula.png"
+
                         } else {
-                            imagenllaves.src="imagenes/valvula_02.png"
-                            document.querySelector("#valvula").innerHTML = "<h5>Regando Automaticamente..</h5>";
-                            
+                            imagenllaves.src = "imagenes/valvula_02.png"
+
+
                         }
                     }
 
@@ -566,12 +565,12 @@
                         $("#btn_activar_man").attr("disabled", false);
                         $("#btn_eliminar_riego").attr("disabled", false);
                         $("#CrearCultivoRiego").attr("disabled", true);
-                        imagenllaves.src="imagenes/valvula.png"
+                        imagenllaves.src = "imagenes/valvula.png"
                     }
 
                 } else {
-                    $("#btn_CrearRiego").attr("disabled",false);
-                    imagenllaves.src="imagenes/valvula.png"
+                    $("#btn_CrearRiego").attr("disabled", false);
+                    imagenllaves.src = "imagenes/valvula.png"
 
                 }
             }
@@ -590,7 +589,7 @@
     }
 
     function DatosEcuacion() {
-       
+
         var URL = "/Formula/Ecuacion";
         $.ajax({
             url: URL,
@@ -610,8 +609,8 @@
                     let Rn = radiacionNeta(ecuacion.ecu_Tmax, ecuacion.ecu_Tmin, ea, Ra, ecuacion.ecu_msnm, N, n);
                     let Eto = EcuacionPenmanMonteith(v2, y, pcv, es, ea, Rn, ecuacion.ecu_Tpromedio, ecuacion.ecu_flujoCalor);
                     $('#Eto').val(Eto);
-                  
-                   
+
+
                 })
             }, error: function (e) {
                 console.log(e.readyState);
@@ -621,7 +620,7 @@
     }
 
 
- 
+
     function CalculosDtos() {
         DatosEcuacion();
         let kc = 0;
@@ -644,18 +643,23 @@
                     let sl = DatosCultivoRiego.cul_dlp;
                     let se = DatosCultivoRiego.rig_cul_dista_goteros;
                     let caudal = DatosCultivoRiego.rig_cul_caudal;
-
+                    let TpoMAduracio = DatosCultivoRiego.cul_TpoMaduracion;
+                    let base = "";
                     if (parseInt(fase) == 1) {
                         kc = DatosCultivoRiego.cul_kc1;
+                        base = "Inicial";
                     }
                     if (parseInt(fase) == 2) {
                         kc = DatosCultivoRiego.cul_kc2;
+                        base = "Desarrollo";
                     }
                     if (parseInt(fase) == 3) {
                         kc = DatosCultivoRiego.cul_kc3;
+                        base = "Media";
                     }
                     if (parseInt(fase) == 4) {
                         kc = DatosCultivoRiego.cul_kc4;
+                        base = "Maduración";
                     }
                     let Etc = (Eto * kc).toFixed(4);
                     let RR = ((Etc / 90) * 100).toFixed();
@@ -670,18 +674,21 @@
                     tbody.append(`
                     <tr>
                         <td>${DatosCultivoRiego.cul_nombre}</td>
-                        <td>${Eto}(mm día)</td>
-                        <td>${Etc}</td>
+                        <td>${Eto}(mm/día)</td>
+                        <td>${Etc}(mm/día)</td>
+                        <td>${base}</td>
                         <td>${kc}</td>
-                        <td>${RR} mm</td>
+                        <td>${RR} L</td>
                         <td>${sp} m</td>
                         <td>${sl} m</td>
-                        <td>${frecuencia}dias</td>
                         <td>${G} L</td>
                         <td>${se} m</td>
                         <td>${caudal}L/h</td> 
                         <td>${Ta} min</td>
-                        <td>${total}</td>
+
+
+                        TpoMAduracio
+                        
                          <td>
                             <a id="Actualizar"  title="Actualizar" value="CrearUsuario" class="tn btn-primary btn-circle"  data-bs-toggle="modal" data-bs-target="#EtapaDesarrolllo"
                                onclick="ActualizarUsuario(${DatosCultivoRiego.riego_cul_id})">
@@ -704,7 +711,7 @@
 
 
 
-    
+
 
     window.onload = ActivacionCultivo;
 </script>

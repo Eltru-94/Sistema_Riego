@@ -14,6 +14,21 @@ router.get("/", isLoggedIn, async (req, res) => {
 
 });
 
+router.get("/HRP", isLoggedIn, async (req) => {
+
+    const fecha = "2021-08-04";
+
+
+
+
+
+
+ 
+
+
+
+})
+
 
 
 

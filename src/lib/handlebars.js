@@ -45,7 +45,7 @@ helpers.existe = function (datos, pos) {
     html += ' <div class="bg-white py-2 collapse-inner rounded">';
     html += '  <a class="collapse-item" href="/cliente">Usuarios</a>';
     html += '<a class="collapse-item" href="/rol">Roles</a>';
-    html += '<a class="collapse-item" href="/Modulo">Modulos</a>';
+    html += '<a class="collapse-item" href="/Modulo">Módulos</a>';
 
     html += "</div>";
     html += "</div>";
@@ -61,8 +61,8 @@ helpers.existe = function (datos, pos) {
     html +=
       '<div id="collapse2" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">';
     html += ' <div class="bg-white py-2 collapse-inner rounded">';
-    html += '  <a class="collapse-item" href="/CalculosRiego">Activacion Riego</a>';
-    html += '  <a class="collapse-item" href="/Formula">Formula</a>';
+    html += '  <a class="collapse-item" href="/CalculosRiego">Activación Riego</a>';
+    html += '  <a class="collapse-item" href="/Formula">Fórmula</a>';
     html += "</div>";
     html += "</div>";
     html += '</li>';
@@ -111,7 +111,7 @@ helpers.existe = function (datos, pos) {
       '<div id="collapse5" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">';
     html += ' <div class="bg-white py-2 collapse-inner rounded">';
     html += '  <a class="collapse-item" href="/GraficoHR">Volumen de agua cultivo</a>';
-    html += '  <a class="collapse-item" href="/GraficoTemperatura">Seguimiento del cultivo</a>';
+    html += '  <a class="collapse-item" href="/GraficoTemperatura">Seguimiento de R cultivo</a>';
 
     html += "</div>";
     html += "</div>";

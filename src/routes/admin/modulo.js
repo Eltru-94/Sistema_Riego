@@ -2,8 +2,10 @@ const express = require("express");
 const router = express.Router();
 const db = require("../../basedatos");
 const { isLoggedIn } = require("../../lib/auth");
+const { sensores } = require('../../lib/Sensores');
 /*Vista index modulo*/
 router.get("/", isLoggedIn, async (req, res) => {
+  sensores.mensaje_valvula = "Lista Módulos";
   res.render("admin/modulo/index", { layout: "admin" });
 });
 /*Crear modulo*/

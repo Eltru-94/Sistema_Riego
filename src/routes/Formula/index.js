@@ -2,14 +2,15 @@ const express = require("express");
 const router = express.Router();
 const db = require("../../basedatos");
 const { isLoggedIn } = require("../../lib/auth");
-
+const { sensores } = require('../../lib/Sensores');
 router.get("/", isLoggedIn, async (req, res) => {
-
+    sensores.mensaje_valvula = "Calculos de la Evapotranspiración";
+    sensores.titulo = "Cultivos";
     res.render("Formula/", { layout: "admin" });
 })
 
 router.get("/Formula_Cultivo", isLoggedIn, async (req, res) => {
-
+    sensores.mensaje_valvula = "Lista de Cultivos";
     res.render("cultivo/", { layout: "admin" });
 })
 
@@ -35,7 +36,7 @@ router.post("/Actualizar/:id", isLoggedIn, async (req, res) => {
         ecu_Tmin: Tmin,
         ecu_Tpromedio: Tpromedio,
         ecu_humedad_relativa_promedio: HRpromedio,
-        ecu_msnm:msnm,
+        ecu_msnm: msnm,
         ecu_despeje_nubes: porcentaje,
         ecu_mes: mes,
         ecu_flujoCalor: FlujoCalor

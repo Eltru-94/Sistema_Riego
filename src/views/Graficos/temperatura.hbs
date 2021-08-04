@@ -47,7 +47,7 @@
         hAxis: { title: 'Dias', titleTextStyle: { color: '#333' } },
         vAxis: { title: 'Datos Climatologicos' },
         with: 100,
-        colors: ['#363FCA', '#363752', '#90074B', '#0CCA23', "#D7E066","#8A7E80"],
+        colors: ['#363FCA', '#363752', '#90074B', '#0CCA23', "#D7E066", "#8A7E80"],
         curveType: 'function',
         legend: { position: 'bottom' }
     };
@@ -71,10 +71,10 @@
             url: URL,
             type: "get",
             dataType: "json",
-            success: function (response) {
+            success: function (res) {
                 var contador = 1;
                 limpiarHtml();
-                response.forEach(selectCultivoRiego => {
+                res.forEach(selectCultivoRiego => {
                     let etapa = selectCultivoRiego.riego_etapa;
                     let kc = 0;
                     if (etapa == 1) {
@@ -106,7 +106,7 @@
                     Data.setValue(contador, 4, ETc);
                     Data.setValue(contador, 5, db);
                     Data.setValue(contador, 6, G);
-                
+
 
 
                     contador++;

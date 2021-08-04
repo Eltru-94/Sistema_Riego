@@ -5,7 +5,7 @@ const { isLoggedIn } = require("../../lib/auth");
 const { sensores } = require('../../lib/Sensores');
 /*Vista Roles index */
 router.get("/", isLoggedIn, async (req, res) => {
-  sensores.mensaje_valvula = "Inicio roles sistema de riego";
+  sensores.mensaje_valvula = "Lista de roles";
   sensores.titulo="Roles",
   res.render("admin/rol/index", { layout: "admin" });
 });
