@@ -77,6 +77,7 @@ app.use("/HumedadRelativa", require("./routes/GestionDatosClima/humedad_relativa
 /*Modulo Cultivo */
 app.use("/GestionCultivo", require("./routes/Cultivo"));
 app.use("/CultivoGestion", require("./routes/Cultivo"));
+app.use("/Productos", require("./routes/Cultivo/Producto"));
 app.use("/RiegoCultivo", require("./routes/Cultivo/RiegoCultivo"));
 app.use("/Formula", require("./routes/Formula"));
 /*Modulo Visualizacion Graficos */
@@ -84,6 +85,7 @@ app.use("/VisualizacionSensores", require("./routes/Graficos/Sensores"));
 app.use("/GraficoTemperatura", require("./routes/Graficos/temperatura"));
 app.use("/GraficoHR", require("./routes/Graficos/humedadr"));
 //Carpeta publica
+
 app.use(express.static(path.join(__dirname, "public")));
 
 //Inicialización Servidor
