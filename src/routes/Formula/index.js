@@ -10,7 +10,7 @@ router.get("/", isLoggedIn, async (req, res) => {
 
 router.get("/Formula_Cultivo", isLoggedIn, async (req, res) => {
 
-    res.render("Formula/", { layout: "admin" });
+    res.render("cultivo/", { layout: "admin" });
 })
 
 
