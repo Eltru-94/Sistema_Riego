@@ -11,12 +11,6 @@ router.get("/", isLoggedIn, async (req, res) => {
 
 });
 
-router.get("/prueba", isLoggedIn, async (req, res) => {
-  sensores.mensaje_valvula = "Inicio sistema de riego";
-  sensores.titulo = "Administrativo";
-  res.render("admin", { layout: "admin" });
-});
-
 router.post("/Crear", isLoggedIn, async (req, res) => {
   const { cultivo, kc1, kc2, kc3, kc4, dep, dlp, TpoMad, frecuencia, descripcion } = req.body;
 
