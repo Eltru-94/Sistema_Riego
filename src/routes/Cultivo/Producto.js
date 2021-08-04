@@ -6,7 +6,7 @@ const { isLoggedIn } = require("../../lib/auth");
 
 router.get("/", isLoggedIn, async (req, res) => {
    
-    res.render("Cultivo/index", { layout: "admin" });
+    res.render("Cultivo/Cultivo", { layout: "admin" });
 
 });
 

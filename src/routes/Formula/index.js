@@ -8,6 +8,11 @@ router.get("/", isLoggedIn, async (req, res) => {
     res.render("Formula/", { layout: "admin" });
 })
 
+router.get("/Formula_Cultivo", isLoggedIn, async (req, res) => {
+
+    res.render("Formula/", { layout: "admin" });
+})
+
 
 router.get("/Ecuacion", isLoggedIn, async (req, res) => {
     const ecuacion = await db.query(
