@@ -17,22 +17,95 @@
 
             <form id="forCultivo">
                 <div class="modal-body">
-                    <div class="form-group">
-                        <div>
-                            <input type="text" class="form-control form-control-user" id="cultivo" name="cultivo"
-                                placeholder="Cultivo : ">
-                            <input type="hidden" class="form-control form-control-user" id="Identificador"
-                                name="Identificador">
+                    <div class="form-group row">
+                        <div class="col-sm-7">
+                            <div>
+                                <label>Cultivo</label>
+                                <input type="text" class="form-control form-control-user" id="cultivo" name="cultivo"
+                                    placeholder="Cultivo : ">
+                                <input type="hidden" class="form-control form-control-user" id="Identificador"
+                                    name="Identificador">
+                            </div>
+                            <div id="grupo_cultivo"></div>
                         </div>
-                        <div id="grupo_cultivo">
+                        <div class="col-sm-5">
+                            <div>
+                                <label>Tiempo Maduración</label>
+                                <select class="form-control form-control-user" id="maduracion" name="maduracion">
+
+                                </select>
+                            </div>
+                            <div id="grupo_maduracion"></div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <div>
+                                <label>Inicial</label>
+                                <input type="text" class="form-control form-control-user" id="kc1" name="kc1"
+                                    placeholder="kc1">
+                            </div>
+                            <div id="grupo_kc1"></div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div>
+                                <label>Desarrollo</label>
+                                <input type="text" class="form-control form-control-user" id="kc2" name="kc2"
+                                    placeholder="kc2">
+                            </div>
+                            <div id="grupo_kc2"></div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div>
+                                <label>Media</label>
+                                <input type="text" class="form-control form-control-user" id="kc3" name="kc3"
+                                    placeholder="kc3">
+                            </div>
+                            <div id="grupo_kc3"></div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div>
+                                <label>Maduración</label>
+                                <input type="text" class="form-control form-control-user" id="kc4" name="kc4"
+                                    placeholder="kc4">
+                            </div>
+                            <div id="grupo_kc4"></div>
+                        </div>
+
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-4">
+                            <div>
+                                <label>Dist entre Planta</label>
+                                <input type="text" class="form-control form-control-user" id="dep" name="dep"
+                                    placeholder="metros">
+                            </div>
+                            <div id="grupo_dep"></div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div>
+                                <label>Dist Lateral Planta</label>
+                                <input type="text" class="form-control form-control-user" id="dlp" name="dlp"
+                                    placeholder="metros">
+                            </div>
+                            <div id="grupo_dlp"></div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div>
+                                <label>Frecuencia Riego</label>
+                                <select class="form-control form-control-user" id="frecuencia" name="frecuencia">
+
+                                </select>
+                            </div>
+                            <div id="grupo_frecuencia"></div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="exampleFormControlTextarea1">Descripción Cultivo </label>
                         <textarea class="form-control" name="descripcion" id="descripcion" rows="3"></textarea>
                     </div>
-
                 </div>
+
                 <div class="modal-footer" id="BotonesCrear">
                     <button type="button" class="btn btn-secondary btn-icon-split btn-sm" id="btn_Cerrar"
                         data-bs-dismiss="modal">
@@ -75,9 +148,17 @@
                 <thead>
                     <tr>
                         <th>Id</th>
-                        <th>Cultivo</th>
-                        <th>Descripcion</th>
-                        <th>Accion</th>
+                        <th>CULTIVO</th>
+                        <th>FR</th>
+                        <th>DEP</th>
+                        <th>DLP</th>
+                        <th>Tpo. Mad</th>
+                        <th>Inicial</th>
+                        <th>Desarrollo</th>
+                        <th>Media</th>
+                        <th>Maduración</th>
+                        <th>Descripción</th>
+                        <th>ACCIÓN</th>
 
                     </tr>
                 </thead>
@@ -103,13 +184,21 @@
             success: function (response) {
                 let tbody = $('tbody');
                 tbody.html('');
-                var a=1;
+                var a = 1;
                 response.forEach(cultivo => {
                     tbody.append(`
                     <tr>
-                         <td id="fnombre">${a++}</td>
-                        <td id="fnombre">${cultivo.cul_nombre}</td>
-                        <td id="fapellido"> ${cultivo.cul_descripcion}</td>
+                        <td >${a++}</td>
+                        <td>${cultivo.cul_nombre}</td>
+                        <td>${cultivo.cul_frecuencia_riego} d</td>
+                        <td>${cultivo.cul_dep} m</td>
+                        <td>${cultivo.cul_dlp} m</td>
+                        <td>${cultivo.cul_TpoMaduracion} meses</td>
+                        <td>${cultivo.cul_kc1}</td>
+                        <td>${cultivo.cul_kc2}</td>
+                        <td>${cultivo.cul_kc3}</td>
+                        <td>${cultivo.cul_kc4}</td>
+                        <td> ${cultivo.cul_descripcion}</td>
                         <td>
                             <a id="Actualizar" value="CrearUsuario" class="tn btn-primary btn-circle"  data-bs-toggle="modal" data-bs-target="#ModuloCultivo"
                                onclick="ActualizarModuloCultivo(${cultivo.cul_id})">
@@ -132,58 +221,112 @@
     btnCrear.addEventListener('click', function (e) {
         e.preventDefault();
         let cultivo = $('#cultivo').val();
+        let TpoMad = $('#maduracion').val();
+        let kc1 = $('#kc1').val();
+        let kc2 = $('#kc2').val();
+        let kc3 = $('#kc3').val();
+        let kc4 = $('#kc4').val();
+        let dep = $("#dep").val();
+        let dlp = $("#dlp").val();
+        let frecuencia = $("#frecuencia").val();
         let descripcion = $('#descripcion').val();
-        if(campoVacio(cultivo, "grupo_cultivo", "Ingrese el cultivo")){
-            if(btn_verificador=="CrearCultivo"){
-               var URL="/GestionCultivo/Crear";
-               $.ajax({
-                   url:URL,
-                   type:"post",
-                   dataType:"json",
-                   data:{
-                       cultivo,
-                       descripcion
-                   },
-                   success:function(res){
-                       if(res.response=="success"){
-                          toastr["success"](res.mensaje)
-                            $('#ModuloCultivo').modal('hide');
-                            $('#forCultivo')[0].reset();
-                            ListaCultivo();
-                       }
+        if (campoVacio(cultivo, "grupo_cultivo", "Ingrese el cultivo")) {
 
-                   }
+            if (campoVacio(kc1, "grupo_kc1", "Ingrese el valor kc1")) {
+                if (validarNumerosIntDoubles(kc1, "grupo_kc1", "Valor Incorrecto")) {
 
-               });
-            }else{
+                    if (campoVacio(kc2, "grupo_kc2", "Ingrese el valor kc2")) {
+                        if (validarNumerosIntDoubles(kc2, "grupo_kc2", "Valor Incorrecto")) {
 
-               
-                let Identificador = $('#Identificador').val();
-                var URL = "/GestionCultivo/Actualizar/" + Identificador;
-            
-                $.ajax({
-                    url: URL,
-                    type: "post",
-                    dataType: "json",
-                    data: {
-                        cultivo,
-                        descripcion,
-                    },
-                    success: function (res) {
-                        if (res.response == "success") {
-                            toastr["success"](res.mensaje)
-                            $('#ModuloCultivo').modal('hide');
-                            $('#forCultivo')[0].reset();
-                            ListaCultivo();
-                            limpiarHtml();
+                            if (campoVacio(kc3, "grupo_kc3", "Ingrese el valor kc3")) {
+                                if (validarNumerosIntDoubles(kc3, "grupo_kc3", "Valor Incorrecto")) {
+
+                                    if (campoVacio(kc4, "grupo_kc4", "Ingrese el valor kc4")) {
+                                        if (validarNumerosIntDoubles(kc4, "grupo_kc4", "Valor Incorrecto")) {
+
+                                            ////
+                                            if (campoVacio(dep, "grupo_dep", "Ingrese la distancia entre planta")) {
+                                                if (validarNumerosIntDoubles(dep, "grupo_dep", "Valor Incorrecto")) {
+
+                                                    if (campoVacio(dlp, "grupo_dlp", "Ingrese la distancia lateral de la planta")) {
+                                                        if (validarNumerosIntDoubles(dlp, "grupo_dlp", "Valor Incorrecto")) {
+
+                                                            if (btn_verificador == "CrearCultivo") {
+                                                                var URL = "/GestionCultivo/Crear";
+                                                                $.ajax({
+                                                                    url: URL,
+                                                                    type: "post",
+                                                                    dataType: "json",
+                                                                    data: {
+                                                                        cultivo,
+                                                                        TpoMad,
+                                                                        kc1,
+                                                                        kc2,
+                                                                        kc3,
+                                                                        kc4,
+                                                                        dep,
+                                                                        dlp,
+                                                                        frecuencia,
+                                                                        descripcion
+                                                                    },
+                                                                    success: function (res) {
+                                                                        if (res.response == "success") {
+                                                                            toastr["success"](res.mensaje)
+                                                                            $('#ModuloCultivo').modal('hide');
+                                                                            $('#forCultivo')[0].reset();
+                                                                            ListaCultivo();
+                                                                        }
+
+                                                                    }
+
+                                                                });
+                                                            } else {
+                                                                let Identificador = $('#Identificador').val();
+                                                                var URL = "/GestionCultivo/Actualizar/" + Identificador;
+
+                                                                $.ajax({
+                                                                    url: URL,
+                                                                    type: "post",
+                                                                    dataType: "json",
+                                                                    data: {
+                                                                        cultivo,
+                                                                        TpoMad,
+                                                                        kc1,
+                                                                        kc2,
+                                                                        kc3,
+                                                                        kc4,
+                                                                        dep,
+                                                                        dlp,
+                                                                        frecuencia,
+                                                                        descripcion
+                                                                    },
+                                                                    success: function (res) {
+                                                                        if (res.response == "success") {
+                                                                            toastr["success"](res.mensaje)
+                                                                            $('#ModuloCultivo').modal('hide');
+                                                                            $('#forCultivo')[0].reset();
+                                                                            ListaCultivo();
+                                                                            limpiarHtml();
+                                                                        }
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }///
+                                        }
+                                    }
+
+                                }
+                            }
                         }
                     }
-                });
-
-
+                }
             }
-        } 
-      
+
+        }
+
     });
 
     function BotonCrear() {
@@ -191,9 +334,11 @@
         var a = document.getElementById("exampleModalLabel");
         a.innerHTML = "Registrar Cultivo";
         btn_verificador = nombre;
+        ListaDias(0);
+        ListaMAduracion(0);
         LimpiarCampos();
     }
-      function ActualizarModuloCultivo(id) {
+    function ActualizarModuloCultivo(id) {
         btn_verificador = "Actualizar";
         var a = document.getElementById("exampleModalLabel");
         a.innerHTML = "Actualizar Cultivo";
@@ -203,8 +348,17 @@
             type: "get",
             success: function (res) {
                 $("#cultivo").val(res.cul_nombre);
+                $('#kc1').val(res.cul_kc1);
+                $('#kc2').val(res.cul_kc2);
+                $('#kc3').val(res.cul_kc3);
+                $('#kc4').val(res.cul_kc4);
+                $("#dep").val(res.cul_dep);
+                $("#dlp").val(res.cul_dlp);
+                ListaDias(res.cul_frecuencia_riego);
+                ListaMAduracion(res.cul_TpoMaduracion);
                 $("#descripcion").val(res.cul_descripcion);
                 $("#Identificador").val(id);
+
             }
         });
     }
@@ -248,15 +402,23 @@
             success: function (response) {
                 let tbody = $('tbody');
                 tbody.html('');
-                var a=1;
+                var a = 1;
                 response.forEach(cultivo => {
                     tbody.append(`
                     <tr>
-                         <td id="fnombre">${a++}</td>
-                        <td id="fnombre">${cultivo.cul_nombre}</td>
-                        <td id="fapellido"> ${cultivo.cul_descripcion}</td>
+                        <td >${a++}</td>
+                        <td>${cultivo.cul_nombre}</td>
+                        <td>${cultivo.cul_frecuencia_riego} d</td>
+                        <td>${cultivo.cul_TpoMaduracion} meses</td>
+                        <td>${cultivo.cul_dep} m</td>
+                        <td>${cultivo.cul_dlp} m</td>
+                        <td>${cultivo.cul_kc1}</td>
+                        <td>${cultivo.cul_kc2}</td>
+                        <td>${cultivo.cul_kc3}</td>
+                        <td>${cultivo.cul_kc4}</td>
+                        <td> ${cultivo.cul_descripcion}</td>
                         <td>
-                            <a id="Actualizar" value="CrearUsuario" class="btn btn-primary btn-circle"  data-bs-toggle="modal" data-bs-target="#ModuloCultivo"
+                            <a id="Actualizar" value="CrearUsuario" class="tn btn-primary btn-circle"  data-bs-toggle="modal" data-bs-target="#ModuloCultivo"
                                onclick="ActualizarModuloCultivo(${cultivo.cul_id})">
                                 <i class="fas fa-pencil-alt"></i>
                             </a>
@@ -274,19 +436,62 @@
 
     function limpiarHtml() {
         document.getElementById("grupo_cultivo").innerHTML = "";
+        document.getElementById("grupo_kc1").innerHTML = "";
+        document.getElementById("grupo_kc2").innerHTML = "";
+        document.getElementById("grupo_kc3").innerHTML = "";
+        document.getElementById("grupo_kc4").innerHTML = "";
+        document.getElementById("grupo_dep").innerHTML = "";
+        document.getElementById("grupo_dlp").innerHTML = "";
     }
 
     btnCerrar.addEventListener("click", function (e) {
         limpiarHtml();
         LimpiarCampos();
     });
-    
+
     function LimpiarCampos() {
         $("#cultivo").val("");
+        $("#kc1").val("");
+        $("#kc2").val("");
+        $("#kc3").val("");
+        $("#kc4").val("");
+        $("#dep").val("");
+        $("#dlp").val("");
         $('#descripcion').val("");
-       
+
     }
 
-  window.onload = ListaCultivo;
+    function ListaDias(id_mes) {
+
+        let meses = document.getElementById("frecuencia");
+        let mensaje = "";
+        for (let i = 0; i < 24; i++) {
+            let aux = (i + 1);
+            if (id_mes == aux) {
+                mensaje += "<option value='" + aux + "' selected>" + aux + " día</option>";
+            } else {
+                mensaje += "<option value='" + aux + "'>" + aux + " día</option>";
+            }
+
+        }
+        meses.innerHTML = mensaje;
+    }
+    function ListaMAduracion(id_mes) {
+
+        let meses = document.getElementById("maduracion");
+        let mensaje = "";
+        for (let i = 1; i < 24; i++) {
+            let aux = (i + 1);
+            if (id_mes == aux) {
+                mensaje += "<option value='" + aux + "' selected>" + aux + " meses</option>";
+            } else {
+                mensaje += "<option value='" + aux + "'>" + aux + " meses</option>";
+            }
+
+        }
+        meses.innerHTML = mensaje;
+    }
+
+    window.onload = ListaCultivo;
 
 </script>

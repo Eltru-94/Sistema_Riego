@@ -5,14 +5,53 @@
     </span>
     <span class="text">Registrar Riego</span>
 </button>
-<br>
+<hr>
+<!-- Inicio Tabla-->
+<div class="card shadow mb-4">
+    <div class="card-header py-3 centro">
+        <h6 class="m-0 font-weight-bold text-primary">Calculos Riego</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Cultivo</th>
+                        <th>ETo</th>
+                        <th>ETc</th>
+                        <th>Kc</th>
+                        <th>RR</th>
+                        <th>EE</th>
+                        <th>EL</th>
+                        <th>FR</th>
+                        <th>VA</th>
+                        <th>EG</th>
+                        <th>Q</th>
+                        <th>TAD</th>
+                        <th>TAF</th>
+                        <th>Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- Fin Tabla-->
 <hr>
 <div class="container1">
 
     <div class="card">
         <img src="/imagenes/riego.jpg" alt="">
         <h4>Sistema de Riego por goteo</h4>
-        <div id="datos" class="container1">
+
+        <div class="PruebaImagen">
+           <img id="imagenvalvula1" alt="">
+          
+        </div>
+         <div id="datos" class="PruebaImagen">
         </div>
         <div id="valvula">
         </div>
@@ -57,12 +96,18 @@
     </div>
 </div>
 <input type="hidden" id="cli_id" name="cli_id" value="{{#cliente_id user 1}}{{/cliente_id}}">
-<input type="hidden" id="manual" name="manual" value="{{sensores.estado_manual}}">
+<input type="hidden"  id="manual" name="manual" value="{{sensores.estado_manual}}">
 <input type="hidden" id="automatico" name="automatico" value="{{sensores.estado_automatico}}">
-<input type="hidden" id="valvula_id" name="valvula" value="{{sensores.valvula}}">
-<input type="hidden" id="aux" name="aux" value="0">
-<input type="hidden" id="riego_cultivo" name="riego_cultivo" value="{{ sensores.riego_cultivo}}">
-<input type="hidden" id="cultivo_id" name="cultivo_id" value="{{sensores.cultivo_id}}">
+<input type="hidden"  id="valvula_id" name="valvula" value="{{sensores.valvula}}">
+<input type="hidden"  id="aux" name="aux">
+<input type="hidden"  id="riego_cultivo" name="riego_cultivo" value="{{ sensores.riego_cultivo}}">
+<input type="hidden"  id="cultivo_id" name="cultivo_id" value="{{sensores.cultivo_id}}">
+<input type="hidden"  id="Eto" name="Eto" value="">
+<input type="hidden"  id="riego_cul_id" name="rig_cul_id" value="{{sensores.riego_cultivo_id}}">
+<input type="hidden"  id="cultivoRiego" name="rig_cul_id" value="{{sensores.riego_cultivo_id}}">
+<input type="hidden"  id="tiempoRiego" name="tiempoRiego">
+<input type="hidden"  id="etapades" name="etapades">
+               
 
 <hr>
 <!-- Inicio Modal Modulo!-->
@@ -75,12 +120,38 @@
 
             <form id="forRol">
                 <div class="modal-body">
-                    <div class="form-group">
-                        <div>
+                    <div class="form-group row">
+                        <div class="col-sm-6">
                             <select name="cultivo" id="cultivo" class="form-control form-control-user">
                             </select>
+                            <div id="grupo_cultivo"></div>
                         </div>
-                        <div id="grupo_cultivo"></div>
+                        <div class="col-sm-6">
+                            <select name="etapacultivo" id="etapacultivo" class="form-control form-control-user">
+                                <option value="0">Seleccione fase cultivo</option>
+                                <option value="1">Fase inicial</option>
+                                <option value="2">Fase Desarrollo</option>
+                                <option value="3">Fase Media</option>
+                                <option value="4">Fase Maduración</option>
+                            </select>
+                            <div id="grupo_etapacultivo"></div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <div>
+                                <input type="text" class="form-control form-control-user" id="distgoteros" name="distgoteros"
+                                    placeholder="Dist goteros en m">
+                            </div>
+                            <div id="grupo_distgoteros"></div>
+                        </div>
+                         <div class="col-sm-6">
+                            <div>
+                                <input type="text" class="form-control form-control-user" id="q_goteros" name="q_goteros"
+                                    placeholder="Q Goteros">
+                            </div>
+                            <div id="grupo_qgoteros"></div>
+                        </div>
                     </div>
 
                 </div>
@@ -105,6 +176,47 @@
     </div>
 </div>
 
+<!-- Inicio Modal Modulo!-->
+<div class="modal fade" id="EtapaDesarrolllo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header text-primary">
+                <h5 class="modal-title " id="exampleModalLabel">ETAPA CULTIVO</h5>
+            </div>
+            <form id="forRol">
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <select name="etapacultivoAct" id="etapacultivoAct" class="form-control form-control-user">
+                                <option value="1">Fase inicial</option>
+                                <option value="2">Fase Desarrollo</option>
+                                <option value="3">Fase Media</option>
+                                <option value="4">Fase Maduración</option>
+                            </select>
+                            <div id="grupo_etapacultivo"></div>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-icon-split btn-sm" id="btn_CerrarEtapa"
+                        data-bs-dismiss="modal">
+                        <span class="icon text-white-50">
+                            <i class="fa fa-window-close"></i>
+                        </span>
+                        <span class="text">Cerrar</span>
+                    </button>
+                    <button type="submit" value="Actualizar" class="btn btn-primary btn-icon-split btn-sm"
+                        id="btn_ActualizarEtapa">
+                        <span class="icon text-white-50">
+                            <i class="fa fa-save"></i>
+                        </span>
+                        <span class="text">Guardar</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
 
     const btnCrear = document.querySelector("#btn_Crear");
@@ -114,6 +226,9 @@
     const btn_desactivar_man = document.querySelector("#btn_desactivar_man");
     const btn_eliminar_riego = document.querySelector("#btn_eliminar_riego");
     const btn_desactivar_aut = document.querySelector("#btn_desactivar_aut");
+    const btn_ActualizarEtapa=document.querySelector("#btn_ActualizarEtapa");
+    const imagenllaves=document.querySelector("#imagenvalvula1");
+  
     function SelectCultivos() {
         let rol = document.getElementById("cultivo");
         let mensaje = " <option selected value='0'>Escoga el cultivo...</option>";
@@ -127,28 +242,39 @@
                     mensaje += "<option value='" + cultivo.cul_id + "'>" + cultivo.cul_nombre + "</option>";
                 });
                 rol.innerHTML = mensaje;
+                imagenllaves.src="imagenes/valvula.png";
             }
         });
 
     }
 
-    function HumedadMedia(fecha) {
-        let url = "/HumedadSuelo/nodo";
+    btn_ActualizarEtapa.addEventListener("click", function(e) {
+        e.preventDefault();
+        let EtapaDesarrolllo=$("#etapacultivoAct").val();
+        let id=$("#riego_cul_id").val();
+        let URL="/CalculosRiego/ActualizarRiegoCultivo/"+ id;
         $.ajax({
-            url: url,
-            type: "post",
-            dataType: "json",
-            data: {
-                fecha
+            url:URL,
+            type:"post",
+            dataType:"json",
+            data:{
+                EtapaDesarrolllo
             },
-            success: function (res) {
-                const promedio = Math.ceil((res.nodo_a + res.nodo_b) / 2);
-                $('#temperatura_media_a').val(Math.ceil(res.nodo_a) + "  % ");
-                $('#temperatura_media_b').val(Math.ceil(res.nodo_b) + "  % ");
-                $('#temperatura_promedio').val(Math.ceil(promedio) + "  % ");
+            success:function(res){
+                if (res.response == "success") {
+                    toastr["success"](res.mensaje);
+                    ActivacionCultivo();
+                    
+                    $("#etapades").val(EtapaDesarrolllo);
+                    $("#EtapaDesarrolllo").modal("hide"); 
+                    imagenllaves.src="imagenes/valvula.png"
+                }
+                
             }
-        });
-    }
+        })
+    });
+
+  
 
     btn_activar_aut.addEventListener("click", function (e) {
         e.preventDefault();
@@ -173,6 +299,7 @@
                         $("#btn_activar_aut").attr("disabled", true);
                         $("#btn_activar_man").attr("disabled", true);
                         $("#btn_eliminar_riego").attr("disabled", true);
+                        imagenllaves.src="imagenes/valvula_02.png"
                     }
                 })
             }
@@ -204,7 +331,7 @@
                             $("#btn_activar_aut").attr("disabled", false);
                             $("#btn_activar_man").attr("disabled", false);
                             $("#btn_eliminar_riego").attr("disabled", false);
-                            document.querySelector("#valvula").innerHTML = "<h5>Esperando activación electrovalvula.....</h5>";
+                           imagenllaves.src="imagenes/valvula.png"
                         }
                     },
                 });
@@ -212,6 +339,7 @@
         });
     });
     btn_eliminar_riego.addEventListener("click", function (e) {
+       
         Swal.fire({
             title: "Eliminar registro cultivo?",
             text: "Estas seguro!",
@@ -230,12 +358,17 @@
                     success: function (res) {
                         if (res.response == "success") {
                             toastr["success"](res.mensaje);
+                            VerificadorTemp(0);
+                            $("#cultivo_id").val(0);
+                            $("#aux").val(0);
                             $("#btn_activar_aut").attr("disabled", true);
                             $("#btn_desactivar_aut").attr("disabled", true);
                             $("#btn_activar_man").attr("disabled", true);
                             $("#btn_desactivar_man").attr("disabled", true);
                             $("#CrearCultivoRiego").attr("disabled", false);
                             $("#btn_eliminar_riego").attr("disabled", true);
+                            ActivacionCultivo();
+                            imagenllaves.src="imagenes/valvula_02.png"
                             document.querySelector("#datos").innerHTML = "";
                         }
                     }
@@ -248,7 +381,9 @@
 
     btn_activar_man.addEventListener("click", function (e) {
         e.preventDefault();
-
+        
+        let Eto=$("#Eto").val();    
+        let etapacultivo= $("#etapades").val();    
         Swal.fire({
             title: "Activar electrovalvula Manual?",
             text: "Estas seguro!",
@@ -262,7 +397,9 @@
                 const cli_id = $("#cli_id").val();
                 $.ajax({
                     url: "/ActivacionRiego/ActivarManual/" + cli_id,
-                    type: "get",
+                    type: "post",
+                    dataType:"json",
+                    data:{Eto,etapacultivo},
                     success: function (res) {
                         if (res.response == "success") {
                             toastr["success"](res.mensaje);
@@ -271,13 +408,15 @@
                             $("#btn_activar_aut").attr("disabled", true);
                             $("#btn_activar_man").attr("disabled", true);
                             $("#btn_eliminar_riego").attr("disabled", true);
-                            document.querySelector("#valvula").innerHTML = "<h5>Regando manualmente..</h5>";
+                            imagenllaves.src="imagenes/valvula_02.png";
+                            document.querySelector("#datos").innerHTML = "<br><h5>Regando.</h5>"+$('#tiempoRiego').val()+" minutos";
                         }
                     },
                 });
             }
         });
     });
+
 
     btnCrearRiego.addEventListener("click", function (e) {
         e.preventDefault();
@@ -286,24 +425,51 @@
         $("#btn_activar_man").attr("disabled", false);
         const cli_id = $("#cli_id").val();
         const cul_id = $("#cultivo").val();
-        $.ajax({
+        const etapacultivo=$("#etapacultivo").val();
+        const caudal=$("#q_goteros").val();
+        const dgoteros=$("#distgoteros").val();
+
+        if(validarCbx1(cul_id,"grupo_cultivo","Seleccione cultivo")){
+            if(validarCbx1(etapacultivo,"grupo_etapacultivo","Seleccione base desarrollo ")){
+
+                if(campoVacio(dgoteros,"grupo_distgoteros","Ingres el valor distancia del gotero")){
+                    if(validarNumerosIntDoubles(dgoteros,"grupo_distgoteros" ,"valor incorrecto")){
+
+                        if(campoVacio(caudal,"grupo_qgoteros","Ingres el cauldal del gotero")){
+                            if(validarNumerosIntDoubles(caudal,"grupo_qgoteros" ,"valor incorrecto")){
+ $.ajax({
             url: URL,
             type: "post",
             dataType: "json",
             data: {
-                cli_id, cul_id
+                cli_id, cul_id,etapacultivo,caudal,dgoteros
             }, success: function (res) {
-                $('#cultivoRiego').val(res.id);
-                ActivacionCultivo();
                 $("#Riego").modal("hide");
+                $('#cultivoRiego').val(res.id);
+                $('#riego_cul_id').val(res.id);
+                $('#cultivo_id').val(res.id);
+                $('#aux').val(1);
+                 $("#etapades").val(etapacultivo);
+                imagenllaves.src="imagenes/valvula.png"
+                ActivacionCultivo();
+               
+                
             }
         });
+                        }
+
+                        }
+                    }
+
+                }
+
+            }
+        }
+/*  */  
     });
 
     btn_desactivar_aut.addEventListener("click", function (e) {
         e.preventDefault();
-
-
         Swal.fire({
             title: "Desactivar Riego Automatico?",
             text: "Estas seguro!",
@@ -323,6 +489,7 @@
                         $("#btn_activar_aut").attr("disabled", false);
                         $("#btn_activar_man").attr("disabled", false);
                         $("#btn_eliminar_riego").attr("disabled", false);
+                        imagenllaves.src="imagenes/valvula.png"
                     }
                 });
             }
@@ -330,32 +497,35 @@
     });
 
     function ActivacionCultivo() {
+        imagenllaves.src="imagenes/valvula.png";
         const cli_id = $("#cli_id").val();
         let id = $('#cultivoRiego').val()
+        
+       let tiempo_aplicacion=$('#tiempoRiego').val();
+       
+        
+        DatosEcuacion();
+        CalculosDtos();
         VerificadorTemp(cli_id);
         if ($('#riego_cultivo').val() == 1) {
-            document.querySelector("#valvula").innerHTML = "<h5>El riego se encuentra activado por otro usuario</h5>";
+          
             $("#CrearCultivoRiego").attr("disabled", true);
 
         } else {
             $("#CrearCultivoRiego").attr("disabled", false);
         }
-
+        
+ 
         const URL = "/ActivacionRiego/ListaRiegoCultivo/" + cli_id;
         $.ajax({
             url: URL,
-            type: "get",
+            type: "post",
             dataType: "json",
+            data: {tiempo_aplicacion},
             success: function (res) {
                 if ($('#aux').val() == cli_id) {
-
-
-                    document.querySelector("#datos").innerHTML = "<p> Creado por : " + res.cli_nombre + " " + res.cli_apellido + " </p>" + "<p>Cultivo : " + res.cul_nombre + " </p>"
-                    + "<p>HSA: " + {{sensores.humedad_suelo_a}} 
-                    + "%  - HSB : " + {{sensores.humedad_suelo_b}} 
-                    + "%  - HSP : " + {{sensores.promedio1}} + "</p>"
-                    + "%<p>TEMP: " + {{sensores.temperuta_a}} 
-                    + "° C- HR : " + {{sensores.humedad_relativa}} + "%</p>";
+    
+                    imagenllaves.src="/imagenes/valvula.png"
                     const manual = $('#manual').val();
                     const automatico = $('#automatico').val();
 
@@ -367,7 +537,8 @@
                         $("#btn_eliminar_riego").attr("disabled", true);
                         $("#btn_CrearRiego").attr("disabled", true);
                         $("#CrearCultivoRiego").attr("disabled", true);
-                        document.querySelector("#valvula").innerHTML = "<h5>Regando manualmente..</h5>";
+                        imagenllaves.src="imagenes/valvula_02.png"
+                        document.querySelector("#valvula").innerHTML = "<h5>Riego Activado</h5>";
                     }
                     if (manual == 0 && automatico == 1) {
                         $("#btn_desactivar_man").attr("disabled", true);
@@ -379,9 +550,12 @@
 
                         document.querySelector("#valvula").innerHTML = "<h5>Riego Automatico Activado..</h5>";
                         if ($("#valvula_id").val() == 0) {
+                            imagenllaves.src="imagenes/valvula.png"
                             document.querySelector("#valvula").innerHTML = "<h5>Esperando Regar..</h5>";
                         } else {
+                            imagenllaves.src="imagenes/valvula_02.png"
                             document.querySelector("#valvula").innerHTML = "<h5>Regando Automaticamente..</h5>";
+                            
                         }
                     }
 
@@ -392,11 +566,12 @@
                         $("#btn_activar_man").attr("disabled", false);
                         $("#btn_eliminar_riego").attr("disabled", false);
                         $("#CrearCultivoRiego").attr("disabled", true);
-                        document.querySelector("#valvula").innerHTML = "<h5>Cultivo listo Para regar..</h5>";
+                        imagenllaves.src="imagenes/valvula.png"
                     }
 
                 } else {
-                    $("#btn_CrearRiego").attr("disabled", true);
+                    $("#btn_CrearRiego").attr("disabled",false);
+                    imagenllaves.src="imagenes/valvula.png"
 
                 }
             }
@@ -413,5 +588,123 @@
             }
         });
     }
+
+    function DatosEcuacion() {
+       
+        var URL = "/Formula/Ecuacion";
+        $.ajax({
+            url: URL,
+            type: "get",
+            dataType: "json",
+            success: function (response) {
+                response.forEach(ecuacion => {
+                    let v2 = velocidadViento(ecuacion.ecu_vels, ecuacion.ecu_altura);
+                    let y = constantepsicometric(ecuacion.ecu_msnm);
+                    let Ra = RadiacionExtraterrestre(ecuacion.ecu_latitud, ecuacion.ecu_mes);
+                    let N = InsolacionMaximaDiaria(ecuacion.ecu_latitud, ecuacion.ecu_mes);
+                    let es = presionVaporSaturacion(ecuacion.ecu_Tmax, ecuacion.ecu_Tmin);
+                    let ea = presionRealVapor(ecuacion.ecu_humedad_relativa_promedio, es);
+                    let es_ea = (parseFloat(es) - parseFloat(ea)).toFixed(4);
+                    let pcv = pendienteCurvaPresionVapor(ecuacion.ecu_Tpromedio);
+                    let n = duracionInsolacion(N, ecuacion.ecu_despeje_nubes);
+                    let Rn = radiacionNeta(ecuacion.ecu_Tmax, ecuacion.ecu_Tmin, ea, Ra, ecuacion.ecu_msnm, N, n);
+                    let Eto = EcuacionPenmanMonteith(v2, y, pcv, es, ea, Rn, ecuacion.ecu_Tpromedio, ecuacion.ecu_flujoCalor);
+                    $('#Eto').val(Eto);
+                  
+                   
+                })
+            }, error: function (e) {
+                console.log(e.readyState);
+            }
+        });
+        return Eto;
+    }
+
+
+ 
+    function CalculosDtos() {
+        DatosEcuacion();
+        let kc = 0;
+        let riego_cul_id = $('#riego_cul_id').val();
+        let URL = "RiegoCultivo/DatosCultivoRiego/" + riego_cul_id;
+
+        $.ajax({
+            url: URL,
+            type: "get",
+            dataType: "json",
+            success: function (response) {
+                let tbody = $('tbody');
+                tbody.html('');
+
+                let Eto = $("#Eto").val();
+                response.forEach((DatosCultivoRiego) => {
+                    let fase = DatosCultivoRiego.rig_cul_base_desarrollo;
+                    let frecuencia = DatosCultivoRiego.cul_frecuencia_riego;
+                    let sp = DatosCultivoRiego.cul_dep;
+                    let sl = DatosCultivoRiego.cul_dlp;
+                    let se = DatosCultivoRiego.rig_cul_dista_goteros;
+                    let caudal = DatosCultivoRiego.rig_cul_caudal;
+
+                    if (parseInt(fase) == 1) {
+                        kc = DatosCultivoRiego.cul_kc1;
+                    }
+                    if (parseInt(fase) == 2) {
+                        kc = DatosCultivoRiego.cul_kc2;
+                    }
+                    if (parseInt(fase) == 3) {
+                        kc = DatosCultivoRiego.cul_kc3;
+                    }
+                    if (parseInt(fase) == 4) {
+                        kc = DatosCultivoRiego.cul_kc4;
+                    }
+                    let Etc = (Eto * kc).toFixed(4);
+                    let RR = ((Etc / 90) * 100).toFixed();
+                    let G = ((RR / frecuencia) * sp * sl).toFixed(4);
+                    let Np = (sp / se);
+                    let Ta = ((((G / Np)) * caudal) * 60).toFixed();
+                    let TaTotal = Ta * frecuencia;
+                    let horas = (TaTotal / 60).toFixed();
+                    let minutos = (TaTotal % 60).toFixed();
+                    let total = horas + " h : " + minutos + " min"
+                    $('#tiempoRiego').val(Ta);
+                    tbody.append(`
+                    <tr>
+                        <td>${DatosCultivoRiego.cul_nombre}</td>
+                        <td>${Eto}(mm día)</td>
+                        <td>${Etc}</td>
+                        <td>${kc}</td>
+                        <td>${RR} mm</td>
+                        <td>${sp} m</td>
+                        <td>${sl} m</td>
+                        <td>${frecuencia}dias</td>
+                        <td>${G} L</td>
+                        <td>${se} m</td>
+                        <td>${caudal}L/h</td> 
+                        <td>${Ta} min</td>
+                        <td>${total}</td>
+                         <td>
+                            <a id="Actualizar"  title="Actualizar" value="CrearUsuario" class="tn btn-primary btn-circle"  data-bs-toggle="modal" data-bs-target="#EtapaDesarrolllo"
+                               onclick="ActualizarUsuario(${DatosCultivoRiego.riego_cul_id})">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                            
+                        
+                        </td>
+                    </tr>
+                `)
+                })
+            }, error: function (e) {
+                console.log(e.readyState);
+            }
+        });
+
+    }
+
+
+
+
+
+    
+
     window.onload = ActivacionCultivo;
 </script>

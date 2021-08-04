@@ -30,4 +30,14 @@ router.post("/Buscar", isLoggedIn, async (req, res) => {
 })
 
 
+router.get("/DatosCultivoRiego/:id", async (req, res) => {
+  const {id} = req.params;
+  const riego_cul_id=id;
+  
+  const DatosCultivoRiego = await db.query("SELECT * FROM tbl_cultivo INNER JOIN tbl_riego_cultivo ON (tbl_cultivo.cul_id = tbl_riego_cultivo.cul_id) WHERE tbl_riego_cultivo.riego_cul_id=? AND tbl_riego_cultivo.riego_cul_estado=?", [riego_cul_id, 1])
+  console.log(DatosCultivoRiego)
+  res.json(DatosCultivoRiego);
+
+});
+
 module.exports = router;

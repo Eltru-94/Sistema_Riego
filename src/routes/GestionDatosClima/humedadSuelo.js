@@ -120,21 +120,33 @@ router.post("/CalculosDatos", isLoggedIn, async (req, res) => {
 ;
 function mensaje() {
   sensores.titulo = "Sensor Humedad Suelo";
-  var aux_a = "";
-  var aux_b = "";
-  if (sensores.humedad_suelo_a == 0) {
-    aux_a = "Nodo A : SC";
-  } else {
-    aux_a = "Nodo A : " + sensores.humedad_suelo_a + "%";
-  }
-  if (sensores.humedad_suelo_b == 0) {
-    aux_b = "Nodo B : SC";
-  } else {
-    aux_b = "Nodo B : " + sensores.humedad_suelo_b + "%";
-  }
 
 
-  sensores.mensaje_valvula = "HS : "+aux_a + "         " + aux_b;
+  sensores.mensaje_valvula = "Humedad Suelo";
 }
+
+router.get("/ConectarSuelo", isLoggedIn, async (req, res) => {
+
+  sensores.humedad_suelo = 1;
+  if (sensores.humedad_suelo) {
+    const respuesta = {
+      response: "success",
+      mensaje: "Sensor Humedad suelo Conectado con exito",
+    };
+    res.json(respuesta);
+  }
+});
+
+router.get("/DesconectarSuelo", isLoggedIn, async (req, res) => {
+
+  sensores.humedad_suelo = 0;
+  if (!sensores.humedad_suelo) {
+    const respuesta = {
+      response: "success",
+      mensaje: "Sensor humedad suelo desconectado con exito",
+    };
+    res.json(respuesta);
+  }
+});
 
 module.exports = router;

@@ -1,28 +1,54 @@
-<button type="button" onclick="BotonCrear()" class="btn btn-primary btn-icon-split btn-sm" data-bs-toggle="modal"
-    data-bs-target="#ModuloTemperatura">
-    <span class="icon text-white-50">
-        <i class="fas fa-user-plus"></i>
-    </span>
-    <span class="text">Resgistrar Temperatura</span>
-</button>
+<div class="row">
+    <div class="col-sm-4">
+        <button type="button" onclick="BotonCrear()" id="btn_crear_T" class="btn btn-primary btn-icon-split btn-sm"
+            data-bs-toggle="modal" data-bs-target="#ModuloTemperatura">
+            <span class="icon text-white-50">
+              
+            </span>
+            <span class="text">Resgistrar Temperatura</span>
+        </button>
+
+    </div>
+    <div class="col-sm-2">
+        <button type="button" id="btn_conectar_T" onclick="conectarTemperatura()"
+            class="btn btn-primary btn-icon-split btn-sm" data-bs-toggle="modal" data-bs-target="">
+            <span class="icon text-white-50">
+
+            </span>
+            <span class="text">Conectar</span>
+        </button>
+    </div>
+    <div class="col-sm-2">
+        <button type="button" id="btn_desconectar_T" onclick="desconecTemperatuara()"
+            class="btn btn-danger btn-icon-split btn-sm" data-bs-toggle="modal" data-bs-target="">
+            <span class="icon text-white-50">
+
+            </span>
+            <span class="text">Desconectar</span>
+        </button>
+    </div>
+
+
+</div>
 <hr>
- <div class="form-group humedad_suelo" id="Humedad_Calculos">
-     <div class="row">
-   <div class="col-sm-4 mb-4 mb-sm-0">
-        <label >Temperatura Maxima :  </label>
-        <input type="text" id="temperatura_maxima" name="temperatura_media" size="5" disabled>
-      </div>
+<input type="hidden" id="temperatura_estado" name="temperatura_estado" value="{{sensores.temperatura_estado}}">
+<div class="form-group humedad_suelo" id="Humedad_Calculos">
+    <div class="row">
         <div class="col-sm-4 mb-4 mb-sm-0">
-        <label >Temperatura Media : </label>
-          <input type="text" id="temperatura_media" name="temperatura_media" size="5" disabled>
-      </div>
+            <label>Temperatura Maxima : </label>
+            <input type="text" id="temperatura_maxima" name="temperatura_media" size="5" disabled>
+        </div>
         <div class="col-sm-4 mb-4 mb-sm-0">
-        <label >Temperatura Minima:  </label>
-          <input type="text" id="temperatura_minima" name="temperatura_minima" size="5" disabled>
-      </div>
-     </div>
-   
- </div>
+            <label>Temperatura Media : </label>
+            <input type="text" id="temperatura_media" name="temperatura_media" size="5" disabled>
+        </div>
+        <div class="col-sm-4 mb-4 mb-sm-0">
+            <label>Temperatura Minima: </label>
+            <input type="text" id="temperatura_minima" name="temperatura_minima" size="5" disabled>
+        </div>
+    </div>
+
+</div>
 <!-- Inicio Modal Cultivo!-->
 <div class="modal fade" id="ModuloTemperatura" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog ">
@@ -35,24 +61,26 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <div>
-                            <input type="text" class="form-control form-control-user" id="temperatura" name="temperatura"
-                                placeholder="0 ° C">
+                            <input type="text" class="form-control form-control-user" id="temperatura"
+                                name="temperatura" placeholder="0 ° C">
                             <input type="hidden" class="form-control form-control-user" id="Identificador"
                                 name="Identificador">
                         </div>
                         <div id="grupo_temperatura">
                         </div>
                     </div>
-                       <div class="form-group row">
+                    <div class="form-group row">
                         <div class="col-sm-6 mb-3 mb-sm-0">
                             <div>
-                                <input type="date" min="2021-03-25" max="2025-05-25" class="form-control form-control-user" id="fecha" name="fecha" >
+                                <input type="date" min="2021-03-25" max="2025-05-25"
+                                    class="form-control form-control-user" id="fecha" name="fecha">
                             </div>
                             <div id="grupo_fecha"></div>
                         </div>
                         <div class="col-sm-6 ">
                             <div>
-                                <input type="time" class="form-control form-control-user" id="hora" name="hora"  min="09:00" max="18:00" step="600">
+                                <input type="time" class="form-control form-control-user" id="hora" name="hora"
+                                    min="09:00" max="18:00" step="600">
                             </div>
                             <div id="grupo_hora"></div>
                         </div>
@@ -74,7 +102,7 @@
                         </span>
                         <span class="text">Guardar</span>
                     </button>
-                   
+
                 </div>
             </form>
         </div>
@@ -93,16 +121,16 @@
                     <input type="date" id="txt_buscar" class="form-control mr-sm-2">
                 </form>
                 <button type="button" onclick="Calculos_HumedadA()" class="btn btn-primary btn-icon-split btn-sm">
-                <span class="icon text-white-50">
-                <i class="fas fa-search"></i>
-                </span>
-                <span class="text">Buscar</span>
+                    <span class="icon text-white-50">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <span class="text">Buscar</span>
                 </button>
-                
+
 
             </div>
-                
-             <div id="grupo_txtBuscar"></div>
+
+            <div id="grupo_txtBuscar"></div>
             <br>
             <table class="table table-bordered" id="dataTable1" width="100%" cellspacing="0">
                 <thead>
@@ -122,8 +150,9 @@
 <script>
     let btn_verificador = "Actualizar";
     const btnCrear = document.querySelector('#btn_Crear');
-    const btnCerrar = document.querySelector('#btn_Cerrar'); 
+    const btnCerrar = document.querySelector('#btn_Cerrar');
     function ListaTemperatura() {
+        let humedad_rel_estado = $('#temperatura_estado').val();
         var URL = "/Temperatura/ListaTem";
         $.ajax({
             url: URL,
@@ -132,9 +161,9 @@
             success: function (response) {
                 let tbody = $('tbody');
                 tbody.html('');
-                var a=1;
+                var a = 1;
                 response.forEach(tem => {
-                    
+
                     tbody.append(`
                     <tr>
                          <td id="fnombre">${a++}</td>
@@ -154,6 +183,9 @@
                     </tr>
                 `)
                 })
+
+
+                verificadorBotones(humedad_rel_estado);
             }, error: function (e) {
                 console.log(e.readyState);
             }
@@ -162,52 +194,52 @@
 
     btnCrear.addEventListener('click', function (e) {
         e.preventDefault();
-        let temperatura=$("#temperatura").val();
-        let fecha=$("#fecha").val();
-        let hora=$("#hora").val();
+        let temperatura = $("#temperatura").val();
+        let fecha = $("#fecha").val();
+        let hora = $("#hora").val();
 
-         if(campoVacio(temperatura, "grupo_temperatura", "Ingrese la temperatura")){
-              if(validarN(temperatura, "grupo_temperatura", "Solo se permiten numeros de 2 digitos")){
-                  if(campoVacio(fecha, "grupo_fecha", "Seleccione una fecha valida")){
-                       if(campoVacio(hora, "grupo_hora", "Seleccione una hora valida")){
+        if (campoVacio(temperatura, "grupo_temperatura", "Ingrese la temperatura")) {
+            if (validarN(temperatura, "grupo_temperatura", "Solo se permiten numeros de 2 digitos")) {
+                if (campoVacio(fecha, "grupo_fecha", "Seleccione una fecha valida")) {
+                    if (campoVacio(hora, "grupo_hora", "Seleccione una hora valida")) {
 
 
-                            if(btn_verificador=="CrearTemperatura"){
-                            var URL="/Temperatura/Crear";
+                        if (btn_verificador == "CrearTemperatura") {
+                            var URL = "/Temperatura/Crear";
                             $.ajax({
-                                url:URL,
-                                type:"post",
-                                dataType:"json",
-                                data:{
-                                    temperatura,fecha,hora
+                                url: URL,
+                                type: "post",
+                                dataType: "json",
+                                data: {
+                                    temperatura, fecha, hora
                                 },
-                                success:function(res){
-                                    if(res.response=="success"){
+                                success: function (res) {
+                                    if (res.response == "success") {
                                         toastr["success"](res.mensaje)
                                         $('#ModuloTemperatura').modal('hide');
                                         $('#forTemperatura')[0].reset();
                                         ListaTemperatura();
                                         limpiarHtml();
                                         LimpiarCampos();
-                                        
+
                                     }
 
                                 }
 
                             });
 
-                        }else{
-                             let Identificador = $('#Identificador').val();
+                        } else {
+                            let Identificador = $('#Identificador').val();
                             var URL = "/Temperatura/Actualizar/" + Identificador;
-                             $.ajax({
-                                url:URL,
-                                type:"post",
-                                dataType:"json",
-                                data:{
-                                     temperatura,fecha,hora
+                            $.ajax({
+                                url: URL,
+                                type: "post",
+                                dataType: "json",
+                                data: {
+                                    temperatura, fecha, hora
                                 },
-                                success:function(res){
-                                    if(res.response=="success"){
+                                success: function (res) {
+                                    if (res.response == "success") {
                                         toastr["success"](res.mensaje)
                                         $('#ModuloTemperatura').modal('hide');
                                         $('#forTemperatura')[0].reset();
@@ -223,17 +255,17 @@
                         }
 
 
-                       }
+                    }
 
 
-                  }
+                }
 
-              }
+            }
 
 
-         }
+        }
 
-      
+
     });
 
     function ActualizarModuloCultivo(id) {
@@ -245,11 +277,11 @@
             url: URL,
             type: "get",
             success: function (res) {
-                
-                var a=res.tem_fecha.split("T");
+
+                var a = res.tem_fecha.split("T");
                 $("#temperatura").val(res.tem_temperatura);
                 $("#fecha").val(a[0]);
-                 $("#hora").val(res.tem_hora);
+                $("#hora").val(res.tem_hora);
                 $("#Identificador").val(id);
             }
         });
@@ -285,79 +317,78 @@
         })
     }
 
-    function Calculos_HumedadA()
-    {
-        let txt_buscar= $('#txt_buscar').val();
-        if(campoVacio(txt_buscar, "grupo_txtBuscar", "Ingrese una fecha valida")){
-        HumedadMaxima(txt_buscar);
-        HumedadMinima(txt_buscar);
-        HumedadMedia(txt_buscar);
-        ListaFechaTemperatura(txt_buscar);
+    function Calculos_HumedadA() {
+        let txt_buscar = $('#txt_buscar').val();
+        if (campoVacio(txt_buscar, "grupo_txtBuscar", "Ingrese una fecha valida")) {
+            HumedadMaxima(txt_buscar);
+            HumedadMinima(txt_buscar);
+            HumedadMedia(txt_buscar);
+            ListaFechaTemperatura(txt_buscar);
         }
-       
-      
+
+
     }
 
-    function HumedadMaxima(fecha){
-        let url="/Temperatura/HumedadMaxima";
+    function HumedadMaxima(fecha) {
+        let url = "/Temperatura/HumedadMaxima";
         $.ajax({
-             url:url,
-            type:"post",
-            dataType:"json",
-            data:{
-            fecha
+            url: url,
+            type: "post",
+            dataType: "json",
+            data: {
+                fecha
             },
-            success:function(res){
-                $('#temperatura_maxima').val(res.temperatura_maxima+ "  % ");
+            success: function (res) {
+                $('#temperatura_maxima').val(res.temperatura_maxima + "  % ");
             }
         });
     }
 
-    function HumedadMedia(fecha){
-        let url="/Temperatura/HumedadMedia";
+    function HumedadMedia(fecha) {
+        let url = "/Temperatura/HumedadMedia";
         $.ajax({
-             url:url,
-            type:"post",
-            dataType:"json",
-            data:{
-            fecha
+            url: url,
+            type: "post",
+            dataType: "json",
+            data: {
+                fecha
             },
-            success:function(res){
-               
-                  $('#temperatura_media').val(Math.ceil(res.temperatura_media)+"  % ");
+            success: function (res) {
+
+                $('#temperatura_media').val(Math.ceil(res.temperatura_media) + "  % ");
             }
         });
     }
-    
-    function HumedadMinima(fecha){
-        let url="/Temperatura/HumedadMinima";
+
+    function HumedadMinima(fecha) {
+        let url = "/Temperatura/HumedadMinima";
         $.ajax({
-             url:url,
-            type:"post",
-            dataType:"json",
-            data:{
-            fecha
+            url: url,
+            type: "post",
+            dataType: "json",
+            data: {
+                fecha
             },
-            success:function(res){
-                $('#temperatura_minima').val(res.temperatura_minima+ "  % ");
+            success: function (res) {
+                $('#temperatura_minima').val(res.temperatura_minima + "  % ");
             }
         });
     }
-    
-    function ListaFechaTemperatura(fecha){
-        let url="/Temperatura/ListaTemperatura";
-          $.ajax({
-             url:url,
-            type:"post",
-            dataType:"json",
-            data:{
-            fecha
+
+    function ListaFechaTemperatura(fecha) {
+        let url = "/Temperatura/ListaTemperatura";
+        $.ajax({
+            url: url,
+            type: "post",
+            dataType: "json",
+            data: {
+                fecha
             },
-            success:function(res){
-                 let tbody = $('tbody');
+            success: function (res) {
+                let tbody = $('tbody');
                 tbody.html('');
-                var a=1;
-                res.forEach(temperatura => { 
+                var a = 1;
+                res.forEach(temperatura => {
                     tbody.append(`
                     <tr>
                          <td id="fnombre">${a++}</td>
@@ -376,7 +407,7 @@
                         </td>
                     </tr>
                 `)
-                })     
+                })
             }
         });
     }
@@ -400,15 +431,99 @@
         limpiarHtml();
         LimpiarCampos();
     });
-    
+
     function LimpiarCampos() {
         $("#temperatura").val("");
         $("#hora").val("");
-        $("#fecha").val("");  
+        $("#fecha").val("");
         $('#temperatura_minima').val("");
         $('#temperatura_media').val("");
         $('#temperatura_maxima').val("");
         $('#txt_buscar').val("")
+    }
+
+    function conectarTemperatura() {
+        let URL = "/Temperatura/ConectarTemperatura";
+
+        Swal.fire({
+            title: 'Estas seguro?',
+            text: "Activar Humedad Relativa",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, Activar!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: URL,
+                    type: "GET",
+                    dataType: "json",
+                    success: function (res) {
+                        if (res.response == "success") {
+                            toastr["success"](res.mensaje)
+                            $("#btn_desconectar_T").attr("disabled", false);
+                            $("#btn_crear_T").attr("disabled", true);
+                            $("#btn_conectar_T").attr("disabled", true);
+                            verificadorBotones(1);
+                            ListaHR();
+                        }
+                    }, error: function (e) {
+                        console.log(e.readyState);
+                    }
+                });
+            }
+        })
+
+    }
+
+    function desconecTemperatuara() {
+        let URL = "/Temperatura/DesconectarTemperatuara";
+
+        Swal.fire({
+            title: 'Estas seguro?',
+            text: "Desactivar Humedad Relativa",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, Desactivar!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: URL,
+                    type: "GET",
+                    dataType: "json",
+                    success: function (res) {
+                        if (res.response == "success") {
+                            toastr["success"](res.mensaje);
+                            $("#btn_desconectar_T").attr("disabled", true);
+                            $("#btn_crear_T").attr("disabled", false);
+                            $("#btn_conectar_T").attr("disabled", false);
+                            verificadorBotones(0);
+                        }
+                    }, error: function (e) {
+                        console.log(e.readyState);
+                    }
+                });
+            }
+        })
+
+    }
+
+    function verificadorBotones(temp_estado) {
+
+        if (temp_estado == 1) {
+            $("#btn_desconectar_T").attr("disabled", false);
+            $("#btn_crear_T").attr("disabled", true);
+            $("#btn_conectar_T").attr("disabled", true);
+        }
+
+        if (temp_estado == 0) {
+            $("#btn_desconectar_T").attr("disabled", true);
+            $("#btn_crear_T").attr("disabled", false);
+            $("#btn_conectar_T").attr("disabled", false);
+        }
     }
 
     window.onload = ListaTemperatura;

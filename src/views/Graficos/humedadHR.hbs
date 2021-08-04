@@ -1,125 +1,159 @@
-<div class="card">
+<input type="hidden" id="Eto" class="form-control mr-sm-2">
 
+<div class="card">
     <div class="card-header">
         <div class="input-group">
-            <form class="form-inline my-2 my-lg-0">
-                <input type="date" id="txt_buscar" class="form-control mr-sm-2">
-            </form>
-            <button type="button" onclick="BuscarValor()" class="btn btn-primary btn-icon-split btn-sm">
-                <span class="icon text-white-50">
-                    <i class="fas fa-search"></i>
-                </span>
-                <span class="text">Buscar</span>
-            </button>
+            <div class="form-group row">
+                <div class="col-sm-8">
+                    <select name="cultivo" id="cultivo" class="form-control form-control-user">
+                    </select>
+                    <div id="grupo_cultivo"></div>
+                </div>
+                <div class="col-sm-4">
+                    <button type="button" onclick="drawChart()" class="btn btn-primary btn-icon-split btn-sm">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <span class="text">Buscar</span>
+                    </button>
+                </div>
+            </div>
         </div>
         <div id="grupo_txtBuscar1"></div>
     </div>
 
-  
 
 
-    <div class="row">
-        <div id="curve_chart1" style="width: 900px; height: 500px" class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
-        </div>
-    </div>
+
+
+
+
 
 
 
 </div>
 
-
+<canvas id="curve_chart1" style="width: 850px; height: 450px">
+</canvas>
 
 
 <script type="text/javascript">
-    google.charts.load('current', { 'packages': ['corechart'] });
-    google.charts.setOnLoadCallback(drawChart2);
+    const grafica = document.querySelector("#curve_chart1");
+    // Las etiquetas son las que van en el eje X. 
+    const etiquetas = ["Fase Inicial", "Fase Desarrollo", "Fase Media", "Maduración"]
+    // Podemos tener varios conjuntos de datos. Comencemos con uno
 
 
 
 
 
-    var options = {
-        title: 'Grafica sensor de humedad relatova DHT11',
-        hAxis: { title: 'Horas ', titleTextStyle: { color: '#333' } },
-        vAxis: { title: 'Humedad Relativa' },
-        with: 200,
-        colors: ['#BCCA36'],
-        curveType: 'function',
-        legend: { position: 'bottom' }
-    };
-
-    function drawChart2() {
-        var fecha = fechaActual();
-
-        var Data = new google.visualization.DataTable();
-        Data.addColumn('number', 'hora');
-        Data.addColumn('number', 'Humedad Relativa');
-        Data.addRows(20);
-
-        var URL = "/HumedadRelativa/ListaHR";
+    function drawChart() {
+        let cul_id = $('#cultivo').val();
+        let Eto = $('#Eto').val();
+        const URL = "/GestionCultivo/Actualizar/" + cul_id;
         $.ajax({
             url: URL,
-            type: "post",
-            dataType: "json",
-            data: { fecha },
-            success: function (response) {
-                var contador = 0;
-                limpiarHtml();
-                response.forEach(HR => {
-                    var a = HR.hum_rel_hora.split(":");
-                    Data.setValue(contador, 0, a[0]);
-                    Data.setValue(contador, 1, HR.hum_rel_valor);
-                  
+            type: "get",
+            success: function (res) {
+                let nombre = res.cul_nombre;
+                let fre = res.cul_frecuencia_riego;
+                let sp = res.cul_dep;
+                let sl = res.cul_dlp;
+                let db1 = ((res.cul_kc1 * Eto) / 90) * 100;
+                let db2 = ((res.cul_kc2 * Eto) / 90) * 100;
+                let db3 = ((res.cul_kc3 * Eto) / 90) * 100;
+                let db4 = ((res.cul_kc4 * Eto) / 90) * 100;
+                let G1 = ((db1 / fre) * sp * sl).toFixed(4);
+                let G2 = ((db2 / fre) * sp * sl).toFixed(4);
+                let G3 = ((db3 / fre) * sp * sl).toFixed(4);
+                let G4 = ((db4 / fre) * sp * sl).toFixed(4);
 
-                    contador++;
+                const datos = {
+
+                    label: "Volumen de agua del cultivo de : " + nombre,
+                    data: [G1, G2, G3, G4], // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)', // Color de fondo
+                    borderColor: 'rgba(54, 162, 235, 1)', // Color del borde
+                    borderWidth: 1,// Ancho del borde
+                };
+                new Chart(grafica, {
+                    type: 'bar',// Tipo de gráfica
+                    data: {
+                        labels: etiquetas,
+                        datasets: [
+                            datos,
+                            // Aquí más datos...
+                        ]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }],
+                        },
+                        with: 50,
+                    }
                 });
-
-                var chartspace = new google.visualization.LineChart(document.getElementById('curve_chart1'));
-                chartspace.draw(Data, options);
-
-            }, error: function (e) {
-                console.log(e.readyState);
             }
         });
-    }
 
-
-    function BuscarValor() {
-        let fecha = $('#txt_buscar').val();
-        if (campoVacio(fecha, "grupo_txtBuscar1", "Seleccione una fecha valida")) {
-            var Data = new google.visualization.DataTable();
-            Data.addColumn('number', 'hora');
-            Data.addColumn('number', 'Humedad Relativa');
-            Data.addRows(20);
-            var URL = "/HumedadRelativa/ListaHR";
-            $.ajax({
-                url: URL,
-                type: "post",
-                dataType: "json",
-                data: { fecha },
-                success: function (response) {
-                    var contador = 0;
-                    limpiarHtml();
-                    response.forEach(HR => {
-                        var a = HR.hum_rel_hora.split(":");
-                        Data.setValue(contador, 0, a[0]);
-                        Data.setValue(contador, 1, HR.hum_rel_valor);
-                       
-                        contador++;
-                    });
-
-                    var chartspace = new google.visualization.LineChart(document.getElementById('curve_chart1'));
-                    chartspace.draw(Data, options);
-                }, error: function (e) {
-                    console.log(e.readyState);
-                }
-            });
-        }
 
     }
 
     function limpiarHtml() {
         $("#grupo_txtBuscar1").val("");
     }
+
+    function SelectCultivos() {
+        DatosEcuacion();
+        let rol = document.getElementById("cultivo");
+        let mensaje = " <option selected value='0'>Escoga el cultivo...</option>";
+        var URLRoles = "/GestionCultivo/Cultivos";
+        $.ajax({
+            url: URLRoles,
+            type: "get",
+            dataType: "json",
+            success: function (response) {
+                response.forEach(cultivo => {
+                    mensaje += "<option value='" + cultivo.cul_id + "'>" + cultivo.cul_nombre + "</option>";
+                });
+                rol.innerHTML = mensaje;
+            }
+        });
+    }
+
+
+    function DatosEcuacion() {
+        var URL = "/Formula/Ecuacion";
+        $.ajax({
+            url: URL,
+            type: "get",
+            dataType: "json",
+            success: function (response) {
+                response.forEach(ecuacion => {
+                    let v2 = velocidadViento(ecuacion.ecu_vels, ecuacion.ecu_altura);
+                    let y = constantepsicometric(ecuacion.ecu_msnm);
+                    let Ra = RadiacionExtraterrestre(ecuacion.ecu_latitud, ecuacion.ecu_mes);
+                    let N = InsolacionMaximaDiaria(ecuacion.ecu_latitud, ecuacion.ecu_mes);
+                    let es = presionVaporSaturacion(ecuacion.ecu_Tmax, ecuacion.ecu_Tmin);
+                    let ea = presionRealVapor(ecuacion.ecu_humedad_relativa_promedio, es);
+                    let es_ea = (parseFloat(es) - parseFloat(ea)).toFixed(4);
+                    let pcv = pendienteCurvaPresionVapor(ecuacion.ecu_Tpromedio);
+                    let n = duracionInsolacion(N, ecuacion.ecu_despeje_nubes);
+                    let Rn = radiacionNeta(ecuacion.ecu_Tmax, ecuacion.ecu_Tmin, ea, Ra, ecuacion.ecu_msnm, N, n);
+                    let Eto = EcuacionPenmanMonteith(v2, y, pcv, es, ea, Rn, ecuacion.ecu_Tpromedio, ecuacion.ecu_flujoCalor);
+                    $('#Eto').val(Eto);
+
+
+                })
+            }, error: function (e) {
+                console.log(e.readyState);
+            }
+        });
+
+    }
+    window.onload = SelectCultivos;
 
 </script>

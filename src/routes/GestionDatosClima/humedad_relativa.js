@@ -44,6 +44,31 @@ router.get("/Actualizar/:id", isLoggedIn, async (req, res) => {
     );
     res.json(modulo[0]);
 });
+router.get("/ConectarHumedadR", isLoggedIn, async (req, res) => {
+
+    sensores.humedad_rel_estado = 1;
+    if (sensores.humedad_rel_estado) {
+        const respuesta = {
+            response: "success",
+            mensaje: "Humedad relativa Conectado con exito",
+        };
+        res.json(respuesta);
+    }
+});
+
+router.get("/DesconectarHumedadR", isLoggedIn, async (req, res) => {
+
+    sensores.humedad_rel_estado = 0;
+    if (!sensores.humedad_rel_estado) {
+        const respuesta = {
+            response: "success",
+            mensaje: "Humedad relativa desconectado con exito",
+        };
+        res.json(respuesta);
+    }
+});
+
+
 
 router.post("/Actualizar/:id", isLoggedIn, async (req, res) => {
     const { id } = req.params;
@@ -104,14 +129,12 @@ router.post("/CalculosDatos", isLoggedIn, async (req, res) => {
     res.json(HR_claculos[0]);
 });
 function mensaje() {
-   
+
     sensores.titulo = "Sensor Humedad relativa";
 
-    if (sensores.humedad_relativa != 0) {
-        sensores.mensaje_valvula = "Sensor HR : " + sensores.humedad_relativa + " %";
-    } else {
-        sensores.mensaje_valvula = "Sensor HR : SC";
-    }
+
+    sensores.mensaje_valvula = "Humedad Relativa";
+
 
 }
 

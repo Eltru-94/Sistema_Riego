@@ -20,7 +20,7 @@
     <link href="/css/estilos.css" rel="stylesheet">
     <!--toastr-->
 
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@latest/dist/Chart.min.js"></script>
 
     <link rel="stylesheet" href="/css/toastr.min.css">
     <link rel="stylesheet" href="/libs/morris.css">
@@ -30,6 +30,8 @@
     <!--Graficos libreria-->
     <script type="text/javascript" src="/js/loader.js"></script>
     <script src="/js/datos.js"></script>
+    <script>
+    </script>
 
 </head>
 
@@ -58,26 +60,11 @@
                 {{#existe user 4}}{{/existe}}
                 {{#existe user 5}}{{/existe}}
                 {{#existe user 6}}{{/existe}}
-                <div class="sidebar-heading">
-                    ELECTROVALVULA
+
+
+                <div class="text-center d-none d-md-inline">
+                    <button class="rounded-circle border-0" id="sidebarToggle"></button>
                 </div>
-            <li class="nav-item">
-
-                <a class="nav-link" href="#" aria-expanded="true" aria-controls="collapse1">
-                    <img src="imagenes/valvula.png" style="width: 35px; height: 35px" alt="">
-                    <span>      {{sensores.temp_valvula}}</span>
-                </a>
-
-
-
-            </li>
-
-            <hr class="sidebar-divider">
-            </li>
-
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
 
         </ul>
         <div id="content-wrapper" class="d-flex flex-column">
@@ -88,7 +75,7 @@
                         <div class="row">
                             <div class="col-md-10 col-sm-8 col-xs-12">
 
-                                <h5>{{sensores.mensaje_valvula}}</h5>
+                                <h5 name="mensaje" id="mensaje">{{sensores.mensaje_valvula}}</h5>
                             </div>
                             <div class="col-md-2 col-sm-4 col-xs-12">
                                 <ul class="navbar-nav ml-md-auto ">
@@ -167,10 +154,6 @@
         </div>
 
     </div>
-
-
-
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
         crossorigin="anonymous"></script>

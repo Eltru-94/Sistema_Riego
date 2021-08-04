@@ -15,13 +15,30 @@ router.get('/', (req, res) => {
 });
 
 router.get('/conectar/', async (req, res) => {
-   const { temperatura_A, humedad_relativa_A, humedad_suelo_nodoA, humedad_suelo_nodoB } = req.query;
-   var hora_actual = horaTiempos();
-   var fecha_actual = fechaTiempos();
-   sensores.humedad_suelo_a = Math.ceil((humedad_suelo_nodoA * 100) / 1023);
-   sensores.humedad_suelo_b = Math.ceil((humedad_suelo_nodoB * 100) / 1023);
-   sensores.temperuta_a = temperatura_A;
-   sensores.humedad_relativa = humedad_relativa_A;
+   const { temperatura_A, hora_actual, fecha_actual, humedad_relativa_A, humedad_suelo_nodoA, humedad_suelo_nodoB } = req.query;
+
+   if (sensores.humedad_rel_estado == 1) {
+      sensores.humedad_relativa = humedad_relativa_A;
+   } else {
+      sensores.humedad_relativa = 0;
+   }
+
+   if (sensores.temperatura_estado == 1) {
+      sensores.temperuta_a = temperatura_A;
+   } else {
+      sensores.temperuta_a = 0;
+   }
+
+   if (sensores.humedad_suelo == 1) {
+      sensores.humedad_suelo_a = Math.ceil((humedad_suelo_nodoA * 100) / 1023);
+      sensores.humedad_suelo_b = Math.ceil((humedad_suelo_nodoB * 100) / 1023);
+   } else {
+      sensores.humedad_suelo_a = 0;
+      sensores.humedad_suelo_b = 0;
+   }
+
+
+
    sensores.promedio1 = Math.ceil((sensores.humedad_suelo_a + sensores.humedad_suelo_b) / 2);
    sensores.fecha_actual = fecha_actual;
    sensores.hora_actual = hora_actual;
@@ -39,20 +56,26 @@ router.get('/conectar/', async (req, res) => {
             hum_sue_fecha: fecha_actual,
             hum_sue_estado: 1,
          };
+         if (sensores.temperatura_estado == 1) {
+            const newtemperatura = {
+               tem_temperatura: temperatura_A,
+               tem_fecha: fecha_actual,
+               tem_hora: hora_actual,
+               tem_estado: 1,
+            };
+         }
 
-         const newtemperatura = {
-            tem_temperatura: temperatura_A,
-            tem_fecha: fecha_actual,
-            tem_hora: hora_actual,
-            tem_estado: 1,
-         };
 
-         const newtHR = {
-            hum_rel_valor: humedad_relativa_A,
-            hum_rel_fecha: fecha_actual,
-            hum_rel_hora: hora_actual,
-            hum_rel_estado: 1,
-         };
+         if (sensores.humedad_rel_estado == 1) {
+
+            const newtHR = {
+               hum_rel_valor: humedad_relativa_A,
+               hum_rel_fecha: fecha_actual,
+               hum_rel_hora: hora_actual,
+               hum_rel_estado: 1,
+            };
+         }
+
 
          const query1 = await db.query("INSERT INTO tbl_humedad_suelo set ?", [newhumedad]);
          const query2 = await db.query("INSERT INTO tbl_temperatura set ?", [newtemperatura]);
@@ -122,22 +145,20 @@ router.get('/conectar/', async (req, res) => {
    if (sensores.estado_manual == 0 && sensores.estado_automatico == 0) {
       sensores.temp_valvula = "0FF"
    }
-   console.log(fechaTiempos()+" h: "+horaTiempos());
+   console.log(fechaTiempos() + " h: " + horaTiempos() + ": " + sensores.tiempo_aplicacion);
    res.json(valor_aux);
 
 
 
 });
-router.get('/ActivarManual/:id', async (req, res) => {
+router.post('/ActivarManual/:id', async (req, res) => {
    sensores.temp_valvula = "Riego Manual ONN"
    sensores.estado_manual = 1;
-   const aux_fecha = sensores.fecha_actual;
    const { id } = req.params;
+   const { Eto, etapacultivo } = req.body;
    const query1 = await db.query("SELECT * FROM tbl_riego_cultivo WHERE tbl_riego_cultivo.cli_id=? AND tbl_riego_cultivo.riego_cul_estado=?", [id, 1]);
-   const query2 = await db.query("SELECT AVG (tbl_humedad_suelo.hum_sue_nodo_a) AS 'nodo_a', AVG (tbl_humedad_suelo.hum_sue_nodo_b) AS 'nodo_b' FROM tbl_humedad_suelo WHERE tbl_humedad_suelo.hum_sue_estado=? AND tbl_humedad_suelo.hum_sue_fecha=?", [1, aux_fecha]);
-   const aux_nodo_a = query2[0].nodo_a;
-   const aux_nodo_b = query2[0].nodo_b;
-   const promedio = Math.ceil((aux_nodo_a + aux_nodo_b) / 2);
+
+   const promedio = sensores.humedad_relativa;
 
    const new_riego = {
       riego_fecha: sensores.fecha_actual,
@@ -148,6 +169,8 @@ router.get('/ActivarManual/:id', async (req, res) => {
       riego_cul_id: query1[0].riego_cul_id,
       riego_tipo: 1,
       riego_humedad_relativa: sensores.humedad_relativa,
+      riego_eto: Eto,
+      riego_etapa: etapacultivo
    }
    const query3 = await db.query("INSERT INTO tbl_riego set ?", [new_riego]);
 
@@ -183,11 +206,16 @@ router.get('/DesactivarManual/:id', async (req, res) => {
 
 router.post('/RiegoCultivo', async (req, res) => {
 
-   const { cul_id, cli_id } = req.body;
+   const { cli_id, cul_id, etapacultivo, caudal, dgoteros } = req.body;
+   sensores.cul_id_tem = cul_id;
+   console.log(cul_id)
    const new_riego_cultivo = {
       riego_cul_estado: 1,
       cli_id: cli_id,
-      cul_id: cul_id
+      cul_id: cul_id,
+      rig_cul_base_desarrollo: etapacultivo,
+      rig_cul_dista_goteros: dgoteros,
+      rig_cul_caudal: caudal
    };
    const insert_riego_cultivo = await db.query("INSERT INTO tbl_riego_cultivo set ?", [
       new_riego_cultivo
@@ -195,18 +223,23 @@ router.post('/RiegoCultivo', async (req, res) => {
 
 
 
+
+
    const riego = {
       id: insert_riego_cultivo.insertId
    }
    sensores.cultivo_id = insert_riego_cultivo.insertId;
+   sensores.riego_cultivo_id = insert_riego_cultivo.insertId;
    sensores.riego_cultivo = 1;
 
    res.json(riego)
 
 });
 
-router.get("/ListaRiegoCultivo/:id", async (req, res) => {
+router.post("/ListaRiegoCultivo/:id", async (req, res) => {
    const { id } = req.params;
+   const { tiempo_aplicacion } = req.body;
+   sensores.tiempo_aplicacion = tiempo_aplicacion;
    const cultivo_riego_user = await db.query("SELECT tbl_cliente.cli_nombre,tbl_cliente.cli_apellido,tbl_cultivo.cul_nombre,tbl_cultivo.cul_estado,tbl_riego_cultivo.cli_id,tbl_riego_cultivo.cul_id FROM tbl_cliente INNER JOIN tbl_riego_cultivo ON (tbl_cliente.cli_id = tbl_riego_cultivo.cli_id) INNER JOIN tbl_cultivo ON (tbl_riego_cultivo.cul_id = tbl_cultivo.cul_id) WHERE tbl_cliente.cli_estado=? AND tbl_cultivo.cul_estado=? AND tbl_riego_cultivo.riego_cul_estado=? AND tbl_riego_cultivo.cli_id=?", [1, 1, 1, id]);
 
    res.json(cultivo_riego_user[0]);
@@ -219,13 +252,15 @@ router.get("/Eliminar/:id", async (req, res) => {
       riego_cul_estado: 0,
    }
    const id_ = query1[0].riego_cul_id;
-   console.log(id_)
+
    const query = await db.query(
       "UPDATE tbl_riego_cultivo set ? WHERE tbl_riego_cultivo.riego_cul_id = ?",
       [delete_cul_riego, id_]
    );
    sensores.riego_cultivo = 0;
    sensores.cultivo_id = 0;
+   sensores.cli_riego_id = 0;
+
    if (query.affectedRows == 1) {
       const respuesta = { response: "success", mensaje: "Cultivo riego elminado" };
       res.json(respuesta);

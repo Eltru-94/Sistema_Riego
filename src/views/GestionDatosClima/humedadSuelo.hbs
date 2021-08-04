@@ -1,10 +1,35 @@
-<button type="button" onclick="BotonCrear()" class="btn btn-primary btn-icon-split btn-sm" data-bs-toggle="modal"
-    data-bs-target="#ModuloHumedad">
-    <span class="icon text-white-50">
-        <i class="fas fa-user-plus"></i>
-    </span>
-    <span class="text">Resgistrar Humedad Suelo</span>
-</button>
+<div class="row">
+    <div class="col-ms-6">
+        <button type="button" onclick="BotonCrear()" id="btn_crear_HS" class="btn btn-primary btn-icon-split btn-sm"
+            data-bs-toggle="modal" data-bs-target="#ModuloHumedad">
+            <span class="icon text-white-50">
+                <i class="fas fa-user-plus"></i>
+            </span>
+            <span class="text">Resgistrar Humedad Suelo</span>
+        </button>
+    </div>
+    <div class="col-sm-2">
+        <button type="button" id="btn_conectar_HS" onclick="conectarHumedadS()"
+            class="btn btn-primary btn-icon-split btn-sm" data-bs-toggle="modal" data-bs-target="">
+            <span class="icon text-white-50">
+
+            </span>
+            <span class="text">Conectar</span>
+        </button>
+    </div>
+    <div class="col-sm-2">
+        <button type="button" id="btn_desconectar_HS" onclick="desconectarHumedadS()"
+            class="btn btn-danger btn-icon-split btn-sm" data-bs-toggle="modal" data-bs-target="">
+            <span class="icon text-white-50">
+
+            </span>
+            <span class="text">Desconectar</span>
+        </button>
+    </div>
+
+
+</div>
+<input type="hidden" id="humedad_suelo" name="humedad_suelo" value="{{sensores.humedad_suelo}}">
 <hr>
 <div class="form-group humedad_suelo" id="Humedad_Calculos">
     <div class="row">
@@ -156,8 +181,80 @@
     const btnCrear = document.querySelector('#btn_Crear');
     const btnCerrar = document.querySelector('#btn_Cerrar');
 
+    function conectarHumedadS() {
+        let URL = "/HumedadSuelo/ConectarSuelo";
+
+        Swal.fire({
+            title: 'Estas seguro?',
+            text: "Activar Humedad Relativa",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, Activar!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: URL,
+                    type: "GET",
+                    dataType: "json",
+                    success: function (res) {
+                        if (res.response == "success") {
+                            toastr["success"](res.mensaje)
+                            $("#btn_desconectar_HS").attr("disabled", false);
+                            $("#btn_crear_HS").attr("disabled", true);
+                            $("#btn_conectar_HS").attr("disabled", true);
+
+                            ListaHR();
+                        }
+                    }, error: function (e) {
+                        console.log(e.readyState);
+                    }
+                });
+            }
+        })
+
+    }
+    function desconectarHumedadS() {
+        let URL = "/HumedadSuelo/DesconectarSuelo";
+
+        Swal.fire({
+            title: 'Estas seguro?',
+            text: "Desactivar Humedad Relativa",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, Desactivar!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: URL,
+                    type: "GET",
+                    dataType: "json",
+                    success: function (res) {
+                        if (res.response == "success") {
+                            toastr["success"](res.mensaje)
+                            $("#btn_desconectar_HS").attr("disabled", true);
+                            $("#btn_crear_HS").attr("disabled", false);
+                            $("#btn_conectar_HS").attr("disabled", false);
+
+                            verificadorBotones(0);
+                        }
+                    }, error: function (e) {
+                        console.log(e.readyState);
+                    }
+                });
+            }
+        })
+
+    }
+
     function SelectHumedad() {
         var URL = "/HumedadSuelo/SelectHumedad";
+
+        let humedad_rel_estado = $('#humedad_suelo').val();
+        verificadorBotones(humedad_rel_estado);
         $.ajax({
             url: URL,
             type: "get",
@@ -414,19 +511,32 @@
                 fecha
             },
             success: function (res) {
-                $('#hs_maxima_a').val(res.max_nodo_a+" %");
-                $('#hs_media_a').val(Math.ceil(res.pro_nodo_a)+" %");
-                $('#hs_minima_a').val(res.min_nodo_a+" %");
+                $('#hs_maxima_a').val(res.max_nodo_a + " %");
+                $('#hs_media_a').val(Math.ceil(res.pro_nodo_a) + " %");
+                $('#hs_minima_a').val(res.min_nodo_a + " %");
 
-                $('#hs_maxima_b').val(res.max_nodo_b+" %");
-                $('#hs_media_b').val(Math.ceil(res.pro_nodo_b)+" %");
-                $('#hs_minima_b').val(res.min_nodo_b+" %");
+                $('#hs_maxima_b').val(res.max_nodo_b + " %");
+                $('#hs_media_b').val(Math.ceil(res.pro_nodo_b) + " %");
+                $('#hs_minima_b').val(res.min_nodo_b + " %");
 
             }
         });
     }
 
+    function verificadorBotones(humedad_suelo_estado) {
 
+        if (humedad_suelo_estado == 1) {
+            $("#btn_desconectar_HS").attr("disabled", false);
+            $("#btn_crear_HS").attr("disabled", true);
+            $("#btn_conectar_HS").attr("disabled", true);
+        }
+
+        if (humedad_suelo_estado == 0) {
+            $("#btn_desconectar_HS").attr("disabled", true);
+            $("#btn_crear_HS").attr("disabled", false);
+            $("#btn_conectar_HS").attr("disabled", false);
+        }
+    }
 
     window.onload = SelectHumedad;
 </script>

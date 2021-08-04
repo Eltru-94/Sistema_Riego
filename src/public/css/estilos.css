@@ -132,3 +132,9 @@
     /* IMPORTANTE */
     text-align: center;
 }
+
+.container1 .card .PruebaImagen img{
+    width: 100px;
+    height: 100px;
+    border-style: none!important;
+}

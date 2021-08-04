@@ -16,7 +16,15 @@ module.exports ={
        riego_id:0,
        mensaje_valvula:"Sistema de Riego",
        temp_valvula:"OFF",
-       titulo:""
+       titulo:"",
+       riego_cultivo_id:0,
+       temperatura_estado:0,
+       humedad_rel_estado:0,
+       humedad_suelo:0,
+       humedad_suelo_b:false,
+       tiempo_aplicacion:0,
+       Eto:0,
+       cul_id_temp:0
     }
    };
   

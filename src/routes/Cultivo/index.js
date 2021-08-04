@@ -12,11 +12,20 @@ router.get("/", isLoggedIn, async (req, res) => {
 });
 
 router.post("/Crear", isLoggedIn, async (req, res) => {
-  const { cultivo, descripcion } = req.body;
+  const { cultivo, kc1, kc2, kc3, kc4, dep, dlp, TpoMad, frecuencia, descripcion } = req.body;
+
   const newcultivo = {
     cul_nombre: cultivo,
+    cul_kc1: kc1,
+    cul_kc2: kc2,
+    cul_kc3: kc3,
+    cul_kc4: kc4,
+    cul_dep: dep,
+    cul_dlp: dlp,
+    cul_frecuencia_riego: frecuencia,
     cul_descripcion: descripcion,
     cul_estado: 1,
+    cul_TpoMaduracion: TpoMad,
   };
 
   const cul = await db.query("INSERT INTO tbl_cultivo set ?", [newcultivo]);
@@ -48,12 +57,19 @@ router.get("/Actualizar/:id", isLoggedIn, async (req, res) => {
 
 router.post("/Actualizar/:id", isLoggedIn, async (req, res) => {
   const { id } = req.params;
-  const { cultivo, descripcion } = req.body;
+  const { cultivo, kc1, kc2, kc3, kc4, dep, dlp, frecuencia, descripcion } = req.body;
 
-  console.log(cultivo);
   const newcultivo = {
     cul_nombre: cultivo,
-    cul_descripcion: descripcion
+    cul_kc1: kc1,
+    cul_kc2: kc2,
+    cul_kc3: kc3,
+    cul_kc4: kc4,
+    cul_dep: dep,
+    cul_dlp: dlp,
+    cul_frecuencia_riego: frecuencia,
+    cul_descripcion: descripcion,
+    cul_estado: 1,
   };
 
   const cul = await db.query(

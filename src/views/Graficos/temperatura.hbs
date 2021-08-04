@@ -1,25 +1,34 @@
+<input type="hidden" id="cli_id" value="{{#cliente_id user 1}}{{/cliente_id}}" class="form-control mr-sm-2">
+
+
 <div class="card">
 
     <div class="card-header">
         <div class="input-group">
-            <form class="form-inline my-2 my-lg-0">
-                <input type="date" id="txt_buscar" class="form-control mr-sm-2">
-            </form>
-            <button type="button" onclick="BuscarValor()" class="btn btn-primary btn-icon-split btn-sm">
-                <span class="icon text-white-50">
-                    <i class="fas fa-search"></i>
-                </span>
-                <span class="text">Buscar</span>
-            </button>
+            <div class="form-group row">
+                <div class="col-sm-8">
+                    <select name="cultivo" id="cultivo" class="form-control form-control-user">
+                    </select>
+                    <div id="grupo_cultivo"></div>
+                </div>
+                <div class="col-sm-4">
+                    <button type="button" onclick="drawChart()" class="btn btn-primary btn-icon-split btn-sm">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <span class="text">Buscar</span>
+                    </button>
+                </div>
+            </div>
         </div>
         <div id="grupo_txtBuscar1"></div>
     </div>
 
-  
+
 
 
     <div class="row">
-        <div id="curve_chart1" style="width: 900px; height: 500px" class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+        <div id="curve_chart1" style="width: 850px; height: 450px" class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
         </div>
     </div>
 
@@ -33,43 +42,137 @@
 <script type="text/javascript">
     google.charts.load('current', { 'packages': ['corechart'] });
     google.charts.setOnLoadCallback(drawChart2);
-
-
-
-
-
     var options = {
-        title: 'Grafica sensor temperatura DTH11',
-        hAxis: { title: 'Horas ', titleTextStyle: { color: '#333' } },
-        vAxis: { title: 'Temperatura' },
-        with: 200,
-        colors: ['#BCCA36'],
+        title: 'Seguimiento riego del cultivo',
+        hAxis: { title: 'Dias', titleTextStyle: { color: '#333' } },
+        vAxis: { title: 'Datos Climatologicos' },
+        with: 100,
+        colors: ['#363FCA', '#363752', '#90074B', '#0CCA23', "#D7E066","#8A7E80"],
         curveType: 'function',
         legend: { position: 'bottom' }
     };
 
+
     function drawChart2() {
-        var fecha = fechaActual();
+        const id = $('#cli_id').val();
 
         var Data = new google.visualization.DataTable();
-        Data.addColumn('number', 'hora');
-        Data.addColumn('number', 'Temperatura');
+        Data.addColumn('number', 'Contador');
+        Data.addColumn('number', 'Temp');
+        Data.addColumn('number', 'Hum Rel');
+        Data.addColumn('number', 'ETO');
+        Data.addColumn('number', 'ETC');
+        Data.addColumn('number', 'DB');
+        Data.addColumn('number', 'Volumen agua L');
         Data.addRows(20);
 
-        var URL = "/Temperatura/ListaTemperatura";
+        var URL = "/VisualizacionSensores/Cultivo_riego/" + id;
+        $.ajax({
+            url: URL,
+            type: "get",
+            dataType: "json",
+            success: function (response) {
+                var contador = 1;
+                limpiarHtml();
+                response.forEach(selectCultivoRiego => {
+                    let etapa = selectCultivoRiego.riego_etapa;
+                    let kc = 0;
+                    if (etapa == 1) {
+                        kc = selectCultivoRiego.cul_kc1;
+                    }
+                    if (etapa == 2) {
+                        kc = selectCultivoRiego.cul_kc2;
+                    }
+                    if (etapa == 3) {
+                        kc = selectCultivoRiego.cul_kc3;
+                    }
+                    if (etapa == 4) {
+                        kc = selectCultivoRiego.cul_kc4;
+                    }
+                    let ETc = kc * selectCultivoRiego.riego_eto;
+                    let db = ((ETc / 90) * 100).toFixed(4);
+                    let frecuencia = selectCultivoRiego.cul_frecuencia_riego;
+                    let sp = selectCultivoRiego.cul_dep;
+                    let sl = selectCultivoRiego.cul_dlp;
+                    let G = ((db / frecuencia) * sp * sl).toFixed(4);
+                    let se = selectCultivoRiego.rig_cul_dista_goteros;
+                    let Np = (sp / se);
+                    let caudal = selectCultivoRiego.rig_cul_caudal;
+                    let ta = (G / Np) * caudal;
+                    Data.setValue(contador, 0, contador);
+                    Data.setValue(contador, 1, selectCultivoRiego.riego_temperatura);
+                    Data.setValue(contador, 2, selectCultivoRiego.riego_humedad_relativa);
+                    Data.setValue(contador, 3, selectCultivoRiego.riego_eto);
+                    Data.setValue(contador, 4, ETc);
+                    Data.setValue(contador, 5, db);
+                    Data.setValue(contador, 6, G);
+                
+
+
+                    contador++;
+                });
+
+                var chartspace = new google.visualization.LineChart(document.getElementById('curve_chart1'));
+                chartspace.draw(Data, options);
+
+            }, error: function (e) {
+                console.log(e.readyState);
+            }
+        });
+    }
+    function drawChart() {
+        const id = $('#cli_id').val();
+        const cul_id = $('#cultivo').val();
+
+
+        var Data = new google.visualization.DataTable();
+        Data.addColumn('number', 'Contador', "holal");
+        Data.addColumn('number', 'Temperatura');
+        Data.addColumn('number', 'Humedad Relativa');
+        Data.addColumn('number', 'ETO');
+        Data.addColumn('number', 'ETC');
+        Data.addColumn('number', 'DB');
+        Data.addColumn('number', 'Volumen agua en litros');
+        Data.addRows(20);
+
+        var URL = "/VisualizacionSensores/Cultivo_riego/" + id;
         $.ajax({
             url: URL,
             type: "post",
             dataType: "json",
-            data: { fecha },
+            data: { cul_id },
             success: function (response) {
-                var contador = 0;
+                var contador = 1;
                 limpiarHtml();
-                response.forEach(temperatura => {
-                    var a = temperatura.tem_hora.split(":");
-                    Data.setValue(contador, 0, a[0]);
-                    Data.setValue(contador, 1, temperatura.tem_temperatura);
-                    
+                response.forEach(selectCultivoRiego => {
+                    let etapa = selectCultivoRiego.riego_etapa;
+                    let kc = 0;
+                    if (etapa == 1) {
+                        kc = selectCultivoRiego.cul_kc1;
+                    }
+                    if (etapa == 2) {
+                        kc = selectCultivoRiego.cul_kc2;
+                    }
+                    if (etapa == 3) {
+                        kc = selectCultivoRiego.cul_kc3;
+                    }
+                    if (etapa == 4) {
+                        kc = selectCultivoRiego.cul_kc4;
+                    }
+                    let ETc = kc * selectCultivoRiego.riego_eto;
+                    let db = ((ETc / 90) * 100).toFixed(4);
+                    let frecuencia = selectCultivoRiego.cul_frecuencia_riego;
+                    let sp = selectCultivoRiego.cul_dep;
+                    let sl = selectCultivoRiego.cul_dlp;
+                    let G = ((db / frecuencia) * sp * sl).toFixed(2);
+                    Data.setValue(contador, 0, contador);
+                    Data.setValue(contador, 1, selectCultivoRiego.riego_temperatura);
+                    Data.setValue(contador, 2, selectCultivoRiego.riego_humedad_relativa);
+                    Data.setValue(contador, 3, selectCultivoRiego.riego_eto);
+                    Data.setValue(contador, 4, ETc);
+                    Data.setValue(contador, 5, db);
+                    Data.setValue(contador, 6, G);
+
 
                     contador++;
                 });
@@ -84,42 +187,36 @@
     }
 
 
-    function BuscarValor() {
-        let fecha = $('#txt_buscar').val();
-        if (campoVacio(fecha, "grupo_txtBuscar1", "Seleccione una fecha valida")) {
-            var Data = new google.visualization.DataTable();
-            Data.addColumn('number', 'hora');
-            Data.addColumn('number', 'Temperatura');
-            Data.addRows(20);
-            var URL = "/Temperatura/ListaTemperatura";
-            $.ajax({
-                url: URL,
-                type: "post",
-                dataType: "json",
-                data: { fecha },
-                success: function (response) {
-                    var contador = 0;
-                    limpiarHtml();
-                    response.forEach(temperatura => {
-                        var a = temperatura.tem_hora.split(":");
-                        Data.setValue(contador, 0, a[0]);
-                        Data.setValue(contador, 1, temperatura.tem_temperatura);
-                        console.log(a[0]);
-                        contador++;
-                    });
 
-                    var chartspace = new google.visualization.LineChart(document.getElementById('curve_chart1'));
-                    chartspace.draw(Data, options);
-                }, error: function (e) {
-                    console.log(e.readyState);
-                }
-            });
-        }
-
-    }
 
     function limpiarHtml() {
         $("#grupo_txtBuscar1").val("");
+
+
+    }
+    function SelectCultivos() {
+        let rol = document.getElementById("cultivo");
+        let mensaje = " <option selected value='0'>Escoga el cultivo...</option>";
+        var URLRoles = "/GestionCultivo/Cultivos";
+        $.ajax({
+            url: URLRoles,
+            type: "get",
+            dataType: "json",
+            success: function (response) {
+                response.forEach(cultivo => {
+                    mensaje += "<option value='" + cultivo.cul_id + "'>" + cultivo.cul_nombre + "</option>";
+                });
+                rol.innerHTML = mensaje;
+            }
+        });
+
     }
 
+
+
+
+
+
+
+    window.onload = SelectCultivos();
 </script>

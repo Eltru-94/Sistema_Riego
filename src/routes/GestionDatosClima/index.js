@@ -127,15 +127,34 @@ router.post("/ListaTemperatura", isLoggedIn, async (req, res) => {
 
 function mensaje() {
   sensores.titulo = "Sensor Temperatura";
-  if (sensores.temperuta_a != 0) {
-    sensores.mensaje_valvula = "Sensor temperatura : " + sensores.temperuta_a + " ° C";
-  } else {
-    sensores.mensaje_valvula = "Sensor temperatura : SC";
-  }
 
-
+  sensores.mensaje_valvula = "Datos Temperatura ";
 
 }
+
+router.get("/ConectarTemperatura", isLoggedIn, async (req, res) => {
+
+  sensores.temperatura_estado = 1;
+  if (sensores.temperatura_estado) {
+    const respuesta = {
+      response: "success",
+      mensaje: "Humedad relativa Conectado con exito",
+    };
+    res.json(respuesta);
+  }
+});
+
+router.get("/DesconectarTemperatuara", isLoggedIn, async (req, res) => {
+
+  sensores.temperatura_estado = 0;
+  if (!sensores.temperatura_estado) {
+    const respuesta = {
+      response: "success",
+      mensaje: "Humedad relativa desconectado con exito",
+    };
+    res.json(respuesta);
+  }
+});
 
 
 module.exports = router;
