@@ -23,16 +23,27 @@
         </div>
         <div id="grupo_txtBuscar1"></div>
     </div>
-
-
-
-
     <div class="row">
-        <div id="curve_chart1" style="width: 850px; height: 450px" class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+        <div class="col-md-12">
+            <canvas id="miGrafico"></canvas>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-12">
+            <canvas id="miGrafico2"></canvas>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <canvas id="miGrafico3"></canvas>
+        </div>
 
-
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <canvas id="miGrafico4"></canvas>
+        </div>
+    </div>
 
 </div>
 
@@ -40,101 +51,11 @@
 
 
 <script type="text/javascript">
-    google.charts.load('current', { 'packages': ['corechart'] });
-    google.charts.setOnLoadCallback(drawChart2);
-    var options = {
-        title: 'Seguimiento riego del cultivo',
-        hAxis: { title: 'Dias', titleTextStyle: { color: '#333' } },
-        vAxis: { title: 'Datos Climatologicos' },
-        with: 100,
-        colors: ['#363FCA', '#363752', '#90074B', '#0CCA23', "#D7E066", "#8A7E80"],
-        curveType: 'function',
-        legend: { position: 'bottom' }
-    };
 
 
-    function drawChart2() {
-        const id = $('#cli_id').val();
-
-        var Data = new google.visualization.DataTable();
-        Data.addColumn('number', 'Contador');
-        Data.addColumn('number', 'Temp');
-        Data.addColumn('number', 'Hum Rel');
-        Data.addColumn('number', 'ETO');
-        Data.addColumn('number', 'ETC');
-        Data.addColumn('number', 'DB');
-        Data.addColumn('number', 'Volumen agua L');
-        Data.addRows(20);
-
-        var URL = "/VisualizacionSensores/Cultivo_riego/" + id;
-        $.ajax({
-            url: URL,
-            type: "get",
-            dataType: "json",
-            success: function (res) {
-                var contador = 1;
-                limpiarHtml();
-                res.forEach(selectCultivoRiego => {
-                    let etapa = selectCultivoRiego.riego_etapa;
-                    let kc = 0;
-                    if (etapa == 1) {
-                        kc = selectCultivoRiego.cul_kc1;
-                    }
-                    if (etapa == 2) {
-                        kc = selectCultivoRiego.cul_kc2;
-                    }
-                    if (etapa == 3) {
-                        kc = selectCultivoRiego.cul_kc3;
-                    }
-                    if (etapa == 4) {
-                        kc = selectCultivoRiego.cul_kc4;
-                    }
-                    let ETc = kc * selectCultivoRiego.riego_eto;
-                    let db = ((ETc / 90) * 100).toFixed(4);
-                    let frecuencia = selectCultivoRiego.cul_frecuencia_riego;
-                    let sp = selectCultivoRiego.cul_dep;
-                    let sl = selectCultivoRiego.cul_dlp;
-                    let G = ((db / frecuencia) * sp * sl).toFixed(4);
-                    let se = selectCultivoRiego.rig_cul_dista_goteros;
-                    let Np = (sp / se);
-                    let caudal = selectCultivoRiego.rig_cul_caudal;
-                    let ta = (G / Np) * caudal;
-                    Data.setValue(contador, 0, contador);
-                    Data.setValue(contador, 1, selectCultivoRiego.riego_temperatura);
-                    Data.setValue(contador, 2, selectCultivoRiego.riego_humedad_relativa);
-                    Data.setValue(contador, 3, selectCultivoRiego.riego_eto);
-                    Data.setValue(contador, 4, ETc);
-                    Data.setValue(contador, 5, db);
-                    Data.setValue(contador, 6, G);
-
-
-
-                    contador++;
-                });
-
-                var chartspace = new google.visualization.LineChart(document.getElementById('curve_chart1'));
-                chartspace.draw(Data, options);
-
-            }, error: function (e) {
-                console.log(e.readyState);
-            }
-        });
-    }
     function drawChart() {
         const id = $('#cli_id').val();
         const cul_id = $('#cultivo').val();
-
-
-        var Data = new google.visualization.DataTable();
-        Data.addColumn('number', 'Contador', "holal");
-        Data.addColumn('number', 'Temperatura');
-        Data.addColumn('number', 'Humedad Relativa');
-        Data.addColumn('number', 'ETO');
-        Data.addColumn('number', 'ETC');
-        Data.addColumn('number', 'DB');
-        Data.addColumn('number', 'Volumen agua en litros');
-        Data.addRows(20);
-
         var URL = "/VisualizacionSensores/Cultivo_riego/" + id;
         $.ajax({
             url: URL,
@@ -142,43 +63,211 @@
             dataType: "json",
             data: { cul_id },
             success: function (response) {
-                var contador = 1;
-                limpiarHtml();
-                response.forEach(selectCultivoRiego => {
-                    let etapa = selectCultivoRiego.riego_etapa;
+                var fecha = [];
+                var temperatura = [];
+                var huemdad_rel = [];
+                var huemdad_suelo = [];
+                var Eto = [];
+                var Etc = [];
+                var volumen_agua = [];
+                var tiempo_aplicacion = [];
+                let nombre;
+                for (var i in response) {
+                    nombre = response[i].cul_nombre;
+                    let aux = response[i].riego_fecha.split('T');
+                    let eto = response[i].riego_eto;
+                    let etapa = response[i].riego_etapa;
                     let kc = 0;
+                    let fre = response[i].cul_frecuencia_riego;
+                    let sp = response[i].cul_dep;
+                    let sl = response[i].cul_dlp;
+                    let se = response[i].rig_cul_dista_goteros;
+                    let caudal = response[i].rig_cul_caudal;
+                    let aux_etapa = "";
                     if (etapa == 1) {
-                        kc = selectCultivoRiego.cul_kc1;
+                        kc = response[i].cul_kc1;
+                        aux_etapa = "Inicial"
                     }
                     if (etapa == 2) {
-                        kc = selectCultivoRiego.cul_kc2;
+                        kc = response[i].cul_kc2;
+                        aux_etapa = "Desarrollo"
                     }
                     if (etapa == 3) {
-                        kc = selectCultivoRiego.cul_kc3;
+                        kc = response[i].cul_kc3;
+                        aux_etapa = "Media"
                     }
                     if (etapa == 4) {
-                        kc = selectCultivoRiego.cul_kc4;
+                        kc = response[i].cul_kc4;
+                        aux_etapa = "Maduración"
                     }
-                    let ETc = kc * selectCultivoRiego.riego_eto;
-                    let db = ((ETc / 90) * 100).toFixed(4);
-                    let frecuencia = selectCultivoRiego.cul_frecuencia_riego;
-                    let sp = selectCultivoRiego.cul_dep;
-                    let sl = selectCultivoRiego.cul_dlp;
-                    let G = ((db / frecuencia) * sp * sl).toFixed(2);
-                    Data.setValue(contador, 0, contador);
-                    Data.setValue(contador, 1, selectCultivoRiego.riego_temperatura);
-                    Data.setValue(contador, 2, selectCultivoRiego.riego_humedad_relativa);
-                    Data.setValue(contador, 3, selectCultivoRiego.riego_eto);
-                    Data.setValue(contador, 4, ETc);
-                    Data.setValue(contador, 5, db);
-                    Data.setValue(contador, 6, G);
+                    let etc = (eto * kc).toFixed(4);
+                    let db1 = (((kc * eto) / 90) * 100).toFixed(4);
+                    let G1 = ((db1 / fre) * sp * sl).toFixed(4);
+
+                    let np = (sp / se);
+                    let ta = ((((G1 / np)) * caudal) * 60).toFixed();
+                    let men = aux_etapa + " : " + aux[0];
+                    fecha.push(men);
+                    temperatura.push(response[i].riego_temperatura);
+                    huemdad_rel.push(response[i].riego_humedad_relativa);
+                    huemdad_suelo.push(response[i].riego_humedad_suelo);
+                    Eto.push(response[i].riego_eto);
+                    Etc.push(etc);
+                    tiempo_aplicacion.push(ta)
+                    volumen_agua.push(G1)
+                }
 
 
-                    contador++;
+
+
+
+
+
+                var chartdata = {
+                    labels: fecha,
+                    datasets: [{
+                        label: "Temperatura °C",
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgb(75, 192, 192)',
+                        borderWidth: 2,
+                        data: temperatura
+                    }, {
+                        label: "Humedad Relativa %",
+                        backgroundColor: 'rgba(201, 203, 207, 0.2)',
+                        borderColor: 'rgb(201, 203, 207)',
+                        borderWidth: 2,
+                        data: huemdad_rel
+                    }, {
+                        label: "Humedad suelo",
+                        backgroundColor: 'rgba(255, 205, 86, 0.2)',
+                        borderColor: 'rgb(255, 205, 86)',
+                        borderWidth: 2,
+                        data: huemdad_suelo
+                    }],
+                };
+
+                var chartdata2 = {
+                    labels: fecha,
+                    datasets: [{
+                        label: "Evopotranspiración",
+                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                        borderColor: 'rgb(153, 102, 255)',
+                        borderWidth: 2,
+                        data: Eto
+                    }, {
+                        label: "Evopotranspiración del cultivo",
+                        backgroundColor: 'rgba(255, 205, 86, 0.3)',
+                        borderColor: 'rgb(255, 205, 86)',
+                        borderWidth: 2,
+                        data: Etc
+                    }]
+                };
+                const datos = {
+
+                    label: "Volumen de agua",
+                    data: volumen_agua, // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)', // Color de fondo
+                    borderColor: 'rgba(54, 162, 235, 1)', // Color del borde
+                    borderWidth: 1,// Ancho del borde
+                };
+                const datos2 = {
+
+                    label: "Tiempo de aplicación",
+                    data: tiempo_aplicacion, // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
+                    backgroundColor: 'rgba(255, 159, 64, 0.2)',// Color de fondo
+                    borderColor: 'rgb(255, 159, 64)', // Color del borde
+                    borderWidth: 1,// Ancho del borde
+                };
+
+                var mostrar = $("#miGrafico");
+                var mostrar2 = $("#miGrafico2");
+                var mostrar3 = $("#miGrafico3");
+                var mostrar4 = $("#miGrafico4");
+
+                var grafico = new Chart(mostrar, {
+                    type: 'line',
+                    data: chartdata,
+                    options: {
+                        responsive: true,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }, title: {
+                            display: true,
+                            text: "Datos Climatológicos del cultivo de :" + nombre
+                        },
+                    }
+                });
+                var grafico2 = new Chart(mostrar2, {
+                    type: 'line',
+                    data: chartdata2,
+                    options: {
+                        responsive: true,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        },
+                        title: {
+                            display: true,
+                            text: "Evapotrasnpiración del cultivo de: " + nombre
+                        }
+                    }
+                });
+                new Chart(mostrar3, {
+                    type: 'bar',// Tipo de gráfica
+                    data: {
+                        labels: fecha,
+                        datasets: [
+                            datos,
+                            // Aquí más datos...
+                        ]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }],
+                        },
+                        title: {
+                            display: true,
+                            text: "Volumen de agua suministrado el cultivo de " + nombre
+                        }
+                    }
                 });
 
-                var chartspace = new google.visualization.LineChart(document.getElementById('curve_chart1'));
-                chartspace.draw(Data, options);
+
+                new Chart(mostrar4, {
+                    type: 'bar',// Tipo de gráfica
+                    data: {
+                        labels: fecha,
+                        datasets: [
+                            datos2,
+                        ]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }],
+                        },
+                        title: {
+                            display: true,
+                            text: "Tiempo de aplicación agua en el cultivo de " + nombre
+                        }
+                    },
+                });
+
+
 
             }, error: function (e) {
                 console.log(e.readyState);

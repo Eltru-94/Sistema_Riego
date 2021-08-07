@@ -29,15 +29,10 @@ router.post("/Cultivo_riego/:id", isLoggedIn, async (req, res) => {
     const { cul_id } = req.body
     const { id } = req.params;
     const selectCultivoRiego = await db.query("SELECT * FROM tbl_riego_cultivo INNER JOIN tbl_riego ON (tbl_riego_cultivo.riego_cul_id = tbl_riego.riego_cul_id) INNER JOIN tbl_cultivo ON (tbl_riego_cultivo.cul_id = tbl_cultivo.cul_id) WHERE tbl_riego_cultivo.cli_id=? AND tbl_riego_cultivo.cul_id=?", [id, cul_id]);
-    
-    if (selectCultivoRiego!=null) {
-        res.json(selectCultivoRiego);
-    } else {
 
-        const respuesta = { response: "success", mensaje: "No existen datos" };
-        res.json(respuesta);
 
-    }
+    res.json(selectCultivoRiego);
+
 
 
 });

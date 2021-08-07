@@ -70,7 +70,7 @@
 
                 const datos = {
 
-                    label: "Volumen de agua del cultivo de : " + nombre,
+                    label: "Volumen de agua",
                     data: [G1, G2, G3, G4], // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
                     backgroundColor: 'rgba(54, 162, 235, 0.2)', // Color de fondo
                     borderColor: 'rgba(54, 162, 235, 1)', // Color del borde
@@ -93,7 +93,10 @@
                                 }
                             }],
                         },
-                        with: 50,
+                        title: {
+                            display: true,
+                            text: "Volumen de agua del cultivo de : " + nombre +" en litros",
+                        }
                     }
                 });
             }
