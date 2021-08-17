@@ -24,7 +24,8 @@ module.exports ={
        humedad_suelo_b:false,
        tiempo_aplicacion:0,
        Eto:0,
-       cul_id_temp:0
+       cul_id_temp:0,
+       EtapaDesarrolllo:0
     }
    };
   

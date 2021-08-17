@@ -21,14 +21,10 @@
                         <th>ETc</th>
                         <th>Fase</th>
                         <th>Kc</th>
+                        <th>Fecha Fase Cultivo</th>
                         <th>R.R</th>
-                        <th>E.E.P</th>
-                        <th>E.L.P</th>
-                        <th>V. Agu</th>
-                        <th>EG</th>
-                        <th>Q</th>
-                        <th>Apli D. Ag</th>
-
+                        <th>Volumen Agua</th>
+                        <th>Aplicación Agua</th>
                         <th>Actualizar</th>
                     </tr>
                 </thead>
@@ -105,8 +101,8 @@
 <input type="hidden" id="Eto" name="Eto" value="">
 <input type="hidden" id="riego_cul_id" name="rig_cul_id" value="{{sensores.riego_cultivo_id}}">
 <input type="hidden" id="cultivoRiego" name="rig_cul_id" value="{{sensores.riego_cultivo_id}}">
-<input type="hidden" id="tiempoRiego" name="tiempoRiego">
-<input type="hidden" id="etapades" name="etapades">
+<input type="hidden" id="tiempoRiego" name="tiempoRiego" value="{{sensores.tiempo_aplicacion}}">
+<input type="hidden" id="etapades" name="etapades" value="{{sensores.EtapaDesarrolllo}}">
 
 
 <hr>
@@ -263,10 +259,11 @@
             success: function (res) {
                 if (res.response == "success") {
                     toastr["success"](res.mensaje);
-                    ActivacionCultivo();
+
 
                     $("#etapades").val(EtapaDesarrolllo);
                     $("#EtapaDesarrolllo").modal("hide");
+                    ActivacionCultivo();
                     imagenllaves.src = "imagenes/valvula.png"
                 }
 
@@ -626,6 +623,7 @@
         let kc = 0;
         let riego_cul_id = $('#riego_cul_id').val();
         let URL = "RiegoCultivo/DatosCultivoRiego/" + riego_cul_id;
+        let idetapa = $("#etapades").val();
 
         $.ajax({
             url: URL,
@@ -645,49 +643,70 @@
                     let caudal = DatosCultivoRiego.rig_cul_caudal;
                     let TpoMAduracio = DatosCultivoRiego.cul_TpoMaduracion;
                     let base = "";
-                    if (parseInt(fase) == 1) {
-                        kc = DatosCultivoRiego.cul_kc1;
-                        base = "Inicial";
-                    }
-                    if (parseInt(fase) == 2) {
-                        kc = DatosCultivoRiego.cul_kc2;
-                        base = "Desarrollo";
-                    }
-                    if (parseInt(fase) == 3) {
-                        kc = DatosCultivoRiego.cul_kc3;
-                        base = "Media";
-                    }
-                    if (parseInt(fase) == 4) {
-                        kc = DatosCultivoRiego.cul_kc4;
-                        base = "Maduración";
-                    }
-                    let Etc = (Eto * kc).toFixed(4);
-                    let RR = ((Etc / 90) * 100).toFixed();
-                    let G = ((RR / frecuencia) * sp * sl).toFixed(4);
-                    let Np = (sp / se);
-                    let Ta = ((((G / Np)) * caudal) * 60).toFixed();
-                    let TaTotal = Ta * frecuencia;
-                    let horas = (TaTotal / 60).toFixed();
-                    let minutos = (TaTotal % 60).toFixed();
-                    let total = horas + " h : " + minutos + " min"
-                    $('#tiempoRiego').val(Ta);
-                    tbody.append(`
+                    let fecha = DatosCultivoRiego.rig_cul_fecha;
+                    let fecha_array = fecha.split("T");
+                    let tiempoMaduracion = DatosCultivoRiego.cul_TpoMaduracion;
+                    let total_dias = ((tiempoMaduracion * 30) / 4);
+                    console.log(total_dias)
+                    var fecha1;
+                    var fecha2; 
+                    var fecha3;
+                    var fecha4;
+                    var dias = total_dias; // Número de días a agregar
+
+                    let mensaje_fecha = fecha_array[0];
+                    for (var i = idetapa; i <= 4; i++) {
+                        if (i == 1) {
+                            fecha1 = new Date(fecha_array[0]);
+                            kc = DatosCultivoRiego.cul_kc1;
+                            base = "Inicial";
+                            mensaje_fecha = (fecha1.getFullYear() + "-" + (fecha1.getMonth() + 1) + "-" + (fecha1.getDate() + 1));
+                        }
+                        if (i == 2) {
+                            fecha2 = new Date(mensaje_fecha);
+                            fecha2.setDate(fecha2.getDate() + dias);
+                            mensaje_fecha = (fecha2.getFullYear() + "-" + (fecha2.getMonth() + 1) + "-" + (fecha2.getDate() + 1));
+                            kc = DatosCultivoRiego.cul_kc2;
+                            base = "Desarrollo";
+                        }
+                        if (i == 3) {
+                             fecha3 = new Date(mensaje_fecha);
+                            fecha3.setDate(fecha3.getDate() + dias);
+                            mensaje_fecha = (fecha3.getFullYear() + "-" + (fecha3.getMonth() + 1) + "-" + (fecha3.getDate() + 1));
+                            kc = DatosCultivoRiego.cul_kc3;
+                            base = "Media";
+                        }
+                        if (i == 4) {
+                            fecha4 = new Date(mensaje_fecha);
+                            fecha4.setDate(fecha4.getDate() + dias);
+                            mensaje_fecha = (fecha4.getFullYear() + "-" + (fecha4.getMonth() + 1) + "-" + (fecha4.getDate() + 1));
+                            kc = DatosCultivoRiego.cul_kc4;
+                            base = "Maduración";
+                        }
+                        let Etc = (Eto * kc).toFixed(4);
+                        let RR = ((Etc / 90) * 100).toFixed();
+                        let G = ((RR / frecuencia) * sp * sl).toFixed(4);
+                        let Np = (sp / se);
+                        let Ta = ((((G / Np)) * caudal) * 60).toFixed();
+                        let TaTotal = Ta * frecuencia;
+                        let horas = (TaTotal / 60).toFixed();
+                        let minutos = (TaTotal % 60).toFixed();
+                        let total = horas + " h : " + minutos + " min"
+                        $('#tiempoRiego').val(Ta);
+
+                        tbody.append(`
                     <tr>
                         <td>${DatosCultivoRiego.cul_nombre}</td>
                         <td>${Eto}(mm/día)</td>
                         <td>${Etc}(mm/día)</td>
                         <td>${base}</td>
                         <td>${kc}</td>
+                         <td>${mensaje_fecha} </td>
                         <td>${RR} L</td>
-                        <td>${sp} m</td>
-                        <td>${sl} m</td>
                         <td>${G} L</td>
-                        <td>${se} m</td>
-                        <td>${caudal}L/h</td> 
                         <td>${Ta} min</td>
 
 
-                        TpoMAduracio
                         
                          <td>
                             <a id="Actualizar"  title="Actualizar" value="CrearUsuario" class="tn btn-primary btn-circle"  data-bs-toggle="modal" data-bs-target="#EtapaDesarrolllo"
@@ -699,6 +718,8 @@
                         </td>
                     </tr>
                 `)
+                    }
+
                 })
             }, error: function (e) {
                 console.log(e.readyState);

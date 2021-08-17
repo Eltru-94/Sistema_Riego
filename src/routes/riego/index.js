@@ -240,14 +240,16 @@ router.post('/RiegoCultivo', async (req, res) => {
 
    const { cli_id, cul_id, etapacultivo, caudal, dgoteros } = req.body;
    sensores.cul_id_tem = cul_id;
-   console.log(cul_id)
+   sensores.EtapaDesarrolllo=etapacultivo;
+   
    const new_riego_cultivo = {
       riego_cul_estado: 1,
       cli_id: cli_id,
       cul_id: cul_id,
       rig_cul_base_desarrollo: etapacultivo,
       rig_cul_dista_goteros: dgoteros,
-      rig_cul_caudal: caudal
+      rig_cul_caudal: caudal,
+      rig_cul_fecha:sensores.fecha_actual
    };
    const insert_riego_cultivo = await db.query("INSERT INTO tbl_riego_cultivo set ?", [
       new_riego_cultivo

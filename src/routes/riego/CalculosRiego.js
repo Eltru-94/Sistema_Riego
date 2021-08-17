@@ -15,6 +15,7 @@ router.post('/ActualizarRiegoCultivo/:id', async(req, res) => {
    const new_riego_cultivo = {
       rig_cul_base_desarrollo:EtapaDesarrolllo
    };
+   sensores.EtapaDesarrolllo=EtapaDesarrolllo;
    const update_riego_cultivo = await db.query(
       "UPDATE tbl_riego_cultivo set ? WHERE tbl_riego_cultivo.riego_cul_id= ?",
       [new_riego_cultivo, id]
