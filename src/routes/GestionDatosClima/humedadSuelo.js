@@ -13,7 +13,7 @@ router.get("/", isLoggedIn, async (req, res) => {
 
 router.get("/SelectHumedad", isLoggedIn, async (req, res) => {
   const humedad = await db.query(
-    "SELECT * FROM tbl_humedad_suelo h WHERE h.hum_sue_estado =? ORDER BY h.hum_sue_fecha  DESC LIMIT 10",
+    "SELECT * FROM tbl_humedad_suelo h WHERE h.hum_sue_estado =? ORDER BY h.hum_sue_fecha  DESC LIMIT 10 AND h.hum_sue_estado =?",
     1
   );
 
@@ -81,9 +81,8 @@ router.get("/Eliminar/:id", isLoggedIn, async (req, res) => {
 
   const { id } = req.params;
   const temp = { hum_sue_estado: 0 };
-  console.log(id);
   const del = await db.query(
-    "UPDATE tbl_humedad_suelo h set ? WHERE h.hum_sue_id = ?",
+    "UPDATE tbl_humedad_suelo set ? WHERE tbl_humedad_suelo.hum_sue_id = ?",
     [temp, id]
   );
   if (del.affectedRows == 1) {
