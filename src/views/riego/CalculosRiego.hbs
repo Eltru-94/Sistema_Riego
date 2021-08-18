@@ -664,13 +664,13 @@
                             console.log(fecha1);
                             kc = DatosCultivoRiego.cul_kc1;
                             base = "Inicial";
-                            mensaje_fecha = (fecha1.getFullYear() + "-" + (fecha1.getMonth() + 1) + "-" + (fecha1.getDate()));
+                            mensaje_fecha = (fecha1.getFullYear() + "-" + (fecha1.getMonth() + 1) + "-" + (fecha1.getDate()+1));
                             contador++;
                         }
                         if (i == 2) {
                             fecha2 = new Date(mensaje_fecha);
                             fecha2.setDate(fecha2.getDate() + dias);
-                            mensaje_fecha = (fecha2.getFullYear() + "-" + (fecha2.getMonth() + 1) + "-" + (fecha2.getDate()));
+                            mensaje_fecha = (fecha2.getFullYear() + "-" + (fecha2.getMonth() + 1) + "-" + (fecha2.getDate()+1));
                             kc = DatosCultivoRiego.cul_kc2;
                             base = "Desarrollo";
                             contador++;
@@ -678,7 +678,7 @@
                         if (i == 3) {
                              fecha3 = new Date(mensaje_fecha);
                             fecha3.setDate(fecha3.getDate() + dias);
-                            mensaje_fecha = (fecha3.getFullYear() + "-" + (fecha3.getMonth() + 1) + "-" + (fecha3.getDate()));
+                            mensaje_fecha = (fecha3.getFullYear() + "-" + (fecha3.getMonth() + 1) + "-" + (fecha3.getDate()+1));
                             kc = DatosCultivoRiego.cul_kc3;
                             base = "Media";
                             contador++;
@@ -686,7 +686,7 @@
                         if (i == 4) {
                             fecha4 = new Date(mensaje_fecha);
                             fecha4.setDate(fecha4.getDate() + dias);
-                            mensaje_fecha = (fecha4.getFullYear() + "-" + (fecha4.getMonth() + 1) + "-" + (fecha4.getDate()));
+                            mensaje_fecha = (fecha4.getFullYear() + "-" + (fecha4.getMonth() + 1) + "-" + (fecha4.getDate()+1));
                             kc = DatosCultivoRiego.cul_kc4;
                             base = "Maduración";
                             contador++;
