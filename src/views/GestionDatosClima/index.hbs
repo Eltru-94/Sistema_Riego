@@ -163,12 +163,12 @@
                 tbody.html('');
                 var a = 1;
                 response.forEach(tem => {
-
+                    let fecha=tem.tem_fecha.split("T");
                     tbody.append(`
                     <tr>
                          <td id="fnombre">${a++}</td>
                         <td id="fnombre">${tem.tem_temperatura} ° C</td>
-                        <td id="fapellido"> ${tem.tem_fecha}</td>
+                        <td id="fapellido"> ${fecha[0]}</td>
                         <td id="fapellido"> ${tem.tem_hora}</td>
                         <td>
                             <a id="Actualizar" value="CrearUsuario" title="Actualizar" class="tn btn-primary btn-circle"  data-bs-toggle="modal" data-bs-target="#ModuloTemperatura"
@@ -389,11 +389,12 @@
                 tbody.html('');
                 var a = 1;
                 res.forEach(temperatura => {
+                    let fecha=temperatura.tem_fecha.split('T');
                     tbody.append(`
                     <tr>
                          <td id="fnombre">${a++}</td>
                         <td id="fnombre">${temperatura.tem_temperatura} ° C</td>
-                        <td id="fapellido"> ${temperatura.tem_fecha}</td>
+                        <td id="fapellido"> ${fecha[0]}</td>
                         <td id="fapellido"> ${temperatura.tem_hora}</td>
                         <td>
                             <a id="Actualizar" value="CrearUsuario" title="Actualizar" class="tn btn-primary btn-circle"  data-bs-toggle="modal" data-bs-target="#ModuloTemperatura"

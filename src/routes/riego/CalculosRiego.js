@@ -11,11 +11,13 @@ router.get('/', (req, res) => {
 
 router.post('/ActualizarRiegoCultivo/:id', async(req, res) => {
    const { id } = req.params;
-   const {EtapaDesarrolllo} = req.body;
+   const {EtapaDesarrolllo,tiempoRiego} = req.body;
    const new_riego_cultivo = {
       rig_cul_base_desarrollo:EtapaDesarrolllo
    };
    sensores.EtapaDesarrolllo=EtapaDesarrolllo;
+   sensores.tiempo_aplicacion=tiempoRiego;
+
    const update_riego_cultivo = await db.query(
       "UPDATE tbl_riego_cultivo set ? WHERE tbl_riego_cultivo.riego_cul_id= ?",
       [new_riego_cultivo, id]
