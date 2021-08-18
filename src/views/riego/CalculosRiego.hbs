@@ -661,6 +661,7 @@
                     for (var i = idetapa; i <= 4; i++) {
                         if (i == 1) {
                             fecha1 = new Date(fecha_array[0]);
+                            console.log(fecha1);
                             kc = DatosCultivoRiego.cul_kc1;
                             base = "Inicial";
                             mensaje_fecha = (fecha1.getFullYear() + "-" + (fecha1.getMonth() + 1) + "-" + (fecha1.getDate()));
@@ -700,7 +701,7 @@
                         let horas = (TaTotal / 60).toFixed();
                         let minutos = (TaTotal % 60).toFixed();
                         let total = horas + " h : " + minutos + " min"
-                        
+
                         if( contador==1){
                             TaEnvio=Ta;
                         }
