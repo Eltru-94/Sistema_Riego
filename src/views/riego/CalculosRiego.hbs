@@ -690,6 +690,7 @@
                             base = "Maduración";
                             contador++;
                         }
+
                         let Etc = (Eto * kc).toFixed(4);
                         let RR = ((Etc / 90) * 100).toFixed();
                         let G = ((RR / frecuencia) * sp * sl).toFixed(4);
@@ -699,6 +700,7 @@
                         let horas = (TaTotal / 60).toFixed();
                         let minutos = (TaTotal % 60).toFixed();
                         let total = horas + " h : " + minutos + " min"
+                        
                         if( contador==1){
                             TaEnvio=Ta;
                         }
