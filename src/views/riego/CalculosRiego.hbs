@@ -663,7 +663,7 @@
                             fecha1 = new Date(fecha_array[0]);
                             kc = DatosCultivoRiego.cul_kc1;
                             base = "Inicial";
-                            mensaje_fecha = (fecha1.getFullYear() + "-" + (fecha1.getMonth() + 1) + "-" + (fecha1.getDate()));
+                            mensaje_fecha = (fecha1.getFullYear() + "-" + (fecha1.getMonth() + 2) + "-" + (fecha1.getDate()-1));
                             contador++;
                         }
                         if (i == 2) {
@@ -685,7 +685,7 @@
                         if (i == 4) {
                             fecha4 = new Date(mensaje_fecha);
                             fecha4.setDate(fecha4.getDate() + dias);
-                            mensaje_fecha = (fecha4.getFullYear() + "-" + (fecha4.getMonth() + 1) + "-" + (fecha4.getDate() + 1));
+                            mensaje_fecha = (fecha4.getFullYear() + "-" + (fecha4.getMonth() + 1) + "-" + (fecha4.getDate()));
                             kc = DatosCultivoRiego.cul_kc4;
                             base = "Maduración";
                             contador++;
